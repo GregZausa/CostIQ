@@ -1,11 +1,79 @@
-import React from 'react'
+import React, { useState } from "react";
+import { X, Menu, ChevronDown } from "lucide-react";
+import { routes } from "../../config/routes";
+import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [openMenus, setOpenMenus] = useState({});
+
+  const toggleMenu = (path) => {
+    setOpenMenus((prev) => ({
+      ...prev,
+      [path]: !prev[path],
+    }));
+  };
+
+  const navBar = ({ isActive }) =>
+    `flex items-center space-x-2 py-4 px-3 rounded-md transition font-bold ${isActive ? "bg-blue-500" : "hover:bg-gray-700"}`;
   return (
     <div>
-      
-    </div>
-  )
-}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="md:hidden fixed top-4 left-4 z-50 bg-gray-800 p-2 rounded-md text-white focus:outline-none"
+      >
+        {isOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
+      {isOpen && (
+        <div
+          onClick={() => setIsOpen(false)}
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-30 md:hidden"
+        />
+      )}
 
-export default Sidebar
+      <div
+        className={`fixed top-0 left-0 h-full w-64 bg-gray-800 text-white flex flex-col p-4 space-y-6 transform transition-transform duration-300 ease-in-out z-40 ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:static md:block`}
+      >
+        <div>This is Logo Placeholder</div>
+        {routes
+          .filter((route) => route.sidebar)
+          .map(({ label, path, icon: Icon, children }) => (
+            <div key={path}>
+              {children ? (
+                <div
+                  className={navBar({ isActive: false })}
+                  onClick={() => toggleMenu(path)}
+                >
+                  <div className="flex items-center space-x-2">
+                    <Icon size={18} />
+                    <span>{label}</span>
+                  </div>
+                  <div
+                    className={`transform-transition duration-300 ${openMenus[path] ? "rotate-180" : "rotate-0"}`}
+                  >
+                    <ChevronDown size={16} />
+                  </div>
+                </div>
+              ) : (
+                <NavLink key={path} to={path} className={navBar}>
+                  <Icon size={18} />
+                  <span>{label}</span>
+                </NavLink>
+              )}
+              {children && openMenus[path] && (
+                <div className="ml-6 mt-2 space-y-1">
+                  {children.map(({ label: childrenLabel, path: childPath }) => (
+                    <NavLink key={childPath} to={childPath} className={navBar}>
+                      <span className="text-sm">{childrenLabel}</span>
+                    </NavLink>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+      </div>
+    </div>
+  );
+};
+
+export default Sidebar;
