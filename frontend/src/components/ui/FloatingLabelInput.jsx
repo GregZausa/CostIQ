@@ -8,6 +8,8 @@ const FloatingLabelInput = ({
   label,
   className,
   required = false,
+  readOnly = false,
+  
 }) => {
   const [onFocus, setOnFocus] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -23,6 +25,7 @@ const FloatingLabelInput = ({
         onBlur={() => setOnFocus(false)}
         onChange={(e) => onChange(e.target.value)}
         className={`border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
+        readOnly = {readOnly}
       />
       <label
         className={`absolute left-3 transition-all duration-300 ${

@@ -2,7 +2,7 @@ import {
   comparePassword,
   createUser,
   findUserByEmail,
-} from "../models/userModel.js";
+} from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 
 export const registerUser = async ({
