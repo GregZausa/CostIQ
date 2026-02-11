@@ -1,4 +1,4 @@
-import { instertRawMaterial } from "../models/raw-material.model.js";
+import { getRawMaterial, instertRawMaterial } from "../models/raw-material.model.js";
 
 export const createRawMaterial = async (req, res) => {
 try {
@@ -25,3 +25,12 @@ try {
     res.status(500).json({message: "Failed to add raw material", error:err.message});
   }
 };
+
+export const fetchRawMaterials = async (req, res) => {
+  try {
+    const rawMaterls = await getRawMaterial();
+    res.json(rawMaterls);
+  }catch(err) {
+    res.status(500).json({message:"Failed to fetch raw materials", error: err});
+  }
+}

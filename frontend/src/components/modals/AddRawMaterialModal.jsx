@@ -24,7 +24,7 @@ function reducer(state, action) {
       return state;
   }
 }
-const AddRawMaterialModal = ({ closeModal, onSave }) => {
+const AddRawMaterialModal = ({ closeModal }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [packUnits, setPackUnits] = useState([]);
   const [unitsPerPackEditable, setUnitsPerPackEditable] = useState(true);
@@ -101,7 +101,7 @@ const AddRawMaterialModal = ({ closeModal, onSave }) => {
     try {
       setIsLoading(true);
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5001/api/add-raw-material", {
+      const res = await fetch("http://localhost:5001/api/add-raw-materials", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

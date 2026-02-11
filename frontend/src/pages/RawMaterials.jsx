@@ -2,16 +2,17 @@ import React, { useState } from "react";
 import Button from "../components/ui/Button";
 import AddRawMaterialModal from "../components/modals/AddRawMaterialModal";
 import toast from "react-hot-toast";
+import RawMaterialsTable from "../tables/RawMaterialsTable";
 
 const RawMaterials = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const saveRawMaterial  = (data) => {
+  const saveRawMaterial = (data) => {
     console.log("New Raw Material Added", data);
     toast.success("Raw Material Added!");
-  }
+  };
 
   return (
     <div>
@@ -19,7 +20,12 @@ const RawMaterials = () => {
         <h1 className="font-bold text-2xl">Raw Materials</h1>
         <Button label="Add Raw Materials" onClick={openModal} />
       </div>
-      {isModalOpen && <AddRawMaterialModal closeModal={closeModal} onSave={saveRawMaterial}/>}
+      {isModalOpen && (
+        <AddRawMaterialModal closeModal={closeModal} onSave={saveRawMaterial} />
+      )}
+      <div>
+        <RawMaterialsTable />
+      </div>
     </div>
   );
 };

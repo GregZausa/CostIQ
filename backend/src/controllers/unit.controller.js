@@ -5,6 +5,6 @@ export const fetchPackUnits = async (req, res) => {
         const units = await getPackUnits();
         res.json(units);
     }catch(err) {
-        res.status(500).json({message: "Failed to fetch units"});
+        res.status(500).json({message: "Failed to fetch units", error:err});
     }
 };
