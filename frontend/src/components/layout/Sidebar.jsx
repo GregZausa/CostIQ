@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import { X, Menu, ChevronDown } from "lucide-react";
 import { routes } from "../../config/routes";
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [openMenus, setOpenMenus] = useState({});
+
+  const { logout } = useAuth();
 
   const toggleMenu = (path) => {
     setOpenMenus((prev) => ({
@@ -15,7 +18,7 @@ const Sidebar = () => {
   };
 
   const navBar = ({ isActive }) =>
-    `flex items-center space-x-2 py-4 px-3 rounded-md transition font-bold ${isActive ? "bg-blue-500" : "hover:bg-gray-700"}`;
+    `flex items-center space-x-2 py-4 px-3 rounded-md transition font-bold ${isActive ? "bg-blue-600" : "hover:bg-gray-700"}`;
   return (
     <div>
       <button
@@ -62,15 +65,28 @@ const Sidebar = () => {
               )}
               {children && openMenus[path] && (
                 <div className="ml-6 mt-2 space-y-1">
-                  {children.map(({ label: childrenLabel, path: childPath }) => (
-                    <NavLink key={childPath} to={childPath} className={navBar}>
-                      <span className="text-sm">{childrenLabel}</span>
-                    </NavLink>
-                  ))}
+                  {children.map(
+                    ({ label: childrenLabel, path: childPath, icon: Icon }) => (
+                      <NavLink
+                        key={childPath}
+                        to={childPath}
+                        className={navBar}
+                      >
+                        <Icon size={14} />
+                        <span className="text-sm">{childrenLabel}</span>
+                      </NavLink>
+                    ),
+                  )}
                 </div>
               )}
             </div>
           ))}
+        <div
+          className="flex items-center space-x-2 py-4 px-3 rounded-md font-bold bg-red-600 hover:bg-red-500 cursor-pointer"
+          onClick={logout}
+        >
+          <span>Logout</span>
+        </div>
       </div>
     </div>
   );

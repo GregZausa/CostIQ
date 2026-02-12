@@ -1,11 +1,13 @@
 import Button from "../ui/Button";
 import FloatingLabelInput from "../ui/FloatingLabelInput";
 import SelectBox from "../ui/SelectBox";
+import {Input} from "@headlessui/react";
 
 const AddRawMaterialsForm = ({ state, handleChange, unitsPerPackEditable, unitOptions, handleSubmit, closeModal, isLoading }) => {
 
   return (
     <form className="space-y-4">
+      <Input/>
       <FloatingLabelInput
         onChange={(val) =>
           handleChange({ target: { name: "materialName", value: val } })

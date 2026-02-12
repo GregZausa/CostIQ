@@ -1,6 +1,6 @@
 import pool from "../config/db.js";
 
-export const instertRawMaterial = async ({
+export const insertRawMaterial = async ({
   material_name,
   pack_unit,
   base_unit,
@@ -23,11 +23,17 @@ export const instertRawMaterial = async ({
   return rows[0];
 };
 
-export const getRawMaterial = async () => {
-  const getRawMaterialQuery = `SELECT material_name, pack_unit, base_unit, units_per_pack, price_per_pack, cost_per_unit FROM raw_materials`;
-  const result = await pool.query(getRawMaterialQuery);
+export const getRawMaterials = async (createdBy) => {
+  const query = `SELECT raw_material_id, material_name, pack_unit, base_unit, units_per_pack, price_per_pack, cost_per_unit FROM raw_materials WHERE created_by = $1`;
+  const result = await pool.query(query, [createdBy]);
   return {
     headers: result.fields.map((field) => field.name),
     rows: result.rows,
   };
 };
+
+export const deleteRawMaterials = async (id) => {
+  const query = `DELETE FROM raw_materials WHERE raw_material_id = $1 RETURNING *`;
+  const {rows} = await pool.query(query, [id]);
+  return rows[0];
+}
