@@ -1,6 +1,8 @@
 import React, { useEffect, useReducer, useState } from "react";
 import toast from "react-hot-toast";
 import AddRawMaterialsForm from "../forms/AddRawMaterialsForm";
+import { apiUrl } from "../../config/apiUrl";
+import useUnits from "../../hooks/useUnits";
 
 const initialState = {
   materialName: "",
@@ -26,22 +28,9 @@ function reducer(state, action) {
 }
 const AddRawMaterialModal = ({ closeModal }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [packUnits, setPackUnits] = useState([]);
   const [unitsPerPackEditable, setUnitsPerPackEditable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const loadUnits = async () => {
-      try {
-        const res = await fetch("http://localhost:5001/api/units");
-        const data = await res.json();
-        setPackUnits(data);
-      } catch (err) {
-        console.error("Failed to fetch units", err);
-      }
-    };
-    loadUnits();
-  }, []);
+  const { units: packUnits, unitOptions } = useUnits();
 
   useEffect(() => {
     const selected = packUnits.find((u) => u.pack_unit === state.packUnit);
@@ -75,10 +64,7 @@ const AddRawMaterialModal = ({ closeModal }) => {
     dispatch({ type: "UPDATE_FIELD", field: "costPerUnit", value: cost });
   }, [state.pricePerPack, state.unitsPerPack]);
 
-  const unitOptions = packUnits.map((unit) => ({
-    label: unit.pack_unit.toUpperCase(),
-    value: unit.pack_unit,
-  }));
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -101,7 +87,7 @@ const AddRawMaterialModal = ({ closeModal }) => {
     try {
       setIsLoading(true);
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5001/api/add-raw-materials", {
+      const res = await fetch(`${apiUrl}/add-raw-materials`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

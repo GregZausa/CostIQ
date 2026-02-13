@@ -10,7 +10,7 @@ const HeadlessUIDropdown = ({ row, onDelete }) => {
       <MenuButton className="inline-flex items-center justify-center rounded-md bg-gray-800 p-1 text-white hover:bg-gray-800">
         <EllipsisIcon size={20} />
       </MenuButton>
-      <MenuItems className="absolute right-0 w-40 rounded-md bg-gray-800 border-gray-700 shadow-lg focus:outline-none z-50">
+      <MenuItems className="absolute right-0 w-40 rounded-md bg-gray-800 border-gray-700 shadow-lg focus:outline-none z-100">
         <MenuItem>
           {({ active }) => (
             <button

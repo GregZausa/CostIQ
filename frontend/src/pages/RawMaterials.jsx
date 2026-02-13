@@ -18,12 +18,20 @@ const RawMaterials = () => {
     <div>
       <div className="flex items-center text-center justify-between">
         <h1 className="font-bold text-2xl">Raw Materials</h1>
-        <Button label="Add Raw Materials" onClick={openModal} backgroundAndText={"bg-gray-800 text-white"}/>
+        <Button
+          label="Add Raw Materials"
+          onClick={openModal}
+          backgroundAndText={"bg-gray-800 text-white"}
+        />
       </div>
       {isModalOpen && (
         <AddRawMaterialModal closeModal={closeModal} onSave={saveRawMaterial} />
       )}
       <div>
+        <div className="shrink-0 ">
+          <div className="grid md:grid-cols-1 gap-2.5">
+          </div>
+        </div>
         <RawMaterialsTable />
       </div>
     </div>

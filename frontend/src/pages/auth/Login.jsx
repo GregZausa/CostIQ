@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LoginForm from "../../components/forms/LoginForm";
 import toast from "react-hot-toast";
+import { apiUrl } from "../../config/apiUrl";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -23,7 +24,7 @@ const Login = () => {
     try {
       setIsLoading(true);
 
-      const res = await fetch("http://localhost:5001/api/auth/login", {
+      const res = await fetch(`${apiUrl}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
