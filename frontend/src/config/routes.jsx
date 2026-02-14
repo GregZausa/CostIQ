@@ -2,8 +2,14 @@ import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import Dashboard from "../pages/Dashboard";
 import MainLayout from "../components/layout/MainLayout";
-import { Box, Calculator, LayoutDashboardIcon } from "lucide-react";
+import {
+  Box,
+  Calculator,
+  IdCardLanyard,
+  LayoutDashboardIcon,
+} from "lucide-react";
 import RawMaterials from "../pages/RawMaterials";
+import Employee from "../pages/Employee";
 
 export const routes = [
   {
@@ -32,7 +38,16 @@ export const routes = [
     sidebar: true,
     label: "Cost Management",
     children: [
-      { path: "/cost-management/raw-materials", label: "Raw Materials", icon: Box, },
+      {
+        path: "/cost-management/raw-materials",
+        label: "Raw Materials",
+        icon: Box,
+      },
+      {
+        path: "/cost-management/employees",
+        label: "Employees",
+        icon: IdCardLanyard,
+      },
     ],
   },
   {
@@ -41,6 +56,15 @@ export const routes = [
     element: (
       <MainLayout>
         <RawMaterials />
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/cost-management/employees",
+    icon: IdCardLanyard,
+    element: (
+      <MainLayout>
+        <Employee />
       </MainLayout>
     ),
   },

@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import RawMaterialsTable from "../tables/RawMaterialsTable";
 import RawMaterialsCard from "../components/cards/RawMaterialsCard";
 import useRawMaterials from "../hooks/useRawMaterials";
+import { Box, TrendingUp } from "lucide-react";
 const RawMaterials = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -17,7 +18,8 @@ const RawMaterials = () => {
     setEditingId(null);
     setIsModalOpen(false);
   };
-  const { totalRawMaterials, loadRawMaterials } = useRawMaterials(closeModal, openModal);
+  const { totalRawMaterials, loadRawMaterials, mostExpensiveMaterial } =
+    useRawMaterials(closeModal, openModal);
   return (
     <div>
       <div className="flex items-center text-center justify-between">
@@ -37,11 +39,22 @@ const RawMaterials = () => {
           editingId={editingId}
         />
       )}
-      <div className="grid md:grid-cols-4 lg:grid-cols-6 sm:grid-cols-2 shrink-0 py-4">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 shrink-0 py-4 gap-4">
         <RawMaterialsCard
           title={"Total Raw Materials"}
           value={totalRawMaterials}
           description={"All Materials currently registered"}
+          icon={<Box size={18}/>}
+        />
+        <RawMaterialsCard
+          title={"Highest Cost / Unit"}
+          value={
+            mostExpensiveMaterial
+              ? `₱ ${Number(mostExpensiveMaterial.cost_per_unit).toLocaleString()}`
+              : "-"
+          }
+          description={mostExpensiveMaterial?.material_name}
+          icon={<TrendingUp size={18}/>}
         />
       </div>
       <div>

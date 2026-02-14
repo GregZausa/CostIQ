@@ -154,15 +154,39 @@ const useRawMaterials = (closeModal, openModal) => {
       });
       const result = await res.json();
 
-      dispatch({type: "UPDATE_FIELD", field:"materialName", value:result.material_name});
-      dispatch({type: "UPDATE_FIELD", field:"packUnit", value:result.pack_unit});
-      dispatch({type: "UPDATE_FIELD", field:"baseUnit", value:result.base_unit});
-      dispatch({type: "UPDATE_FIELD", field:"unitsPerPack", value:result.units_per_pack});
-      dispatch({type: "UPDATE_FIELD", field:"pricePerPack", value:result.price_per_pack});
-      dispatch({type: "UPDATE_FIELD", field:"costPerUnit", value:result.cost_per_unit});
+      dispatch({
+        type: "UPDATE_FIELD",
+        field: "materialName",
+        value: result.material_name,
+      });
+      dispatch({
+        type: "UPDATE_FIELD",
+        field: "packUnit",
+        value: result.pack_unit,
+      });
+      dispatch({
+        type: "UPDATE_FIELD",
+        field: "baseUnit",
+        value: result.base_unit,
+      });
+      dispatch({
+        type: "UPDATE_FIELD",
+        field: "unitsPerPack",
+        value: result.units_per_pack,
+      });
+      dispatch({
+        type: "UPDATE_FIELD",
+        field: "pricePerPack",
+        value: result.price_per_pack,
+      });
+      dispatch({
+        type: "UPDATE_FIELD",
+        field: "costPerUnit",
+        value: result.cost_per_unit,
+      });
 
       openModal(id);
-    } catch(err) { 
+    } catch (err) {
       console.error("Failed to get raw material", err);
     }
   };
@@ -186,7 +210,16 @@ const useRawMaterials = (closeModal, openModal) => {
   };
 
   const totalRawMaterials = useMemo(() => data.length, [data]);
+  const mostExpensiveMaterial = useMemo(() => {
+    if (!data || data.length === 0) return null;
+    return data.reduce((max, current) => {
+      return Number(current.cost_per_unit) > Number(max.cost_per_unit)
+        ? current
+        : max;
+    });
+  }, [data]);
   return {
+    mostExpensiveMaterial,
     totalRawMaterials,
     columns,
     data,
