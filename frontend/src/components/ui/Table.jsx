@@ -38,6 +38,7 @@ const Table = ({ columns, data, toolbar, text }) => {
                     {col.render ? col.render(row) : row[col.key]}
                   </td>
                 ))}
+                
               </tr>
             ))
           ) : (

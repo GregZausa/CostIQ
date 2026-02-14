@@ -3,6 +3,7 @@ import { apiUrl } from "../config/apiUrl.js";
 
 const useUnits = () => {
   const [units, setUnits] = useState([]);
+
   useEffect(() => {
     const loadUnits = async () => {
       try {
@@ -20,9 +21,12 @@ const useUnits = () => {
     value: unit.pack_unit,
   }));
 
+  const unitOptionsWithAll = [{ label: "All Pack Unit", value: "" }, ...unitOptions];
+
   return {
     units,
     unitOptions,
+    unitOptionsWithAll,
   };
 };
 

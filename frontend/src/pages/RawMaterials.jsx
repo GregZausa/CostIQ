@@ -3,17 +3,21 @@ import Button from "../components/ui/Button";
 import AddRawMaterialModal from "../components/modals/AddRawMaterialModal";
 import toast from "react-hot-toast";
 import RawMaterialsTable from "../tables/RawMaterialsTable";
-
+import RawMaterialsCard from "../components/cards/RawMaterialsCard";
+import useRawMaterials from "../hooks/useRawMaterials";
 const RawMaterials = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const [editingId, setEditingId] = useState(null);
 
-  const saveRawMaterial = (data) => {
-    console.log("New Raw Material Added", data);
-    toast.success("Raw Material Added!");
+  const openModal = (id = null) => {
+    setEditingId(id);
+    setIsModalOpen(true);
   };
-
+  const closeModal = () => {
+    setEditingId(null);
+    setIsModalOpen(false);
+  };
+  const { totalRawMaterials, loadRawMaterials } = useRawMaterials(closeModal, openModal);
   return (
     <div>
       <div className="flex items-center text-center justify-between">
@@ -25,14 +29,23 @@ const RawMaterials = () => {
         />
       </div>
       {isModalOpen && (
-        <AddRawMaterialModal closeModal={closeModal} onSave={saveRawMaterial} />
+        <AddRawMaterialModal
+          closeModal={() => {
+            closeModal();
+            loadRawMaterials();
+          }}
+          editingId={editingId}
+        />
       )}
+      <div className="grid md:grid-cols-4 lg:grid-cols-6 sm:grid-cols-2 shrink-0 py-4">
+        <RawMaterialsCard
+          title={"Total Raw Materials"}
+          value={totalRawMaterials}
+          description={"All Materials currently registered"}
+        />
+      </div>
       <div>
-        <div className="shrink-0 ">
-          <div className="grid md:grid-cols-1 gap-2.5">
-          </div>
-        </div>
-        <RawMaterialsTable />
+        <RawMaterialsTable onEdit={openModal} />
       </div>
     </div>
   );
