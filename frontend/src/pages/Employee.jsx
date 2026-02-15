@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Button from "../components/ui/Button";
 import AddEmployeeModal from "../components/modals/AddEmployeeModal";
+import EmployeesTable from "../tables/EmployeesTable";
 
 const Employee = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,6 +25,8 @@ const Employee = () => {
         />
       </div>
       {isModalOpen && <AddEmployeeModal closeModal={closeModal}/>}
+
+      <EmployeesTable/>
     </div>
   );
 };

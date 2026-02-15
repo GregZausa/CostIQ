@@ -1,0 +1,30 @@
+import { getEmployees, insertEmployee } from "../models/employee.model.js";
+
+export const createEmployee = async (req, res) => {
+  try {
+    const createdBy = req.user.id;
+    const { last_name, first_name, rate_per_hr } = req.body;
+
+    const employee = await insertEmployee({
+      last_name,
+      first_name,
+      rate_per_hr,
+      created_by: createdBy,
+    });
+    res.status(201).json({ message: "Employee added successfully!", employee });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Failed to add employee", error: err.message });
+  }
+};
+
+export const fetchEmployees = async (req, res) => {
+  try {
+    const createdBy = req.user.id;
+    const employees = await getEmployees(createdBy);
+    res.json(employees);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch employees", error: err });
+  }
+};

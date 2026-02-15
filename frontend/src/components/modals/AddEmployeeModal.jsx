@@ -1,7 +1,9 @@
 import React from "react";
 import AddEmployeeForm from "../forms/AddEmployeeForm";
+import useEmployee from "../../hooks/useEmployee";
 
-const AddEmployeeModal = ({closeModal}) => {
+const AddEmployeeModal = ({ closeModal }) => {
+  const { state, handleChange, handleSubmit } = useEmployee(closeModal);
   return (
     <>
       <div
@@ -13,8 +15,13 @@ const AddEmployeeModal = ({closeModal}) => {
                       shadow-lg transform -translate-x-1/2 -translate-y-1/2 p-6 hover:shadow-2xl hover:scale-102 transition-all
                       duration-300 ease-in-out text-black overflow-hidden"
       >
-        <h1 className="text-xl font-bold mb-4">Add Raw Products</h1>
-        <AddEmployeeForm closeModal={closeModal}/>
+        <h1 className="text-xl font-bold mb-4">Add Employee</h1>
+        <AddEmployeeForm
+          closeModal={closeModal}
+          state={state}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+        />
       </div>
     </>
   );
