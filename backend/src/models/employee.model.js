@@ -16,10 +16,16 @@ export const insertEmployee = async ({
 };
 
 export const getEmployees = async (createdBy) => {
-  const query = `SELECT last_name, first_name, rate_per_hr FROM employees WHERE created_by = $1`;
+  const query = `SELECT employee_id, last_name, first_name, rate_per_hr FROM employees WHERE created_by = $1`;
   const result = await pool.query(query, [createdBy]);
   return {
     headers: result.fields.map((field) => field.name),
     rows: result.rows,
   };
+};
+
+export const deleteEmployee = async (id) => {
+  const query = `DELETE FROM employees WHERE employee_id = $1 RETURNING *`;
+  const { rows } = await pool.query(query, [id]);
+  return rows[0];
 };

@@ -76,6 +76,23 @@ const useEmployee = () => {
       closeModal();
     } catch (err) {}
   };
+  const handleDelete = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`${apiUrl}/employees/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const result = await res.json();
+      console.log("Employee deleted", result);
+      loadEmployees();
+    } catch (err) {
+      console.error("Failed to delete employee", err);
+    }
+  };
   const loadEmployees = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -96,6 +113,7 @@ const useEmployee = () => {
   return {
     handleChange,
     handleSubmit,
+    handleDelete,
     loadEmployees,
     data,
     columns,

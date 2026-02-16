@@ -2,7 +2,7 @@ import React from "react";
 import { EllipsisIcon, PencilIcon, TrashIcon, Copy } from "lucide-react";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 
-const HeadlessUIDropdown = ({ row, onDelete, onEdit }) => {
+const HeadlessUIDropdown = ({ id, onDelete, onEdit }) => {
   const buttonClassName =
     "flex w-full items-center gap-2 px-3 py-2 text-white text-sm rounded-md";
   return (
@@ -16,7 +16,7 @@ const HeadlessUIDropdown = ({ row, onDelete, onEdit }) => {
             <button
               className={`${active ? "bg-gray-800" : ""}
             ${buttonClassName}`}
-              onClick={() => onEdit(row.raw_material_id)}
+              onClick={() => onEdit(id)}
             >
               <PencilIcon className="w-4 h-4" />
               Edit
@@ -40,7 +40,7 @@ const HeadlessUIDropdown = ({ row, onDelete, onEdit }) => {
             <button
               className={`${active ? "bg-gray-800" : ""}
             ${buttonClassName}`}
-              onClick={() => onDelete(row.raw_material_id)}
+              onClick={() => onDelete(id)}
             >
               <TrashIcon className="w-4 h-4" />
               Delete

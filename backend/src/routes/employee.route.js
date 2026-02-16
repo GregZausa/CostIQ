@@ -4,11 +4,13 @@ import { requireAuth } from "../middleware/auth.middleware.js";
 import {
   createEmployee,
   fetchEmployees,
+  removeEmployees,
 } from "../controllers/employee.controller.js";
 
 const router = express.Router();
 
 router.post("/employees", globalLimiter, requireAuth, createEmployee);
 router.get("/employees", requireAuth, fetchEmployees);
+router.delete("/employees/:id", requireAuth, removeEmployees);
 
 export default router;

@@ -1,4 +1,8 @@
-import { getEmployees, insertEmployee } from "../models/employee.model.js";
+import {
+  deleteEmployee,
+  getEmployees,
+  insertEmployee,
+} from "../models/employee.model.js";
 
 export const createEmployee = async (req, res) => {
   try {
@@ -26,5 +30,18 @@ export const fetchEmployees = async (req, res) => {
     res.json(employees);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch employees", error: err });
+  }
+};
+
+export const removeEmployees = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const employee = await deleteEmployee(id);
+    if (!employee) {
+      res.status(404).json({ message: "Employee not found", error: err });
+    }
+    res.json(employee);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to delete employee", error: err });
   }
 };

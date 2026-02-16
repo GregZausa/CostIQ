@@ -6,11 +6,12 @@ import useUnits from "../hooks/useUnits";
 import useRawMaterials from "../hooks/useRawMaterials";
 import HeadlessUIDropdown from "../components/ui/HeadlessUIDropdown";
 
-const RawMaterialsTable = ({onEdit}) => {
+const RawMaterialsTable = ({ onEdit }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUnit, setSelectedUnit] = useState();
   const { unitOptionsWithAll } = useUnits();
-  const { data, columns, loadRawMaterials, handleDelete, handleEdit } = useRawMaterials(onEdit);
+  const { data, columns, loadRawMaterials, handleDelete, handleEdit } =
+    useRawMaterials(onEdit);
 
   useEffect(() => {
     loadRawMaterials();
@@ -37,6 +38,7 @@ const RawMaterialsTable = ({onEdit}) => {
       {
         render: (row) => (
           <HeadlessUIDropdown
+            id={row.raw_material_id}
             row={row}
             onDelete={handleDelete}
             onEdit={handleEdit}
@@ -47,15 +49,19 @@ const RawMaterialsTable = ({onEdit}) => {
     [columns],
   );
 
-  const filteredData = data.filter((row) => {
-    const matchedName = row.material_name
-      ?.toLowerCase()
-      .includes(searchTerm.toLowerCase());
+  const filteredData = useMemo(() => {
+    return data.filter((row) => {
+      const matchedName = row.material_name
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase());
 
-    const matchedPackUnit = selectedUnit ? row.pack_unit == selectedUnit : true;
+      const matchedPackUnit = selectedUnit
+        ? row.pack_unit == selectedUnit
+        : true;
 
-    return matchedName && matchedPackUnit;
-  });
+      return matchedName && matchedPackUnit;
+    });
+  },[data, searchTerm, selectedUnit]);
   return (
     <>
       <Table
