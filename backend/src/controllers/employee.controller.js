@@ -25,8 +25,14 @@ export const createEmployee = async (req, res) => {
 
 export const fetchEmployees = async (req, res) => {
   try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 8;
+    const searchTerm = req.query.search || "";
+
+    const offset = (page - 1) * limit;
+
     const createdBy = req.user.id;
-    const employees = await getEmployees(createdBy);
+    const employees = await getEmployees(createdBy, searchTerm, limit, offset);
     res.json(employees);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch employees", error: err });
