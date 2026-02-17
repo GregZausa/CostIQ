@@ -17,7 +17,7 @@ export const insertEmployee = async ({
 
 export const getEmployees = async (createdBy) => {
   const query = `SELECT employee_id, last_name, first_name, rate_per_hr FROM employees 
-                  WHERE created_by = $1 AND first_name = $2 OR last_name = $2 
+                  WHERE created_by = $1 AND first_name ILIKE = $2 OR last_name ILIKE = $2 
                   LIMIT $3 OFFSET $4`;
 
   const values = [createdBy, `${searchTerm}`, limit, offset]

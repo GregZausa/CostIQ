@@ -25,8 +25,7 @@ export const insertRawMaterial = async ({
 
 export const getRawMaterials = async (createdBy) => {
   const query = `SELECT raw_material_id, material_name, pack_unit, base_unit, units_per_pack, price_per_pack, cost_per_unit FROM raw_materials 
-                  WHERE created_by = $1 AND material_name = $2 
-                  LIMIT $3 OFfSET $4`;
+                  WHERE created_by = $1 AND material_name ILIKE = $2 LIMIT $3 OFfSET $4`;
   const result = await pool.query(query, [createdBy]);
   return {
     headers: result.fields.map((field) => field.name),
