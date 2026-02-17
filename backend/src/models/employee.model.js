@@ -15,12 +15,18 @@ export const insertEmployee = async ({
   return rows[0];
 };
 
-export const getEmployees = async (createdBy) => {
+export const getEmployees = async (
+  createdBy,
+  searchTerm = "",
+  limit = 8,
+  offset = 0,
+) => {
+  const searchValue = searchTerm ? `%${searchTerm}%` : "%";
   const query = `SELECT employee_id, last_name, first_name, rate_per_hr FROM employees 
-                  WHERE created_by = $1 AND first_name ILIKE = $2 OR last_name ILIKE = $2 
+                  WHERE created_by = $1 AND (first_name ILIKE $2 OR last_name ILIKE $2) 
                   LIMIT $3 OFFSET $4`;
 
-  const values = [createdBy, `${searchTerm}`, limit, offset]
+  const values = [createdBy, searchValue, limit, offset];
   const result = await pool.query(query, values);
   return {
     headers: result.fields.map((field) => field.name),
