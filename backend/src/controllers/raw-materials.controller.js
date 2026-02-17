@@ -4,6 +4,7 @@ import {
   getRawMaterialsById,
   insertRawMaterial,
 } from "../models/raw-material.model.js";
+import { getPaginationParams } from "../utils/pagination.js";
 
 export const createRawMaterial = async (req, res) => {
   try {
@@ -37,8 +38,14 @@ export const createRawMaterial = async (req, res) => {
 
 export const fetchRawMaterials = async (req, res) => {
   try {
-    const createdBy = req.user.id;
-    const rawMaterials = await getRawMaterials(createdBy);
+    const { page, limit, offset, searchTerm, createdBy } =
+      getPaginationParams(req);
+    const rawMaterials = await getRawMaterials(
+      createdBy,
+      searchTerm,
+      limit,
+      offset,
+    );
     res.json(rawMaterials);
   } catch (err) {
     res
