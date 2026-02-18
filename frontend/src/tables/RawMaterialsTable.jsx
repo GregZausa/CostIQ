@@ -7,15 +7,9 @@ import useRawMaterials from "../hooks/useRawMaterials";
 import HeadlessUIDropdown from "../components/ui/HeadlessUIDropdown";
 
 const RawMaterialsTable = ({ onEdit }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedUnit, setSelectedUnit] = useState();
   const { unitOptionsWithAll } = useUnits();
-  const { data, columns, loadRawMaterials, handleDelete, handleEdit } =
+  const { data, columns, totalPages, page, setPage, search, setSearch, selectedUnit, setSelectedUnit, handleDelete, handleEdit } =
     useRawMaterials(onEdit);
-
-  useEffect(() => {
-    loadRawMaterials();
-  }, [loadRawMaterials]);
 
   const moneyFields = ["price_per_pack", "cost_per_unit"];
 
@@ -49,30 +43,20 @@ const RawMaterialsTable = ({ onEdit }) => {
     [columns],
   );
 
-  const filteredData = useMemo(() => {
-    return data.filter((row) => {
-      const matchedName = row.material_name
-        ?.toLowerCase()
-        .includes(searchTerm.toLowerCase());
-
-      const matchedPackUnit = selectedUnit
-        ? row.pack_unit == selectedUnit
-        : true;
-
-      return matchedName && matchedPackUnit;
-    });
-  },[data, searchTerm, selectedUnit]);
   return (
     <>
       <Table
         columns={cols}
-        data={filteredData}
+        data={data}
+        page={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
         toolbar={
           <div className="grid md:grid-cols-2 gap-2.5 max-w-4xl mt-4">
             <TextInput
               placeholder="Search for material name..."
-              value={searchTerm}
-              onChange={setSearchTerm}
+              value={search}
+              onChange={setSearch}
             />
             <SelectBox
               placeholder="Filter Pack Unit"

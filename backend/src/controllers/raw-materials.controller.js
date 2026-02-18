@@ -38,13 +38,16 @@ export const createRawMaterial = async (req, res) => {
 
 export const fetchRawMaterials = async (req, res) => {
   try {
+    const selectedUnit = req.query.packUnit || "";
     const { page, limit, offset, searchTerm, createdBy } =
       getPaginationParams(req);
     const rawMaterials = await getRawMaterials(
       createdBy,
       searchTerm,
+      selectedUnit,
       limit,
       offset,
+      page,
     );
     res.json(rawMaterials);
   } catch (err) {

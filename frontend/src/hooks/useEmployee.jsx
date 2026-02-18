@@ -33,7 +33,7 @@ const useEmployee = () => {
   }, [page, search]);
   useEffect(() => {
     setPage(1);
-  }, [search])
+  }, [search]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

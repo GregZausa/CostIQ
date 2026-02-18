@@ -36,13 +36,17 @@ const useRawMaterials = (closeModal, openModal) => {
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [selectedUnit, setSelectedUnit] = useState();
 
   const { units } = useUnits();
 
   //useEffects
   useEffect(() => {
     loadRawMaterials();
-  }, []);
+  }, [page, search, selectedUnit]);
+  useEffect(() => {
+    setPage(1);
+  }, [search, selectedUnit]);
   useEffect(() => {
     const selected = units.find((u) => u.pack_unit === state.packUnit);
     if (selected) {
@@ -87,16 +91,23 @@ const useRawMaterials = (closeModal, openModal) => {
   const loadRawMaterials = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`${apiUrl}/raw-materials`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const urlParams = new URLSearchParams({ search, page, limit: 8 });
+      if (selectedUnit) urlParams.append("packUnit", selectedUnit);
+      const res = await fetch(
+        `${apiUrl}/raw-materials?${urlParams.toString()}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
       const result = await res.json();
 
       setColumns(result.headers);
       setData(result.rows);
+      setTotalPages(result.totalPages);
+      setPage(result.page);
     } catch (err) {
       console.error("Failed to load raw material", err);
     }
@@ -226,6 +237,13 @@ const useRawMaterials = (closeModal, openModal) => {
     totalRawMaterials,
     columns,
     data,
+    page,
+    setPage,
+    totalPages,
+    search,
+    setSearch,
+    selectedUnit,
+    setSelectedUnit,
     state,
     loadRawMaterials,
     handleChange,

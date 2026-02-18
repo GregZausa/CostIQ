@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Button from "../components/ui/Button";
 import AddEmployeeModal from "../components/modals/AddEmployeeModal";
 import EmployeesTable from "../tables/EmployeesTable";
+import useEmployee from "../hooks/useEmployee";
 
 const Employee = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,6 +15,7 @@ const Employee = () => {
     setEditingId(null);
     setIsModalOpen(false);
   };
+  const { loadEmployees } = useEmployee(closeModal, openModal);
   return (
     <div>
       <div className="flex items-center text-center justify-between">
@@ -24,9 +26,17 @@ const Employee = () => {
           backgroundAndText={"bg-gray-800 text-white"}
         />
       </div>
-      {isModalOpen && <AddEmployeeModal closeModal={closeModal}/>}
+      {isModalOpen && (
+        <AddEmployeeModal
+          closeModal={() => {
+            closeModal();
+            loadEmployees();
+          }}
+          editingId={editingId}
+        />
+      )}
 
-      <EmployeesTable/>
+      <EmployeesTable />
     </div>
   );
 };
