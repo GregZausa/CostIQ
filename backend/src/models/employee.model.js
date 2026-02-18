@@ -20,8 +20,18 @@ export const getEmployees = async (
   searchTerm = "",
   limit = 8,
   offset = 0,
+  page = 1,
 ) => {
   const searchValue = searchTerm ? `%${searchTerm}%` : "%";
+
+  const countQuery = `SELECT COUNT(*) AS total
+                      FROM employees
+                      WHERE created_by = $1
+                      AND (first_name ILIKE $2 OR last_name ILIKE $2)`;
+
+  const countResult = await pool.query(countQuery, [createdBy, searchValue]);
+  const totalRows = Number(countResult.rows[0].total)
+  const totalPages = Math.ceil(totalRows / limit)
   const query = `SELECT employee_id, last_name, first_name, rate_per_hr FROM employees 
                   WHERE created_by = $1 AND (first_name ILIKE $2 OR last_name ILIKE $2) 
                   LIMIT $3 OFFSET $4`;
@@ -31,6 +41,9 @@ export const getEmployees = async (
   return {
     headers: result.fields.map((field) => field.name),
     rows: result.rows,
+    page,
+    totalPages,
+    totalRows,
   };
 };
 

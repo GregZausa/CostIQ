@@ -33,6 +33,9 @@ const useRawMaterials = (closeModal, openModal) => {
   const [isLoading, setIsLoading] = useState(false);
   const [columns, setColumns] = useState([]);
   const [data, setData] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
 
   const { units } = useUnits();
 

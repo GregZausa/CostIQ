@@ -21,7 +21,7 @@ const Pagination = ({ page, totalPages, onPageChange }) => {
       <button
         disabled={isLast}
         onClick={() => onPageChange(page + 1)}
-        className="px-3 py-1 rounded-4xl disabled:opacity-50"
+        className="px-3 py-1 rounded disabled:opacity-50"
       >
         <ChevronRight size={15}/>
       </button>

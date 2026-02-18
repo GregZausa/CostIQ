@@ -7,12 +7,7 @@ import HeadlessUIDropdown from "../components/ui/HeadlessUIDropdown";
 import TextInput from "../components/ui/TextInput";
 
 const EmployeesTable = () => {
-  const { handleDelete, loadEmployees, data, columns } = useEmployee();
-  const [searchTerm, setSearchTerm] = useState("");
-
-  useEffect(() => {
-    loadEmployees();
-  }, [loadEmployees]);
+  const { handleDelete, data, columns, totalPages, page, setPage, search, setSearch } = useEmployee();
 
   const cols = useMemo(
     () => [
@@ -47,26 +42,20 @@ const EmployeesTable = () => {
     ],
     [columns],
   );
-  const filteredData = useMemo(() => {
-    return data.filter((row) => {
-      const matchedName =
-        row.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        row.last_name?.toLowerCase().includes(searchTerm.toLowerCase());
-
-      return matchedName;
-    });
-  },[data, searchTerm]);
   return (
     <>
       <Table
         columns={cols}
-        data={filteredData}
+        data={data}
+        page={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
         toolbar={
           <div className="grid md:grid-cols-2 gap-2.5 max-w-4xl mt-4">
             <TextInput
               placeholder="Search for material name..."
-              value={searchTerm}
-              onChange={setSearchTerm}
+              value={search}
+              onChange={setSearch}
             />
           </div>
         }

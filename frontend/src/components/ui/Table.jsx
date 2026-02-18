@@ -1,18 +1,16 @@
 import React from "react";
-import usePagination from "../../hooks/usePagination";
 import Pagination from "../layout/Pagination";
 
-const Table = ({ columns, data, toolbar, text }) => {
-  const { page, setPage, totalPages, paginatedData } = usePagination(data, 8);
+const Table = ({ columns, data, toolbar, text, page, totalPages, onPageChange }) => {
   return (
     <div className="relative">
       <div className="flex items-center justify-between gap-3">
         <div className="flex-1">{toolbar}</div>
-        {data.length > 0 && (
+        {totalPages > 1 && (
           <Pagination
             page={page}
             totalPages={totalPages}
-            onPageChange={setPage}
+            onPageChange={onPageChange}
           />
         )}
       </div>
@@ -30,15 +28,14 @@ const Table = ({ columns, data, toolbar, text }) => {
           </tr>
         </thead>
         <tbody>
-          {paginatedData.length > 0 ? (
-            paginatedData.map((row, idx) => (
+          {data.length > 0 ? (
+            data.map((row, idx) => (
               <tr key={idx} className="hover:bg-gray-50">
                 {columns.map((col) => (
                   <td key={col.key} className="px-4 py-2 text-left">
                     {col.render ? col.render(row) : row[col.key]}
                   </td>
                 ))}
-                
               </tr>
             ))
           ) : (

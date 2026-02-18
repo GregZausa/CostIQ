@@ -24,10 +24,16 @@ const useEmployee = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [columns, setColumns] = useState([]);
   const [data, setData] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     loadEmployees();
-  }, []);
+  }, [page, search]);
+  useEffect(() => {
+    setPage(1);
+  }, [search])
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -96,7 +102,8 @@ const useEmployee = () => {
   const loadEmployees = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`${apiUrl}/employees`, {
+      const urlParams = new URLSearchParams({ search, page, limit: 8 });
+      const res = await fetch(`${apiUrl}/employees?${urlParams.toString()}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -105,6 +112,8 @@ const useEmployee = () => {
       const result = await res.json();
       setColumns(result.headers);
       setData(result.rows);
+      setTotalPages(result.totalPages);
+      setPage(result.page);
     } catch (err) {
       console.error("Failed to load employees data", err);
     }
@@ -117,6 +126,11 @@ const useEmployee = () => {
     loadEmployees,
     data,
     columns,
+    page,
+    setPage,
+    totalPages,
+    search,
+    setSearch,
     state,
   };
 };
