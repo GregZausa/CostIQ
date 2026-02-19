@@ -2,17 +2,40 @@ import React, { useState } from "react";
 import FloatingLabelInput from "../ui/FloatingLabelInput";
 import Button from "../ui/Button";
 
-const AddOtherExpensesForm = ({ closeModal, handleSubmit }) => {
+const AddOtherExpensesForm = ({
+  state,
+  closeModal,
+  handleSubmit,
+  handleChange,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   return (
     <form className="space-y-4">
       <FloatingLabelInput
-        label="Category Name"
+        onChange={(val) =>
+          handleChange({ target: { name: "categoryName", value: val } })
+        }
         name="categoryName"
         type="text"
+        value={state.categoryName}
+        label="Category Name"
       />
-      <FloatingLabelInput label="Quantity" name="quantity" type="number" />
-      <FloatingLabelInput label="Cost" name="cost" type="number" />
+      <FloatingLabelInput
+        onChange={(val) =>
+          handleChange({ target: { name: "quantity", value: val } })
+        }
+        name="quantity"
+        type="number"
+        value={state.quantity}
+        label="Quantity"
+      />
+      <FloatingLabelInput onChange={(val) =>
+          handleChange({ target: { name: "cost", value: val } })
+        }
+        name="cost"
+        type="number"
+        value={state.cost}
+        label="Cost" />
       <div className="flex justify-end space-x-4">
         <Button
           label={isLoading ? "Saving" : "Save"}

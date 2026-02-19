@@ -21,7 +21,7 @@ const SelectBox = ({
   };
   
   return (
-    <div className={`w-full max-w-xs ${className}`}>
+    <div className={`min-w-full max-w-xs ${className}`}>
       {label && (
         <label className="block text-sm font-medium text-gray-700 mb-2">
           {label}

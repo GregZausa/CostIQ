@@ -1,21 +1,27 @@
-import React from 'react'
+import React from "react";
 
-const Button = ({label, onClick, disabled, className, backgroundAndText}) => {
+const Button = ({
+  label,
+  onClick,
+  disabled,
+  className,
+  backgroundAndText,
+  type = "button",
+}) => {
   return (
-    <div className='relative'>
+    <div className="relative">
       <button
-      type='button'
-      disabled={disabled}
-      onClick={onClick}
-      className={`border rounded-md p-3 py-2 cursor-pointer transition ${
-        disabled
-        ? "bg-gray-400 cursor-not-allowed"
-        : backgroundAndText
-      } ${className}`}>
+        type={type}
+        disabled={disabled}
+        onClick={onClick}
+        className={`border rounded-md p-3 py-2 cursor-pointer transition ${
+          disabled ? "bg-gray-400 cursor-not-allowed" : backgroundAndText
+        } ${className}`}
+      >
         {label}
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default Button
+export default Button;

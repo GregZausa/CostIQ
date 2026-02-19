@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import FloatingLabelInput from "../ui/FloatingLabelInput";
 import Button from "../ui/Button";
 
-const AddEmployeeForm = ({ closeModal, state, handleChange, handleSubmit }) => {
-  const [isLoading, setIsLoading] = useState(false);
+const AddEmployeeForm = ({ closeModal, state, handleChange, handleSubmit, isLoading, setIsLoading }) => {
+  
   return (
-    <form className="space-y-4">
+    <form className="space-y-4" onSubmit={handleSubmit}>
       <FloatingLabelInput
         onChange={(val) =>
           handleChange({ target: { name: "employeeLastName", value: val } })
@@ -35,9 +35,10 @@ const AddEmployeeForm = ({ closeModal, state, handleChange, handleSubmit }) => {
       />
       <div className="flex justify-end space-x-4">
         <Button
+        type="submit"
           label={isLoading ? "Saving" : "Save"}
           onClick={() => {
-            handleSubmit();
+            handleSubmit;
             setIsLoading(!isLoading);
           }}
           backgroundAndText={"bg-blue-700 hover:bg-blue-500 text-white"}

@@ -1,9 +1,9 @@
 import { useReducer } from "react";
 
 const initialState = {
-  employeeFirstName: "",
-  employeeLastName: "",
-  ratePerHr: 0,
+  categoryName: "",
+  quantity: "",
+  cost: "",
 };
 
 function reducer(state, action) {
@@ -21,8 +21,11 @@ function reducer(state, action) {
 
 const useOtherExpenses = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-
-  return {};
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    dispatch({ type: "UPDATE_FIELD", field: name, value });
+  };
+  return { handleChange, state };
 };
 
 export default useOtherExpenses;

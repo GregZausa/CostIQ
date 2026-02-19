@@ -3,7 +3,7 @@ import AddOtherExpensesForm from "../forms/AddOtherExpensesForm";
 import useOtherExpenses from "../../hooks/useOtherExpenses";
 
 const AddOtherExpensesModal = ({ closeModal }) => {
-  const { handleSubmit, handleChange } = useOtherExpenses(closeModal);
+  const { handleSubmit, handleChange, state } = useOtherExpenses(closeModal);
   return (
     <>
       <div
@@ -19,6 +19,8 @@ const AddOtherExpensesModal = ({ closeModal }) => {
         <AddOtherExpensesForm
           closeModal={closeModal}
           handleSubmit={handleSubmit}
+          handleChange={handleChange}
+          state={state}
         />
       </div>
     </>

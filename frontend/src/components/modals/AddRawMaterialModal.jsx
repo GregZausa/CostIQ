@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import AddRawMaterialsForm from "../forms/AddRawMaterialsForm";
 import useUnits from "../../hooks/useUnits";
 import useRawMaterials from "../../hooks/useRawMaterials";
 
 const AddRawMaterialModal = ({ closeModal }) => {
   const { unitOptions } = useUnits();
-  const { state, handleChange, handleSubmit, isLoading, unitsPerPackEditable } =
-    useRawMaterials(closeModal);
+    const [isLoading, setIsLoading] = useState(false);
+  const { state, handleChange, handleSubmit, unitsPerPackEditable } =
+    useRawMaterials({closeModal, setIsLoading});
   return (
     <>
       <div

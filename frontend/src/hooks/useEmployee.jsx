@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 const initialState = {
   employeeFirstName: "",
   employeeLastName: "",
-  ratePerHr: 0,
+  ratePerHr: "",
 };
 
 function reducer(state, action) {
@@ -20,7 +20,7 @@ function reducer(state, action) {
       return state;
   }
 }
-const useEmployee = () => {
+const useEmployee = ({ setIsLoading, closeModal } = {}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [columns, setColumns] = useState([]);
   const [data, setData] = useState([]);
@@ -55,10 +55,12 @@ const useEmployee = () => {
     if (Object.keys(errors).length > 0) {
       Object.values(errors).forEach((msg) => toast.error(msg));
       dispatch({ type: "SET_ERRORS", errors });
+      setIsLoading(false);
       return;
     }
 
     try {
+      setIsLoading(true)
       const token = localStorage.getItem("token");
       const res = await fetch(`${apiUrl}/employees`, {
         method: "POST",
@@ -80,7 +82,10 @@ const useEmployee = () => {
       toast.success("Employee added successfully!");
       dispatch({ type: "RESET_FORM" });
       closeModal();
-    } catch (err) {}
+    } catch (err) {
+    } finally {
+      setIsLoading(false);
+    }
   };
   const handleDelete = async (id) => {
     try {

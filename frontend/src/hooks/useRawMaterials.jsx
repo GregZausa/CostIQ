@@ -7,8 +7,8 @@ const initialState = {
   materialName: "",
   packUnit: "",
   baseUnit: "",
-  unitsPerPack: 0,
-  pricePerPack: 0,
+  unitsPerPack: "",
+  pricePerPack: "",
   costPerUnit: "",
   errors: {},
 };
@@ -26,11 +26,11 @@ function reducer(state, action) {
   }
 }
 
-const useRawMaterials = (closeModal, openModal) => {
+const useRawMaterials = ({ closeModal, openModal, setIsLoading } = {}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const [unitsPerPackEditable, setUnitsPerPackEditable] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+
   const [columns, setColumns] = useState([]);
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
@@ -122,6 +122,7 @@ const useRawMaterials = (closeModal, openModal) => {
     if (Object.keys(errors).length > 0) {
       Object.values(errors).forEach((msg) => toast.error(msg));
       dispatch({ type: "SET_ERRORS", errors });
+      setIsLoading(false)
       return;
     }
 
@@ -251,7 +252,6 @@ const useRawMaterials = (closeModal, openModal) => {
     handleEdit,
     handleDelete,
     unitsPerPackEditable,
-    isLoading,
   };
 };
 
