@@ -7,9 +7,11 @@ import {
   Calculator,
   IdCardLanyard,
   LayoutDashboardIcon,
+  Toolbox,
 } from "lucide-react";
 import RawMaterials from "../pages/RawMaterials";
 import Employee from "../pages/Employee";
+import OtherExpenses from "../pages/OtherExpenses";
 
 export const routes = [
   {
@@ -48,6 +50,11 @@ export const routes = [
         label: "Employees",
         icon: IdCardLanyard,
       },
+      {
+        path: "/cost-management/other-expenses",
+        label: "Other Expenses",
+        icon: Toolbox,
+      },
     ],
   },
   {
@@ -65,6 +72,15 @@ export const routes = [
     element: (
       <MainLayout>
         <Employee />
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/cost-management/other-expenses",
+    icon: Toolbox,
+    element: (
+      <MainLayout>
+        <OtherExpenses />
       </MainLayout>
     ),
   },

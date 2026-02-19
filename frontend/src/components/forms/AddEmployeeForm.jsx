@@ -36,7 +36,10 @@ const AddEmployeeForm = ({ closeModal, state, handleChange, handleSubmit }) => {
       <div className="flex justify-end space-x-4">
         <Button
           label={isLoading ? "Saving" : "Save"}
-          onClick={handleSubmit}
+          onClick={() => {
+            handleSubmit();
+            setIsLoading(!isLoading);
+          }}
           backgroundAndText={"bg-blue-700 hover:bg-blue-500 text-white"}
         />
         <Button
