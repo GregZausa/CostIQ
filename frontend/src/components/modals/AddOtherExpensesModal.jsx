@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import AddOtherExpensesForm from "../forms/AddOtherExpensesForm";
 import useOtherExpenses from "../../hooks/useOtherExpenses";
 
 const AddOtherExpensesModal = ({ closeModal }) => {
-  const { handleSubmit, handleChange, state } = useOtherExpenses(closeModal);
+  const [isLoading, setIsLoading] = useState(false);
+  const { handleSubmit, handleChange, state } = useOtherExpenses({
+    closeModal,
+    setIsLoading,
+  });
   return (
     <>
       <div
@@ -21,6 +25,8 @@ const AddOtherExpensesModal = ({ closeModal }) => {
           handleSubmit={handleSubmit}
           handleChange={handleChange}
           state={state}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
         />
       </div>
     </>
