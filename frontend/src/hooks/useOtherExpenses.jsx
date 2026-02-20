@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import toast from "react-hot-toast";
 import { apiUrl } from "../config/apiUrl";
 
@@ -23,6 +23,18 @@ function reducer(state, action) {
 
 const useOtherExpenses = ({ closeModal, setIsLoading } = {}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [page, setPage] = useState(1);
+  const [columns, setColumns] = useState([]);
+  const [data, setData] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    loadOtherExpenses();
+  }, [page, search]);
+  useEffect(() => {
+    setPage(1);
+  }, [search]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,7 +59,7 @@ const useOtherExpenses = ({ closeModal, setIsLoading } = {}) => {
     try {
       setIsLoading(true);
       const token = localStorage.getItem("token");
-      const res = await fetch(`${apiUrl}/other-expense`, {
+      const res = await fetch(`${apiUrl}/other-expenses`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -72,7 +84,56 @@ const useOtherExpenses = ({ closeModal, setIsLoading } = {}) => {
       setIsLoading(false);
     }
   };
-  return { handleChange, handleSubmit, state };
+
+  const loadOtherExpenses = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const urlParams = new URLSearchParams({ search, page, limit: 8 });
+      const res = await fetch(`${apiUrl}/other-expenses?${urlParams}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const result = await res.json();
+      setColumns(result.headers);
+      setData(result.rows);
+      setTotalPages(result.totalPages);
+      setPage(result.page);
+    } catch (err) {
+      console.error("Failed to load other expenses data", err);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`${apiUrl}/other-expenses/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const result = await res.json();
+      console.log("Deleted", result);
+      loadOtherExpenses();
+    } catch (err) {}
+  };
+  return {
+    handleDelete,
+    handleChange,
+    handleSubmit,
+    state,
+    loadOtherExpenses,
+    data,
+    columns,
+    page,
+    totalPages,
+    setPage,
+    search,
+    setSearch,
+  };
 };
 
 export default useOtherExpenses;

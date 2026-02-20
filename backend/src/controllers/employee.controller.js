@@ -28,7 +28,13 @@ export const fetchEmployees = async (req, res) => {
   try {
     const { page, limit, offset, searchTerm, createdBy } =
       getPaginationParams(req);
-    const employees = await getEmployees(createdBy, searchTerm, limit, offset, page);
+    const employees = await getEmployees(
+      createdBy,
+      searchTerm,
+      limit,
+      offset,
+      page,
+    );
     res.json(employees);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch employees", error: err });

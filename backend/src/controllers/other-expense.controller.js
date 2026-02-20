@@ -1,4 +1,9 @@
-import { insertOtherExpense } from "../models/other-expense.model.js";
+import {
+  deleteOtherExpense,
+  getOtherExpenses,
+  insertOtherExpense,
+} from "../models/other-expense.model.js";
+import { getPaginationParams } from "../utils/pagination.js";
 
 export const createOtherExpense = async (req, res) => {
   try {
@@ -18,5 +23,39 @@ export const createOtherExpense = async (req, res) => {
     res
       .status(500)
       .json({ message: "Something went wrong", error: err.message });
+  }
+};
+
+export const fetchOtherExpenses = async (req, res) => {
+  try {
+    const { page, limit, offset, searchTerm, createdBy } =
+      getPaginationParams(req);
+    const otherExpenses = await getOtherExpenses(
+      createdBy,
+      searchTerm,
+      limit,
+      offset,
+      page,
+    );
+    res.json(otherExpenses);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Failed to fetch other expenses", error: err.message });
+  }
+};
+
+export const removeOtherExpense = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const otherExpense = await deleteOtherExpense(id);
+    if (!otherExpense) {
+      res.status(404).json({ message: "Expense not found" });
+    }
+    res.json(otherExpense);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Failed to delete expense", error: err.message });
   }
 };

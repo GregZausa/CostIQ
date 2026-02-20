@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Button from "../components/ui/Button";
 import AddUtilitiesModal from "../components/modals/AddOtherExpensesModal";
+import OtherExpensesTable from "../tables/OtherExpensesTable";
 
 const OtherExpenses = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,6 +34,7 @@ const OtherExpenses = () => {
           editingId={editingId}
         />
       )}
+      <OtherExpensesTable />
     </div>
   );
 };
