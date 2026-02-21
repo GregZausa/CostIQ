@@ -1,6 +1,7 @@
 import { useEffect, useReducer, useState } from "react";
 import toast from "react-hot-toast";
 import { apiUrl } from "../config/apiUrl";
+import { authFetch } from "../utils/authFetch";
 
 const initialState = {
   categoryName: "",
@@ -58,13 +59,8 @@ const useOtherExpenses = ({ closeModal, setIsLoading } = {}) => {
 
     try {
       setIsLoading(true);
-      const token = localStorage.getItem("token");
       const res = await fetch(`${apiUrl}/other-expenses`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({
           category_name: state.categoryName,
           quantity: state.quantity,
@@ -87,14 +83,8 @@ const useOtherExpenses = ({ closeModal, setIsLoading } = {}) => {
 
   const loadOtherExpenses = async () => {
     try {
-      const token = localStorage.getItem("token");
       const urlParams = new URLSearchParams({ search, page, limit: 8 });
-      const res = await fetch(`${apiUrl}/other-expenses?${urlParams}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await authFetch(`${apiUrl}/other-expenses?${urlParams}`);
       const result = await res.json();
       setColumns(result.headers);
       setData(result.rows);
@@ -107,13 +97,8 @@ const useOtherExpenses = ({ closeModal, setIsLoading } = {}) => {
 
   const handleDelete = async (id) => {
     try {
-      const token = localStorage.getItem("token");
       const res = await fetch(`${apiUrl}/other-expenses/${id}`, {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
       });
       const result = await res.json();
       console.log("Deleted", result);

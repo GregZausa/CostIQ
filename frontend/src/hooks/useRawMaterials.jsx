@@ -2,6 +2,7 @@ import React, { useReducer, useState, useEffect, useMemo } from "react";
 import { apiUrl } from "../config/apiUrl.js";
 import toast from "react-hot-toast";
 import useUnits from "./useUnits";
+import { authFetch } from "../utils/authFetch.js";
 
 const initialState = {
   materialName: "",
@@ -17,6 +18,8 @@ function reducer(state, action) {
   switch (action.type) {
     case "UPDATE_FIELD":
       return { ...state, [action.field]: action.value };
+    case "SET_FORM":
+      return { ...state, ...action.payload };
     case "SET_ERRORS":
       return { ...state, errors: action.errors };
     case "RESET_FORM":
@@ -61,6 +64,7 @@ const useRawMaterials = ({ closeModal, openModal, setIsLoading } = {}) => {
           field: "unitsPerPack",
           value: selected.multiplier,
         });
+        setUnitsPerPackEditable(false);
       } else {
         dispatch({
           type: "UPDATE_FIELD",
@@ -90,18 +94,9 @@ const useRawMaterials = ({ closeModal, openModal, setIsLoading } = {}) => {
   };
   const loadRawMaterials = async () => {
     try {
-      const token = localStorage.getItem("token");
       const urlParams = new URLSearchParams({ search, page, limit: 8 });
       if (selectedUnit) urlParams.append("packUnit", selectedUnit);
-      const res = await fetch(
-        `${apiUrl}/raw-materials?${urlParams.toString()}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      const res = await authFetch(`${apiUrl}/raw-materials?${urlParams}`);
       const result = await res.json();
 
       setColumns(result.headers);
@@ -122,19 +117,13 @@ const useRawMaterials = ({ closeModal, openModal, setIsLoading } = {}) => {
     if (Object.keys(errors).length > 0) {
       Object.values(errors).forEach((msg) => toast.error(msg));
       dispatch({ type: "SET_ERRORS", errors });
-      setIsLoading(false)
       return;
     }
 
     try {
       setIsLoading(true);
-      const token = localStorage.getItem("token");
-      const res = await fetch(`${apiUrl}/raw-materials`, {
+      const res = await authFetch(`${apiUrl}/raw-materials`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({
           material_name: state.materialName,
           pack_unit: state.packUnit,
@@ -159,47 +148,21 @@ const useRawMaterials = ({ closeModal, openModal, setIsLoading } = {}) => {
   };
   const handleEdit = async (id) => {
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`${apiUrl}/raw-materials/${id}`, {
+      const res = await authFetch(`${apiUrl}/raw-materials/${id}`, {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
       });
       const result = await res.json();
-
       dispatch({
-        type: "UPDATE_FIELD",
-        field: "materialName",
-        value: result.material_name,
+        type: "SET_FORM",
+        payload: {
+          materialName: result.material_name,
+          packUnit: result.pack_unit,
+          baseUnit: result.base_unit,
+          unitsPerPack: result.units_per_pack,
+          pricePerPack: result.price_per_pack,
+          costPerUnit: result.cost_per_unit,
+        },
       });
-      dispatch({
-        type: "UPDATE_FIELD",
-        field: "packUnit",
-        value: result.pack_unit,
-      });
-      dispatch({
-        type: "UPDATE_FIELD",
-        field: "baseUnit",
-        value: result.base_unit,
-      });
-      dispatch({
-        type: "UPDATE_FIELD",
-        field: "unitsPerPack",
-        value: result.units_per_pack,
-      });
-      dispatch({
-        type: "UPDATE_FIELD",
-        field: "pricePerPack",
-        value: result.price_per_pack,
-      });
-      dispatch({
-        type: "UPDATE_FIELD",
-        field: "costPerUnit",
-        value: result.cost_per_unit,
-      });
-
       openModal(id);
     } catch (err) {
       console.error("Failed to get raw material", err);
@@ -208,13 +171,8 @@ const useRawMaterials = ({ closeModal, openModal, setIsLoading } = {}) => {
 
   const handleDelete = async (id) => {
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`${apiUrl}/raw-materials/${id}`, {
+      const res = await authFetch(`${apiUrl}/raw-materials/${id}`, {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
       });
       const result = await res.json();
       console.log("Deleted", result);

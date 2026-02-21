@@ -1,6 +1,7 @@
 import { useReducer, useEffect, useState } from "react";
 import { apiUrl } from "../config/apiUrl";
 import toast from "react-hot-toast";
+import { authFetch } from "../utils/authFetch";
 
 const initialState = {
   employeeFirstName: "",
@@ -61,13 +62,8 @@ const useEmployee = ({ setIsLoading, closeModal } = {}) => {
 
     try {
       setIsLoading(true)
-      const token = localStorage.getItem("token");
       const res = await fetch(`${apiUrl}/employees`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({
           last_name: state.employeeLastName,
           first_name: state.employeeFirstName,
@@ -89,13 +85,8 @@ const useEmployee = ({ setIsLoading, closeModal } = {}) => {
   };
   const handleDelete = async (id) => {
     try {
-      const token = localStorage.getItem("token");
       const res = await fetch(`${apiUrl}/employees/${id}`, {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
       });
       const result = await res.json();
       console.log("Employee deleted", result);
@@ -106,14 +97,8 @@ const useEmployee = ({ setIsLoading, closeModal } = {}) => {
   };
   const loadEmployees = async () => {
     try {
-      const token = localStorage.getItem("token");
       const urlParams = new URLSearchParams({ search, page, limit: 8 });
-      const res = await fetch(`${apiUrl}/employees?${urlParams.toString()}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await authFetch(`${apiUrl}/employees?${urlParams}`);
       const result = await res.json();
       setColumns(result.headers);
       setData(result.rows);
