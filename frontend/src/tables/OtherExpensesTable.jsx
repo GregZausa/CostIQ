@@ -1,16 +1,16 @@
 import React, { useMemo } from "react";
 import Table from "../components/ui/Table";
-import useOtherExpenses from "../hooks/useOtherExpenses";
+import useOtherExpenses from "../hooks/other-expenses/useOtherExpenses";
 import HeadlessUIDropdown from "../components/ui/HeadlessUIDropdown";
 import TextInput from "../components/ui/TextInput";
 
 const OtherExpensesTable = () => {
-  const { data, columns, search, setSearch, setPage, page, totalPages, handleDelete } =
+  const { query, actions } =
     useOtherExpenses();
 
   const cols = useMemo(
     () => [
-      ...columns
+      ...query.columns
         .filter((header) => header !== "other_expense_id")
         .map((header) => ({
           key: header,
@@ -20,26 +20,26 @@ const OtherExpensesTable = () => {
         })),
       {
         render: (row) => (
-          <HeadlessUIDropdown id={row.other_expense_id} row={row} onDelete={handleDelete}/>
+          <HeadlessUIDropdown id={row.other_expense_id} row={row} onDelete={actions.handleDelete}/>
         ),
       },
     ],
-    [columns],
+    [query.columns],
   );
   return (
     <>
       <Table
         columns={cols}
-        data={data}
-        page={page}
-        totalPages={totalPages}
-        onPageChange={setPage}
+        data={query.data}
+        page={query.page}
+        totalPages={query.totalPages}
+        onPageChange={query.setPage}
         toolbar={
           <div className="grid md:grid-cols-2 gap-2.5 max-w-4xl mt-4">
             <TextInput
               placeholder="Search for material name..."
-              value={search}
-              onChange={setSearch}
+              value={query.search}
+              onChange={query.setSearch}
             />
           </div>
         }

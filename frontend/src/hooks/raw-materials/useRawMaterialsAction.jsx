@@ -43,7 +43,7 @@ export const useRawMaterialsAction = ({
         toast.error(result.message || "Failed to add raw material");
         return;
       }
-      toast.success("Raw material added successfully!");
+      toast.success(`${form.state.materialName} added successfully!`);
       form.resetForm();
       closeModal();
       query.setPage(1);

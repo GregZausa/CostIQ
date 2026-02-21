@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import Button from "../components/ui/Button";
-import AddUtilitiesModal from "../components/modals/AddOtherExpensesModal";
+import AddOtherExpensesModal from "../components/modals/AddOtherExpensesModal";
 import OtherExpensesTable from "../tables/OtherExpensesTable";
+import useOtherExpenses from "../hooks/other-expenses/useOtherExpenses";
 
 const OtherExpenses = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,6 +16,7 @@ const OtherExpenses = () => {
     setEditingId(null);
     setIsModalOpen(false);
   };
+  const { query } = useOtherExpenses(closeModal, openModal);
   return (
     <div>
       <div className="flex items-center text-center justify-between">
@@ -26,10 +28,10 @@ const OtherExpenses = () => {
         />
       </div>
       {isModalOpen && (
-        <AddUtilitiesModal
+        <AddOtherExpensesModal
           closeModal={() => {
             closeModal();
-            loadRawMaterials();
+            query.load();
           }}
           editingId={editingId}
         />

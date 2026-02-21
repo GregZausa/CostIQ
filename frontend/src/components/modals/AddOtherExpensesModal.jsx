@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import AddOtherExpensesForm from "../forms/AddOtherExpensesForm";
-import useOtherExpenses from "../../hooks/useOtherExpenses";
+import useOtherExpenses from "../../hooks/other-expenses/useOtherExpenses";
 
 const AddOtherExpensesModal = ({ closeModal }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { handleSubmit, handleChange, state } = useOtherExpenses({
+  const { form, actions } = useOtherExpenses({
     closeModal,
     setIsLoading,
   });
@@ -22,9 +22,9 @@ const AddOtherExpensesModal = ({ closeModal }) => {
         <h1 className="text-xl font-bold mb-4">Add Other Expenses</h1>
         <AddOtherExpensesForm
           closeModal={closeModal}
-          handleSubmit={handleSubmit}
-          handleChange={handleChange}
-          state={state}
+          handleSubmit={actions.handleSubmit}
+          handleChange={form.handleChange}
+          state={form.state}
           isLoading={isLoading}
           setIsLoading={setIsLoading}
         />
