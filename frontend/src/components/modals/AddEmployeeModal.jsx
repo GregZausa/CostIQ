@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import AddEmployeeForm from "../forms/AddEmployeeForm";
-import useEmployee from "../../hooks/useEmployee";
+import useEmployee from "../../hooks/employees/useEmployee";
 
 const AddEmployeeModal = ({ closeModal }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { state, handleChange, handleSubmit } = useEmployee({
+  const { form, actions } = useEmployee({
     isLoading,
     setIsLoading,
     closeModal,
@@ -24,9 +24,9 @@ const AddEmployeeModal = ({ closeModal }) => {
         <h1 className="text-xl font-bold mb-4">Add Employee</h1>
         <AddEmployeeForm
           closeModal={closeModal}
-          state={state}
-          handleChange={handleChange}
-          handleSubmit={handleSubmit}
+          state={form.state}
+          handleChange={form.handleChange}
+          handleSubmit={actions.handleSubmit}
           isLoading={isLoading}
           setIsLoading={setIsLoading}
         />

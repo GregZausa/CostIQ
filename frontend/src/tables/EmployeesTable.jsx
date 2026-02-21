@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import useEmployee from "../hooks/useEmployee";
+import useEmployee from "../hooks/employees/useEmployee";
 import Table from "../components/ui/Table";
 import { useEffect } from "react";
 import { useMemo } from "react";
@@ -7,7 +7,7 @@ import HeadlessUIDropdown from "../components/ui/HeadlessUIDropdown";
 import TextInput from "../components/ui/TextInput";
 
 const EmployeesTable = () => {
-  const { handleDelete, data, columns, totalPages, page, setPage, search, setSearch } = useEmployee();
+  const { query, actions } = useEmployee();
 
   const cols = useMemo(
     () => [
@@ -17,7 +17,7 @@ const EmployeesTable = () => {
         render: (row) =>
           `${row.first_name?.trim() || ""} ${row.last_name?.trim() || ""}`,
       },
-      ...(columns || [])
+      ...(query.columns || [])
         .filter(
           (header) =>
             header !== "first_name" &&
@@ -35,27 +35,27 @@ const EmployeesTable = () => {
           <HeadlessUIDropdown
             id={row.employee_id}
             row={row}
-            onDelete={handleDelete}
+            onDelete={actions.handleDelete}
           />
         ),
       },
     ],
-    [columns],
+    [query.columns],
   );
   return (
     <>
       <Table
         columns={cols}
-        data={data}
-        page={page}
-        totalPages={totalPages}
-        onPageChange={setPage}
+        data={query.data}
+        page={query.page}
+        totalPages={query.totalPages}
+        onPageChange={query.setPage}
         toolbar={
           <div className="grid md:grid-cols-2 gap-2.5 max-w-4xl mt-4">
             <TextInput
               placeholder="Search for material name..."
-              value={search}
-              onChange={setSearch}
+              value={query.search}
+              onChange={query.setSearch}
             />
           </div>
         }

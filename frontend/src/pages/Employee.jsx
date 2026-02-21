@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Button from "../components/ui/Button";
 import AddEmployeeModal from "../components/modals/AddEmployeeModal";
 import EmployeesTable from "../tables/EmployeesTable";
-import useEmployee from "../hooks/useEmployee";
+import useEmployee from "../hooks/employees/useEmployee";
 
 const Employee = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,7 +15,7 @@ const Employee = () => {
     setEditingId(null);
     setIsModalOpen(false);
   };
-  const { loadEmployees } = useEmployee(closeModal, openModal);
+  const { query } = useEmployee(closeModal, openModal);
   return (
     <div>
       <div className="flex items-center text-center justify-between">
@@ -30,7 +30,7 @@ const Employee = () => {
         <AddEmployeeModal
           closeModal={() => {
             closeModal();
-            loadEmployees();
+            query.load();
           }}
           editingId={editingId}
         />

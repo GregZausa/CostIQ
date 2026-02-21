@@ -1,28 +1,25 @@
 import { useCallback, useEffect, useState } from "react";
-import { authFetch } from "../../utils/authFetch";
 import { apiUrl } from "../../config/apiUrl";
+import { authFetch } from "../../utils/authFetch";
 
-export const useRawMaterialsQuery = () => {
+export const useEmployeeQuery = () => {
   const [data, setData] = useState([]);
   const [columns, setColumns] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
-  const [selectedUnit, setSelectedUnit] = useState();
 
   const load = useCallback(async () => {
     const urlParams = new URLSearchParams({ search, page, limit: 8 });
-    if (selectedUnit) urlParams.append("packUnit", selectedUnit);
-    const res = await authFetch(
-      `${apiUrl}/raw-materials?${urlParams.toString()}`,
-    );
+    const res = await authFetch(`${apiUrl}/employees?${urlParams.toString()}`);
+
     const result = await res.json();
 
     setData(result.rows);
     setColumns(result.headers);
     setPage(result.page);
     setTotalPages(result.totalPages);
-  }, [search, page, selectedUnit]);
+  }, [search, page]);
 
   useEffect(() => {
     load();
@@ -30,7 +27,7 @@ export const useRawMaterialsQuery = () => {
 
   useEffect(() => {
     setPage(1);
-  }, [search, selectedUnit]);
+  }, [search]);
 
   return {
     data,
@@ -41,8 +38,6 @@ export const useRawMaterialsQuery = () => {
     totalPages,
     search,
     setSearch,
-    selectedUnit,
-    setSelectedUnit,
     load,
   };
 };

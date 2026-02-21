@@ -1,6 +1,7 @@
 import { useState, useReducer, useEffect } from "react";
+import { createInitialState, reducer } from "../../utils/reducer";
 
-const initialState = {
+const initialState = createInitialState({
   materialName: "",
   packUnit: "",
   baseUnit: "",
@@ -8,22 +9,8 @@ const initialState = {
   pricePerPack: "",
   costPerUnit: "",
   errors: {},
-};
+});
 
-function reducer(state, action) {
-  switch (action.type) {
-    case "UPDATE_FIELD":
-      return { ...state, [action.field]: action.value };
-    case "SET_FORM":
-      return { ...state, ...action.payload };
-    case "SET_ERRORS":
-      return { ...state, errors: action.errors };
-    case "RESET_FORM":
-      return initialState;
-    default:
-      return state;
-  }
-}
 
 export const useRawMaterialsForm = ({ units = [] } = {}) => {
   const [state, dispatch] = useReducer(reducer, initialState);

@@ -3,31 +3,8 @@ import { apiUrl } from "../config/apiUrl";
 import toast from "react-hot-toast";
 import { authFetch } from "../utils/authFetch";
 
-const initialState = {
-  employeeFirstName: "",
-  employeeLastName: "",
-  ratePerHr: "",
-};
 
-function reducer(state, action) {
-  switch (action.type) {
-    case "UPDATE_FIELD":
-      return { ...state, [action.field]: action.value };
-    case "SET_ERRORS":
-      return { ...state, errors: action.errors };
-    case "RESET_FORM":
-      return initialState;
-    default:
-      return state;
-  }
-}
 const useEmployee = ({ setIsLoading, closeModal } = {}) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const [columns, setColumns] = useState([]);
-  const [data, setData] = useState([]);
-  const [totalPages, setTotalPages] = useState(1);
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("");
 
   useEffect(() => {
     loadEmployees();
@@ -43,15 +20,6 @@ const useEmployee = ({ setIsLoading, closeModal } = {}) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const errors = {};
-
-    if (!state.employeeFirstName)
-      errors.employeeFirstName = "Employee first name is required!";
-
-    if (!state.employeeLastName)
-      errors.employeeLastName = "Employee last name is required!";
-
-    if (!state.ratePerHr) errors.ratePerHr = "Rate per hour is required!";
 
     if (Object.keys(errors).length > 0) {
       Object.values(errors).forEach((msg) => toast.error(msg));

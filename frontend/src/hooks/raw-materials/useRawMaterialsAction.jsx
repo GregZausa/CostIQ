@@ -46,7 +46,9 @@ export const useRawMaterialsAction = ({
       toast.success("Raw material added successfully!");
       form.resetForm();
       closeModal();
+      query.setPage(1);
       query.load();
+      return;
     } catch (err) {
     } finally {
       setIsLoading(false);
@@ -61,6 +63,8 @@ export const useRawMaterialsAction = ({
       console.log("Deleted", result);
       toast.success(`${result.material_name} is deleted successfully!`);
       query.load();
+      query.setPage(1);
+      return;
     } catch (err) {
       toast.error("Failed to deleted raw material");
       console.log("Failed to delete raw material", err);

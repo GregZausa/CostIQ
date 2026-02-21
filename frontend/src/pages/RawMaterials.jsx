@@ -4,7 +4,7 @@ import AddRawMaterialModal from "../components/modals/AddRawMaterialModal";
 import toast from "react-hot-toast";
 import RawMaterialsTable from "../tables/RawMaterialsTable";
 import RawMaterialsCard from "../components/cards/RawMaterialsCard";
-import useRawMaterials from "../hooks/useRawMaterials";
+import useRawMaterials from "../hooks/raw-materials/useRawMaterials";
 import { Box, TrendingUp } from "lucide-react";
 const RawMaterials = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -18,7 +18,7 @@ const RawMaterials = () => {
     setEditingId(null);
     setIsModalOpen(false);
   };
-  const { totalRawMaterials, loadRawMaterials, mostExpensiveMaterial } =
+  const { totalRawMaterials, query, mostExpensiveMaterial } =
     useRawMaterials(closeModal, openModal);
   return (
     <div>
@@ -34,7 +34,7 @@ const RawMaterials = () => {
         <AddRawMaterialModal
           closeModal={() => {
             closeModal();
-            loadRawMaterials();
+            query.load();
           }}
           editingId={editingId}
         />
