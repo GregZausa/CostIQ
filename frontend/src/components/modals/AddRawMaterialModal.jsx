@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import AddRawMaterialsForm from "../forms/AddRawMaterialsForm";
 import useUnits from "../../hooks/useUnits";
-import useRawMaterials from "../../hooks/useRawMaterials";
+import useRawMaterials from "../../hooks/raw-materials/useRawMaterials";
 
 const AddRawMaterialModal = ({ closeModal }) => {
   const { unitOptions } = useUnits();
     const [isLoading, setIsLoading] = useState(false);
-  const { state, handleChange, handleSubmit, unitsPerPackEditable } =
+  const { form, actions } =
     useRawMaterials({closeModal, setIsLoading});
   return (
     <>
@@ -21,10 +21,10 @@ const AddRawMaterialModal = ({ closeModal }) => {
       >
         <h1 className="text-xl font-bold mb-4">Add Raw Products</h1>
         <AddRawMaterialsForm
-          state={state}
-          handleChange={handleChange}
-          handleSubmit={handleSubmit}
-          unitsPerPackEditable={unitsPerPackEditable}
+          state={form.state}
+          handleChange={form.handleChange}
+          handleSubmit={actions.handleSubmit}
+          unitsPerPackEditable={form.unitsPerPackEditable}
           closeModal={closeModal}
           unitOptions={unitOptions}
           isLoading={isLoading}
