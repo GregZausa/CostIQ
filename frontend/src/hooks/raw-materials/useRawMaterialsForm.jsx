@@ -1,5 +1,7 @@
 import { useState, useReducer, useEffect } from "react";
 import { createInitialState, reducer } from "../../utils/reducer";
+import { authFetch } from "../../utils/authFetch";
+import { apiUrl } from "../../config/apiUrl";
 
 const initialState = createInitialState({
   materialName: "",
@@ -11,13 +13,12 @@ const initialState = createInitialState({
   errors: {},
 });
 
-
 export const useRawMaterialsForm = ({ units = [] } = {}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [unitsPerPackEditable, setUnitsPerPackEditable] = useState(false);
 
   useEffect(() => {
-    const selected = units.find((u) => u.pack_unit === state.packUnit);
+    const selected = units.find((u) => u.pack_unit === state?.packUnit);
     if (selected) {
       dispatch({
         type: "UPDATE_FIELD",
@@ -40,27 +41,45 @@ export const useRawMaterialsForm = ({ units = [] } = {}) => {
         setUnitsPerPackEditable(true);
       }
     }
-  }, [state.packUnit, units]);
+  }, [state?.packUnit, units]);
 
   useEffect(() => {
-    const price = Number(state.pricePerPack) || 0;
-    const unitsCount = Number(state.unitsPerPack) || 0;
+    const price = Number(state?.pricePerPack) || 0;
+    const unitsCount = Number(state?.unitsPerPack) || 0;
     const cost = unitsCount ? price / unitsCount : 0;
     dispatch({
       type: "UPDATE_FIELD",
       field: "costPerUnit",
       value: cost.toFixed(2),
     });
-  }, [state.pricePerPack, state.unitsPerPack]);
+  }, [state?.pricePerPack, state?.unitsPerPack]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     dispatch({ type: "UPDATE_FIELD", field: name, value });
   };
+  const loadForEdit = async (id) => {
+    try {
+      const res = await authFetch(`${apiUrl}/raw-materials/${id}`);
+      const result = await res.json();
+      dispatch({
+        type: "SET_FORM",
+        payload: {
+          materialName: result.material_name,
+          packUnit: result.pack_unit,
+          baseUnit: result.base_unit,
+          unitsPerPack: result.units_per_pack,
+          pricePerPack: result.price_per_pack,
+          costPerUnit: result.cost_per_unit,
+        },
+      });
+    } catch (err) {}
+  };
   const resetForm = () => dispatch({ type: "RESET_FORM" });
   return {
     state,
     handleChange,
+    loadForEdit,
     dispatch,
     resetForm,
     unitsPerPackEditable,

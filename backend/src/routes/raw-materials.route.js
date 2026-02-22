@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createRawMaterial,
+  editRawMaterial,
   fetchRawMaterials,
   fetchRawMaterialsById,
   removeRawMaterials,
@@ -14,5 +15,6 @@ router.post("/raw-materials", globalLimiter, requireAuth, createRawMaterial);
 router.get("/raw-materials", requireAuth, fetchRawMaterials);
 router.get("/raw-materials/:id", requireAuth, fetchRawMaterialsById);
 router.delete("/raw-materials/:id", requireAuth, removeRawMaterials);
+router.put("/raw-materials/:id", globalLimiter, requireAuth, editRawMaterial)
 
 export default router;

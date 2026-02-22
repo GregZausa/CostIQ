@@ -1,13 +1,16 @@
 import toast from "react-hot-toast";
 import { authFetch } from "../../utils/authFetch";
 import { apiUrl } from "../../config/apiUrl";
+import { useState } from "react";
 
 export const useRawMaterialsAction = ({
   form,
   query,
   closeModal,
+  openModal,
   setIsLoading,
 }) => {
+  const [editingId, setEditingId] = useState(null);
   const validate = (state) => {
     const errors = {};
     if (!state.materialName) errors.materialName = "Material name required";
@@ -26,33 +29,49 @@ export const useRawMaterialsAction = ({
       setIsLoading(false);
       return;
     }
+    const payload = {
+      material_name: form.state.materialName,
+      pack_unit: form.state.packUnit,
+      base_unit: form.state.baseUnit,
+      units_per_pack: form.state.unitsPerPack,
+      price_per_pack: form.state.pricePerPack,
+    };
+
     try {
       setIsLoading(true);
-      const res = await authFetch(`${apiUrl}/raw-materials`, {
-        method: "POST",
-        body: JSON.stringify({
-          material_name: form.state.materialName,
-          pack_unit: form.state.packUnit,
-          base_unit: form.state.baseUnit,
-          units_per_pack: form.state.unitsPerPack,
-          price_per_pack: form.state.pricePerPack,
-        }),
-      });
-      const result = await res.json();
-      if (!res.ok) {
-        toast.error(result.message || "Failed to add raw material");
-        return;
+      if (editingId != null) {
+        await authFetch(`${apiUrl}/raw-materials/${editingId}`, {
+          method: "PUT",
+          body: JSON.stringify(payload),
+        });
+      } else {
+        await authFetch(`${apiUrl}/raw-materials`, {
+          method: "POST",
+          body: JSON.stringify(payload),
+        });
       }
-      toast.success(`${form.state.materialName} added successfully!`);
+      toast.success(
+        editingId
+          ? `${form.state.materialName} updated successfully!`
+          : `${form.state.materialName} added successfully!`,
+      );
       form.resetForm();
       closeModal();
+      setEditingId(null);
       query.setPage(1);
       query.load();
       return;
     } catch (err) {
+      toast.error(err.message);
     } finally {
       setIsLoading(false);
     }
+  };
+  const handleEdit = async (id) => {
+    await form.loadForEdit(id);
+    openModal();
+    setEditingId(id);
+
   };
   const handleDelete = async (id) => {
     try {
@@ -73,5 +92,6 @@ export const useRawMaterialsAction = ({
   return {
     handleSubmit,
     handleDelete,
+    handleEdit,
   };
 };

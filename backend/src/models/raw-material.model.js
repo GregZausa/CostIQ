@@ -23,6 +23,33 @@ export const insertRawMaterial = async ({
   return rows[0];
 };
 
+export const updateRawMaterial = async (
+  material_name,
+  pack_unit,
+  base_unit,
+  units_per_pack,
+  price_per_pack,
+  createdBy,
+  id,
+) => {
+  const query = `UPDATE raw_materials
+                  SET material_name = $1, pack_unit = $2, base_unit = $3,
+                  units_per_pack = $4, price_per_pack = $5
+                  WHERE created_by = $6 AND raw_material_id = $7 RETURNING *`;
+
+  const values = [
+    material_name,
+    pack_unit,
+    base_unit,
+    units_per_pack,
+    price_per_pack,
+    createdBy,
+    id,
+  ];
+  const {rows } = await pool.query(query, values);  
+  return rows[0];
+};
+
 export const getRawMaterials = async (
   createdBy,
   searchTerm = "",
@@ -68,7 +95,7 @@ export const getRawMaterials = async (
 };
 
 export const getRawMaterialsById = async (createdBy, id) => {
-  const query = `SELECT material_name, pack_unit, base_unit, units_per_pack, price_per_pack cost_per_unit FROM raw_materials WHERE created_by = $1 AND raw_material_id = $2`;
+  const query = `SELECT material_name, pack_unit, base_unit, units_per_pack, price_per_pack, cost_per_unit FROM raw_materials WHERE created_by = $1 AND raw_material_id = $2`;
   const result = await pool.query(query, [createdBy, id]);
   return result.rows[0];
 };

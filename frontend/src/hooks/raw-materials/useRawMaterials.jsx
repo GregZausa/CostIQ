@@ -3,7 +3,7 @@ import { useRawMaterialsAction } from "./useRawMaterialsAction";
 import { useRawMaterialsForm } from "./useRawMaterialsForm";
 import { useRawMaterialsQuery } from "./useRawMaterialsQuery";
 
-const useRawMaterials = ({ closeModal, setIsLoading } = {}) => {
+const useRawMaterials = ({ closeModal, openModal, setIsLoading, editingId } = {}) => {
   const { units } = useUnits();
   const form = useRawMaterialsForm({ units });
   const query = useRawMaterialsQuery();
@@ -11,10 +11,11 @@ const useRawMaterials = ({ closeModal, setIsLoading } = {}) => {
     form,
     query,
     closeModal,
+    openModal,
     setIsLoading,
   });
 
-  const totalRawMaterials = query.data.length;
+  const totalRawMaterials = query.totalRows;
   const mostExpensiveMaterial = query.data.reduce(
     (max, cur) =>
       Number(cur.cost_per_unit) > Number(max.cost_per_unit) ? cur : max,

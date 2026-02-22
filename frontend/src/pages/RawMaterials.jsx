@@ -1,25 +1,23 @@
-import React, { useState } from "react";
+import React, { act, useState } from "react";
 import Button from "../components/ui/Button";
 import AddRawMaterialModal from "../components/modals/AddRawMaterialModal";
-import toast from "react-hot-toast";
 import RawMaterialsTable from "../tables/RawMaterialsTable";
 import RawMaterialsCard from "../components/cards/RawMaterialsCard";
 import useRawMaterials from "../hooks/raw-materials/useRawMaterials";
 import { Box, TrendingUp } from "lucide-react";
 const RawMaterials = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const openModal = (id = null) => {
-    setEditingId(id);
+  const openModal = () => {
     setIsModalOpen(true);
   };
   const closeModal = () => {
-    setEditingId(null);
     setIsModalOpen(false);
+    form.resetForm()
   };
-  const { totalRawMaterials, query, mostExpensiveMaterial } =
-    useRawMaterials(closeModal, openModal);
+  const { totalRawMaterials, query, actions, form, mostExpensiveMaterial } =
+    useRawMaterials({ closeModal, openModal, setIsLoading   });
   return (
     <div>
       <div className="flex items-center text-center justify-between">
@@ -36,7 +34,10 @@ const RawMaterials = () => {
             closeModal();
             query.load();
           }}
-          editingId={editingId}
+          form={form}
+          actions={actions}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
         />
       )}
       <div className="grid md:grid-cols-2 lg:grid-cols-4 shrink-0 py-4 gap-4">
@@ -44,7 +45,7 @@ const RawMaterials = () => {
           title={"Total Raw Materials"}
           value={totalRawMaterials}
           description={"All Materials currently registered"}
-          icon={<Box size={18}/>}
+          icon={<Box size={18} />}
         />
         <RawMaterialsCard
           title={"Highest Cost / Unit"}
@@ -54,11 +55,11 @@ const RawMaterials = () => {
               : "-"
           }
           description={mostExpensiveMaterial?.material_name}
-          icon={<TrendingUp size={18}/>}
+          icon={<TrendingUp size={18} />}
         />
       </div>
       <div>
-        <RawMaterialsTable onEdit={openModal} />
+        <RawMaterialsTable query={query} actions={actions} />
       </div>
     </div>
   );

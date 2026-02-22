@@ -3,13 +3,10 @@ import Table from "../components/ui/Table";
 import TextInput from "../components/ui/TextInput";
 import SelectBox from "../components/ui/SelectBox";
 import useUnits from "../hooks/useUnits";
-import useRawMaterials from "../hooks//raw-materials/useRawMaterials";
 import HeadlessUIDropdown from "../components/ui/HeadlessUIDropdown";
 
-const RawMaterialsTable = ({ onEdit }) => {
+const RawMaterialsTable = ({ query, actions }) => {
   const { unitOptionsWithAll } = useUnits();
-  const { query, actions } =
-    useRawMaterials();
 
   const moneyFields = ["price_per_pack", "cost_per_unit"];
 
@@ -36,11 +33,12 @@ const RawMaterialsTable = ({ onEdit }) => {
             id={row.raw_material_id}
             row={row}
             onDelete={actions.handleDelete}
+            onEdit={actions.handleEdit}
           />
         ),
       },
     ],
-    [query.columns, actions.handleDelete],
+    [query.columns, actions.handleDelete, actions.handleSubmit],
   );
 
   return (

@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import AddRawMaterialsForm from "../forms/AddRawMaterialsForm";
 import useUnits from "../../hooks/useUnits";
-import useRawMaterials from "../../hooks/raw-materials/useRawMaterials";
 
-const AddRawMaterialModal = ({ closeModal }) => {
+const AddRawMaterialModal = ({
+  closeModal,
+  form,
+  actions,
+  isLoading,
+  setIsLoading,
+}) => {
   const { unitOptions } = useUnits();
-    const [isLoading, setIsLoading] = useState(false);
-  const { form, actions } =
-    useRawMaterials({closeModal, setIsLoading});
   return (
     <>
       <div
@@ -27,6 +29,7 @@ const AddRawMaterialModal = ({ closeModal }) => {
           unitsPerPackEditable={form.unitsPerPackEditable}
           closeModal={closeModal}
           unitOptions={unitOptions}
+          setIsLoading={setIsLoading}
           isLoading={isLoading}
         />
       </div>

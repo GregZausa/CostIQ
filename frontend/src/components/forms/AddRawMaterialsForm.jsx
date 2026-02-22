@@ -2,7 +2,7 @@ import Button from "../ui/Button";
 import FloatingLabelInput from "../ui/FloatingLabelInput";
 import SelectBox from "../ui/SelectBox";
 
-const AddRawMaterialsForm = ({ state, handleChange, unitsPerPackEditable, unitOptions, handleSubmit, closeModal, isLoading }) => {
+const AddRawMaterialsForm = ({ state, handleChange, unitsPerPackEditable, unitOptions, handleSubmit, closeModal, isLoading}) => {
 
   return (
     <form className="space-y-4">
@@ -13,12 +13,12 @@ const AddRawMaterialsForm = ({ state, handleChange, unitsPerPackEditable, unitOp
         }
         name="materialName"
         type="text"
-        value={state.materialName}
+        value={state?.materialName || ""}
         label="Material Name"
       />
       <SelectBox
         name="packUnit"
-        value={state.packUnit}
+        value={state?.packUnit}
         label="Select Pack Unit"
         options={unitOptions}
         onChange={(val) =>
@@ -28,7 +28,7 @@ const AddRawMaterialsForm = ({ state, handleChange, unitsPerPackEditable, unitOp
       <FloatingLabelInput
         name="baseUnit"
         type="text"
-        value={state.baseUnit}
+        value={state?.baseUnit || ""}
         label="Base Unit"
         readOnly={true}
       />
@@ -38,7 +38,7 @@ const AddRawMaterialsForm = ({ state, handleChange, unitsPerPackEditable, unitOp
         }
         name="unitsPerPack"
         type="number"
-        value={state.unitsPerPack}
+        value={state?.unitsPerPack}
         label="Units Per Pack"
         readOnly={!unitsPerPackEditable}
       />
@@ -48,7 +48,7 @@ const AddRawMaterialsForm = ({ state, handleChange, unitsPerPackEditable, unitOp
         }
         name="pricePerPack"
         type="number"
-        value={state.pricePerPack}
+        value={state?.pricePerPack || ""}
         label="Price Per Pack"
       />
       <FloatingLabelInput
@@ -57,17 +57,19 @@ const AddRawMaterialsForm = ({ state, handleChange, unitsPerPackEditable, unitOp
         }
         name="costPerUnit"
         type="text"
-        value={`${state.costPerUnit} PHP / ${state.baseUnit}`}
+        value={`${state?.costPerUnit} PHP / ${state?.baseUnit}` || ""}
         label="Cost Per Unit"
         readOnly={true}
       />
       <div className="flex justify-end space-x-4">
         <Button
+          onClick={(e) => handleSubmit(e)}
           label={isLoading ? "Saving" : "Save"}
-          onClick={handleSubmit}
           backgroundAndText={"bg-blue-700 hover:bg-blue-500 text-white"}
+          disabled={isLoading}
         />
         <Button
+        type="button"
           onClick={closeModal}
           label="Cancel"
           backgroundAndText={

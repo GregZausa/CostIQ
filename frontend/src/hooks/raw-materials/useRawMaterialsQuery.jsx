@@ -7,6 +7,8 @@ export const useRawMaterialsQuery = () => {
   const [columns, setColumns] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalRows, setTotalRows] = useState(1);
+
   const [search, setSearch] = useState("");
   const [selectedUnit, setSelectedUnit] = useState();
 
@@ -20,6 +22,7 @@ export const useRawMaterialsQuery = () => {
 
     setData(result.rows);
     setColumns(result.headers);
+    setTotalRows(result.totalRows);
     setPage(result.page);
     setTotalPages(result.totalPages);
   }, [search, page, selectedUnit]);
@@ -39,6 +42,7 @@ export const useRawMaterialsQuery = () => {
     page,
     setPage,
     totalPages,
+    totalRows,
     search,
     setSearch,
     selectedUnit,
