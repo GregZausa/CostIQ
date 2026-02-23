@@ -22,6 +22,7 @@ export const useEmployeeAction = ({
     if (!state.ratePerHr) errors.ratePerHr = "Rate per hour is required!";
     return errors;
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = validate(form.state);
@@ -31,26 +32,35 @@ export const useEmployeeAction = ({
       setIsLoading(false);
       return;
     }
+    const payload = {
+      last_name: form.state.employeeLastName,
+      first_name: form.state.employeeFirstName,
+      rate_per_hr: form.state.ratePerHr,
+    };
+
     try {
       setIsLoading(true);
-      const res = await authFetch(`${apiUrl}/employees`, {
-        method: "POST",
-        body: JSON.stringify({
-          last_name: form.state.employeeLastName,
-          first_name: form.state.employeeFirstName,
-          rate_per_hr: form.state.ratePerHr,
-        }),
-      });
-      const result = await res.json();
-      if (!res.ok) {
-        toast.error(result.message || "Failed to add employee");
-        return;
+      if (editingId !== null) {
+        await authFetch(`${apiUrl}/employees/${editingId}`, {
+          method: "PUT",
+          body: JSON.stringify(payload),
+        });
+      } else {
+        await authFetch(`${apiUrl}/employees`, {
+          method: "POST",
+          body: JSON.stringify(payload),
+        });
       }
       toast.success(
-        `Employee ${form.state.employeeFirstName} ${form.state.employeeLastName} added successfully!`,
+        editingId
+          ? `Employee ${form.state.employeeFirstName} ${form.state.employeeLastName} added succesfully`
+          : `Employee ${form.state.employeeFirstName} ${form.state.employeeLastName} added successfully!`,
       );
       form.resetForm();
       closeModal();
+      setEditingId(null);
+      query.setPage(1);
+      query.load();
     } catch (err) {
     } finally {
       setIsLoading(false);
@@ -77,7 +87,7 @@ export const useEmployeeAction = ({
     await form.loadForEdit(id);
     openModal();
     setEditingId(id);
-  }
+  };
   return {
     handleDelete,
     handleSubmit,

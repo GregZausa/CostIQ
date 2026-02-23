@@ -15,6 +15,22 @@ export const insertEmployee = async ({
   return rows[0];
 };
 
+export const updateEmployee = async (
+  last_name,
+  first_name,
+  rate_per_hr,
+  createdBy,
+  id,
+) => {
+  const query = `UPDATE employees 
+                  SET last_name = $1, first_name = $2, rate_per_hr = $3 
+                  WHERE created_by = $4 AND employee_id = $5 RETURNING *`;
+
+  const values = [last_name, first_name, rate_per_hr, createdBy, id];
+  const { rows } = await pool.query(query, values);
+  return rows[0];
+};
+
 export const getEmployees = async (
   createdBy,
   searchTerm = "",
@@ -34,6 +50,7 @@ export const getEmployees = async (
   const totalPages = Math.ceil(totalRows / limit);
   const query = `SELECT employee_id, last_name, first_name, rate_per_hr FROM employees 
                   WHERE created_by = $1 AND (first_name ILIKE $2 OR last_name ILIKE $2) 
+                  ORDER BY first_name ASC, last_name ASC
                   LIMIT $3 OFFSET $4`;
 
   const values = [createdBy, searchValue, limit, offset];

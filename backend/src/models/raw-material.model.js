@@ -68,7 +68,7 @@ export const getRawMaterials = async (
   let query = `SELECT raw_material_id, material_name, pack_unit, base_unit, units_per_pack, price_per_pack, cost_per_unit FROM raw_materials 
                   WHERE created_by = $1 AND material_name ILIKE $2`;
 
-  const values = [createdBy, searchValue];
+  let values = [createdBy, searchValue];
 
   if (selectedUnit) {
     query += ` AND pack_unit = $3`;
@@ -82,7 +82,7 @@ export const getRawMaterials = async (
 
   const limitPlaceholder = `$${values.length + 1}`;
   const offsetPlaceholder = `$${values.length + 2}`;
-  query += ` LIMIT ${limitPlaceholder} OFFSET ${offsetPlaceholder}`;
+  query += ` ORDER BY created_at DESC LIMIT ${limitPlaceholder} OFFSET ${offsetPlaceholder}`;
   values.push(limit, offset);
   const result = await pool.query(query, values);
   return {
