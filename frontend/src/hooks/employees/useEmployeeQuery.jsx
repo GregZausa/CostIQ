@@ -21,6 +21,8 @@ export const useEmployeeQuery = () => {
     setTotalPages(result.totalPages);
   }, [search, page]);
 
+
+
   useEffect(() => {
     load();
   }, [load]);

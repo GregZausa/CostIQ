@@ -1,14 +1,10 @@
 import React, { useState } from "react";
-import useEmployee from "../hooks/employees/useEmployee";
 import Table from "../components/ui/Table";
-import { useEffect } from "react";
 import { useMemo } from "react";
 import HeadlessUIDropdown from "../components/ui/HeadlessUIDropdown";
 import TextInput from "../components/ui/TextInput";
 
-const EmployeesTable = () => {
-  const { query, actions } = useEmployee();
-
+const EmployeesTable = ({ query, actions }) => {
   const cols = useMemo(
     () => [
       {
@@ -31,16 +27,18 @@ const EmployeesTable = () => {
             .replace(/\b\w/g, (c) => c.toUpperCase()),
         })),
       {
+        key: "action",
         render: (row) => (
           <HeadlessUIDropdown
             id={row.employee_id}
             row={row}
             onDelete={actions.handleDelete}
+            onEdit={actions.handleEdit}
           />
         ),
       },
     ],
-    [query.columns],
+    [query.columns, actions.handleDelete, actions.handleSubmit],
   );
   return (
     <>

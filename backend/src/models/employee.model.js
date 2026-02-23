@@ -30,8 +30,8 @@ export const getEmployees = async (
                       AND (first_name ILIKE $2 OR last_name ILIKE $2)`;
 
   const countResult = await pool.query(countQuery, [createdBy, searchValue]);
-  const totalRows = Number(countResult.rows[0].total)
-  const totalPages = Math.ceil(totalRows / limit)
+  const totalRows = Number(countResult.rows[0].total);
+  const totalPages = Math.ceil(totalRows / limit);
   const query = `SELECT employee_id, last_name, first_name, rate_per_hr FROM employees 
                   WHERE created_by = $1 AND (first_name ILIKE $2 OR last_name ILIKE $2) 
                   LIMIT $3 OFFSET $4`;
@@ -45,6 +45,12 @@ export const getEmployees = async (
     totalPages,
     totalRows,
   };
+};
+
+export const getEmployeesById = async (createdBy, id) => {
+  const query = `SELECT last_name, first_name, rate_per_hr FROM employees WHERE created_by = $1 AND employee_id = $2`;
+  const result = await pool.query(query, [createdBy, id]);
+  return result.rows[0];
 };
 
 export const deleteEmployee = async (id) => {

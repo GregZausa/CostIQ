@@ -1,6 +1,7 @@
 import {
   deleteEmployee,
   getEmployees,
+  getEmployeesById,
   insertEmployee,
 } from "../models/employee.model.js";
 import { getPaginationParams } from "../utils/pagination.js";
@@ -38,6 +39,22 @@ export const fetchEmployees = async (req, res) => {
     res.json(employees);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch employees", error: err });
+  }
+};
+
+export const fetchEmployeesById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const createdBy = req.user.id;
+    const employeeById = await getEmployeesById(createdBy, id);
+    if (!employeeById) {
+      res.status(404).json({ message: "Employee not found" });
+    }
+    res.json(employeeById);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Failed to fetch employee", error: err.message });
   }
 };
 

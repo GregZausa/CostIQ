@@ -14,10 +14,10 @@ const RawMaterials = () => {
   };
   const closeModal = () => {
     setIsModalOpen(false);
-    form.resetForm()
+    form.resetForm();
   };
   const { totalRawMaterials, query, actions, form, mostExpensiveMaterial } =
-    useRawMaterials({ closeModal, openModal, setIsLoading   });
+    useRawMaterials({ closeModal, openModal, setIsLoading });
   return (
     <div>
       <div className="flex items-center text-center justify-between">

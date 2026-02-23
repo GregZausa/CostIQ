@@ -6,16 +6,19 @@ import useEmployee from "../hooks/employees/useEmployee";
 
 const Employee = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState(null);
-  const openModal = (id = null) => {
-    setEditingId(id);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const openModal = () => {
     setIsModalOpen(true);
   };
   const closeModal = () => {
-    setEditingId(null);
     setIsModalOpen(false);
   };
-  const { query } = useEmployee(closeModal, openModal);
+  const { query, actions, form } = useEmployee({
+    closeModal,
+    openModal,
+    setIsLoading,
+  });
   return (
     <div>
       <div className="flex items-center text-center justify-between">
@@ -32,11 +35,14 @@ const Employee = () => {
             closeModal();
             query.load();
           }}
-          editingId={editingId}
+          form={form}
+          actions={actions}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
         />
       )}
 
-      <EmployeesTable />
+      <EmployeesTable query={query} actions={actions} />
     </div>
   );
 };

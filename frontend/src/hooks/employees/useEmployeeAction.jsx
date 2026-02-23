@@ -1,13 +1,16 @@
 import toast from "react-hot-toast";
 import { authFetch } from "../../utils/authFetch";
 import { apiUrl } from "../../config/apiUrl";
+import { useState } from "react";
 
 export const useEmployeeAction = ({
   form,
   query,
   closeModal,
+  openModal,
   setIsLoading,
 }) => {
+  const [editingId, setEditingId] = useState(null);
   const validate = (state) => {
     const errors = {};
     if (!state.employeeFirstName)
@@ -70,8 +73,14 @@ export const useEmployeeAction = ({
       console.error("Failed to delete employee", err);
     }
   };
+  const handleEdit = async (id) => {
+    await form.loadForEdit(id);
+    openModal();
+    setEditingId(id);
+  }
   return {
     handleDelete,
     handleSubmit,
+    handleEdit,
   };
 };

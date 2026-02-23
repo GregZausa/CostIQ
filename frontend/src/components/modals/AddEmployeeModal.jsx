@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import AddEmployeeForm from "../forms/AddEmployeeForm";
-import useEmployee from "../../hooks/employees/useEmployee";
 
-const AddEmployeeModal = ({ closeModal }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const { form, actions } = useEmployee({
-    isLoading,
-    setIsLoading,
-    closeModal,
-  });
-
+const AddEmployeeModal = ({
+  closeModal,
+  form,
+  actions,
+  isLoading,
+  setIsLoading,
+}) => {
   return (
     <>
       <div
