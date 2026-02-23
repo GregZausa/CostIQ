@@ -3,7 +3,7 @@ import { useOtherExpensesForm } from "./useOtherExpensesForm";
 import { useOtherExpensesQuery } from "./useOtherExpensesQuery";
 import { useOtherExpensesAction } from "./useOtherExpensesAction";
 
-const useOtherExpenses = ({ setIsLoading, closeModal } = {}) => {
+const useOtherExpenses = ({ setIsLoading, closeModal, openModal } = {}) => {
   const form = useOtherExpensesForm();
   const query = useOtherExpensesQuery();
   const actions = useOtherExpensesAction({
@@ -11,6 +11,7 @@ const useOtherExpenses = ({ setIsLoading, closeModal } = {}) => {
     query,
     setIsLoading,
     closeModal,
+    openModal,
   });
   return {
     form,

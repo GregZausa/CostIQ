@@ -3,6 +3,7 @@ import {
   getOtherExpenses,
   getOtherExpensesById,
   insertOtherExpense,
+  updateOtherExpense,
 } from "../models/other-expense.model.js";
 import { getPaginationParams } from "../utils/pagination.js";
 
@@ -24,6 +25,29 @@ export const createOtherExpense = async (req, res) => {
     res
       .status(500)
       .json({ message: "Something went wrong", error: err.message });
+  }
+};
+
+export const editOtherExpense = async (req, res) => {
+  try {
+    const createdBy = req.user.id;
+    const { id } = req.params;
+    const { category_name, quantity, cost } = req.body;
+
+    const otherExpense = await updateOtherExpense(
+      category_name,
+      quantity,
+      cost,
+      createdBy,
+      id,
+    );
+    res
+      .status(200)
+      .json({ message: "Expense updated successfully!", data: otherExpense });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Failed to update expense", error: err.message });
   }
 };
 

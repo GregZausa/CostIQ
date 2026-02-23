@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
 import Table from "../components/ui/Table";
-import useOtherExpenses from "../hooks/other-expenses/useOtherExpenses";
 import HeadlessUIDropdown from "../components/ui/HeadlessUIDropdown";
 import TextInput from "../components/ui/TextInput";
 
@@ -16,6 +15,7 @@ const OtherExpensesTable = ({ query, actions }) => {
             .replace(/\b\w/g, (c) => c.toUpperCase()),
         })),
       {
+        key: "action",
         render: (row) => (
           <HeadlessUIDropdown
             id={row.other_expense_id}
@@ -26,7 +26,7 @@ const OtherExpensesTable = ({ query, actions }) => {
         ),
       },
     ],
-    [query.columns],
+    [query.columns, actions.handleDelete, actions.handleSubmit],
   );
   return (
     <>

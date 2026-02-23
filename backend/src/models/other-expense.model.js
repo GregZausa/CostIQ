@@ -13,6 +13,22 @@ export const insertOtherExpense = async ({
   return rows[0];
 };
 
+export const updateOtherExpense = async (
+  category_name,
+  quantity,
+  cost,
+  createdBy,
+  id,
+) => {
+  const query = `UPDATE other_expenses SET category_name = $1, quantity = $2, expense_cost = $3
+                  WHERE created_by = $4
+                  AND other_expense_id = $5`;
+
+  const values = [category_name, quantity, cost, createdBy, id];
+  const { rows } = await pool.query(query, values);
+  return rows[0];
+};
+
 export const getOtherExpenses = async (
   createdBy,
   searchTerm = "",
@@ -35,6 +51,7 @@ export const getOtherExpenses = async (
                   FROM other_expenses
                   WHERE created_by = $1
                   AND category_name ILIKE $2
+                  ORDER BY created_at DESC
                   LIMIT $3 OFFSET $4`;
 
   const values = [createdBy, searchValue, limit, offset];

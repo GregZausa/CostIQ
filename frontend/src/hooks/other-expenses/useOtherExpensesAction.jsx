@@ -8,6 +8,7 @@ export const useOtherExpensesAction = ({
   query,
   setIsLoading,
   closeModal,
+  openModal,
 }) => {
   const [editingId, setEditingId] = useState(null);
   const validate = (state) => {
@@ -28,26 +29,37 @@ export const useOtherExpensesAction = ({
       setIsLoading(false);
       return;
     }
+    const payload = {
+      category_name: form.state.categoryName,
+      quantity: form.state.quantity,
+      cost: form.state.cost,
+    };
     try {
       setIsLoading(true);
-      const res = await authFetch(`${apiUrl}/other-expenses`, {
-        method: "POST",
-        body: JSON.stringify({
-          category_name: form.state.categoryName,
-          quantity: form.state.quantity,
-          cost: form.state.cost,
-        }),
-      });
-      const result = await res.json();
-      if (!res.ok) {
-        toast.error(result.message || "Failed to add expense");
-        return;
+      if (editingId !== null) {
+        await authFetch(`${apiUrl}/other-expenses/${editingId}`, {
+          method: "PUT",
+          body: JSON.stringify(payload),
+        });
+      } else {
+        await authFetch(`${apiUrl}/other-expenses`, {
+          method: "POST",
+          body: JSON.stringify(payload),
+        });
       }
-      toast.success(`${form.state.categoryName} added successfully!`);
+      toast.success(
+        editingId
+          ? `${form.state.categoryName} updated successfully!`
+          : `${form.state.categoryName} added successfully!`,
+      );
       form.resetForm();
       closeModal();
+      setEditingId(null);
+      query.setPage(1);
+      query.load();
       return;
     } catch (err) {
+      toast.error(err.message);
     } finally {
       setIsLoading(false);
     }

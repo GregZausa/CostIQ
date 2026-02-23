@@ -14,7 +14,11 @@ const OtherExpenses = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  const { query, form, actions } = useOtherExpenses(closeModal, openModal);
+  const { query, form, actions } = useOtherExpenses({
+    closeModal,
+    openModal,
+    setIsLoading,
+  });
   return (
     <div>
       <div className="flex items-center text-center justify-between">

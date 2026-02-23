@@ -27,7 +27,7 @@ export const useOtherExpensesForm = () => {
         payload: {
           categoryName: result.category_name,
           quantity: result.quantity,
-          cost: result.cost,
+          cost: result.expense_cost,
         },
       });
     } catch (err) {}

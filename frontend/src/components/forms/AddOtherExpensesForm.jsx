@@ -18,7 +18,7 @@ const AddOtherExpensesForm = ({
         }
         name="categoryName"
         type="text"
-        value={state.categoryName}
+        value={state?.categoryName}
         label="Category Name"
       />
       <FloatingLabelInput
