@@ -1,5 +1,6 @@
 import {
   deleteRawMaterials,
+  getMostExpenseiveMaterial,
   getRawMaterials,
   getRawMaterialsById,
   insertRawMaterial,
@@ -59,9 +60,16 @@ export const editRawMaterial = async (req, res) => {
       id,
     );
 
-    res.status(201).json({message: "Raw material updated successfully!", data: updatedRawMaterial});
+    res
+      .status(201)
+      .json({
+        message: "Raw material updated successfully!",
+        data: updatedRawMaterial,
+      });
   } catch (err) {
-    res.status(500).json({message: "Failed to update raw material", error: err.message})
+    res
+      .status(500)
+      .json({ message: "Failed to update raw material", error: err.message });
   }
 };
 
@@ -78,7 +86,9 @@ export const fetchRawMaterials = async (req, res) => {
       offset,
       page,
     );
-    res.json(rawMaterials);
+
+    const mostExpensive = await getMostExpenseiveMaterial(createdBy);
+    res.json({...rawMaterials, mostExpensive});
   } catch (err) {
     res
       .status(500)

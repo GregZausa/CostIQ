@@ -16,11 +16,7 @@ const useRawMaterials = ({ closeModal, openModal, setIsLoading } = {}) => {
   });
 
   const totalRawMaterials = query.totalRows;
-  const mostExpensiveMaterial = query.data.reduce(
-    (max, cur) =>
-      Number(cur.cost_per_unit) > Number(max.cost_per_unit) ? cur : max,
-    query.data[0],
-  );
+  const mostExpensiveMaterial = query.mostExpensive;
 
   return {
     form,

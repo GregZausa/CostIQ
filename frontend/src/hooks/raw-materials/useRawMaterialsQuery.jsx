@@ -4,6 +4,7 @@ import { apiUrl } from "../../config/apiUrl";
 
 export const useRawMaterialsQuery = () => {
   const [data, setData] = useState([]);
+  const [mostExpensive, setMostExpensive] = useState(0);
   const [columns, setColumns] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -21,6 +22,7 @@ export const useRawMaterialsQuery = () => {
     const result = await res.json();
 
     setData(result.rows);
+    setMostExpensive(result.mostExpensive);
     setColumns(result.headers);
     setTotalRows(result.totalRows);
     setPage(result.page);
@@ -47,6 +49,7 @@ export const useRawMaterialsQuery = () => {
     setSearch,
     selectedUnit,
     setSelectedUnit,
+    mostExpensive,
     load,
   };
 };

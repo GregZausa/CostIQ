@@ -9,8 +9,8 @@ export const insertRawMaterial = async ({
   created_by,
 }) => {
   const query = `INSERT INTO raw_materials
-    (material_name, pack_unit, base_unit, units_per_pack, price_per_pack, created_by) 
-    VALUES($1, $2, $3, $4, $5, $6) RETURNING *;`;
+                  (material_name, pack_unit, base_unit, units_per_pack, price_per_pack, created_by) 
+                  VALUES($1, $2, $3, $4, $5, $6) RETURNING *;`;
   const values = [
     material_name,
     pack_unit,
@@ -65,8 +65,10 @@ export const getRawMaterials = async (
                       WHERE created_by = $1
                       AND material_name ILIKE $2`;
 
-  let query = `SELECT raw_material_id, material_name, pack_unit, base_unit, units_per_pack, price_per_pack, cost_per_unit FROM raw_materials 
-                  WHERE created_by = $1 AND material_name ILIKE $2`;
+  let query = `SELECT raw_material_id, material_name, pack_unit, 
+                base_unit, units_per_pack, price_per_pack, cost_per_unit 
+                FROM raw_materials 
+                WHERE created_by = $1 AND material_name ILIKE $2`;
 
   let values = [createdBy, searchValue];
 
@@ -103,7 +105,18 @@ export const getRawMaterialsById = async (createdBy, id) => {
 };
 
 export const deleteRawMaterials = async (id) => {
-  const query = `DELETE FROM raw_materials WHERE raw_material_id = $1 RETURNING *`;
+  const query = `DELETE FROM raw_materials 
+                  WHERE raw_material_id = $1 RETURNING *`;
   const { rows } = await pool.query(query, [id]);
   return rows[0];
 };
+
+export const getMostExpenseiveMaterial = async (createdBy) => {
+  const query = `SELECT * 
+                  FROM raw_materials 
+                  WHERE created_by = $1 
+                  ORDER BY cost_per_unit DESC 
+                  LIMIT 1`
+  const result = await pool.query(query, [createdBy]);
+  return result.rows[0] || null;
+}
