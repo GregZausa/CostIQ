@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import LoginForm from "../../components/forms/LoginForm";
 import toast from "react-hot-toast";
 import { apiUrl } from "../../config/apiUrl";
+import { useAuth } from "../../hooks/useAuth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const {setIsAuthenticated } = useAuth();
 
   const navigate = useNavigate();
 
@@ -33,15 +35,10 @@ const Login = () => {
       });
 
       const data = await res.json();
-
-      if (!res.ok) {
-        toast.error(data.message || "Login Failed!");
-        return;
-      }
       localStorage.setItem("token", data.token);
-
+      setIsAuthenticated(true);
       toast.success("Logged In Successfully!");
-      navigate("/dashboard")
+      navigate("/dashboard", {replace: true})
     } catch {
       toast.error("Something went wrong, please try again later");
     } finally {

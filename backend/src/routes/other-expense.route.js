@@ -10,10 +10,11 @@ import {
 } from "../controllers/other-expense.controller.js";
 
 const router = express.Router();
+router.use(requireAuth);
 
-router.post("/other-expenses", globalLimiter, requireAuth, createOtherExpense);
-router.get("/other-expenses", requireAuth, fetchOtherExpenses);
-router.get("/other-expenses/:id", requireAuth, fetchOtherExpensesById);
-router.delete("/other-expenses/:id", requireAuth, removeOtherExpense);
-router.put("/other-expenses/:id", globalLimiter, requireAuth, editOtherExpense);
+router.post("/other-expenses", globalLimiter, createOtherExpense);
+router.get("/other-expenses", fetchOtherExpenses);
+router.get("/other-expenses/:id", fetchOtherExpensesById);
+router.delete("/other-expenses/:id", removeOtherExpense);
+router.put("/other-expenses/:id", globalLimiter, editOtherExpense);
 export default router;

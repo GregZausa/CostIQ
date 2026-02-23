@@ -10,11 +10,12 @@ import {
 } from "../controllers/employee.controller.js";
 
 const router = express.Router();
+router.use(requireAuth);
 
-router.post("/employees", globalLimiter, requireAuth, createEmployee);
-router.get("/employees", requireAuth, fetchEmployees);
-router.get("/employees/:id", requireAuth, fetchEmployeesById);
-router.delete("/employees/:id", requireAuth, removeEmployees);
-router.put("/employees/:id", globalLimiter, requireAuth, editEmployee);
+router.post("/employees", globalLimiter, createEmployee);
+router.get("/employees",  fetchEmployees);
+router.get("/employees/:id",  fetchEmployeesById);
+router.delete("/employees/:id",  removeEmployees);
+router.put("/employees/:id", globalLimiter,  editEmployee);
 
 export default router;

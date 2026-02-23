@@ -10,11 +10,12 @@ import { requireAuth } from "../middleware/auth.middleware.js";
 import { globalLimiter } from "../middleware/rate-limiter.js";
 
 const router = express.Router();
+router.use(requireAuth);
 
-router.post("/raw-materials", globalLimiter, requireAuth, createRawMaterial);
-router.get("/raw-materials", requireAuth, fetchRawMaterials);
-router.get("/raw-materials/:id", requireAuth, fetchRawMaterialsById);
-router.delete("/raw-materials/:id", requireAuth, removeRawMaterials);
-router.put("/raw-materials/:id", globalLimiter, requireAuth, editRawMaterial)
+router.post("/raw-materials", globalLimiter, createRawMaterial);
+router.get("/raw-materials", fetchRawMaterials);
+router.get("/raw-materials/:id", fetchRawMaterialsById);
+router.delete("/raw-materials/:id", removeRawMaterials);
+router.put("/raw-materials/:id", globalLimiter, editRawMaterial);
 
 export default router;
