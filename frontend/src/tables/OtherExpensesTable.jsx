@@ -4,10 +4,7 @@ import useOtherExpenses from "../hooks/other-expenses/useOtherExpenses";
 import HeadlessUIDropdown from "../components/ui/HeadlessUIDropdown";
 import TextInput from "../components/ui/TextInput";
 
-const OtherExpensesTable = () => {
-  const { query, actions } =
-    useOtherExpenses();
-
+const OtherExpensesTable = ({ query, actions }) => {
   const cols = useMemo(
     () => [
       ...query.columns
@@ -20,7 +17,12 @@ const OtherExpensesTable = () => {
         })),
       {
         render: (row) => (
-          <HeadlessUIDropdown id={row.other_expense_id} row={row} onDelete={actions.handleDelete}/>
+          <HeadlessUIDropdown
+            id={row.other_expense_id}
+            row={row}
+            onDelete={actions.handleDelete}
+            onEdit={actions.handleEdit}
+          />
         ),
       },
     ],

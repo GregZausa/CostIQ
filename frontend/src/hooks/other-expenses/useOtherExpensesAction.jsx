@@ -1,6 +1,7 @@
 import toast from "react-hot-toast";
 import { authFetch } from "../../utils/authFetch";
 import { apiUrl } from "../../config/apiUrl";
+import { useState } from "react";
 
 export const useOtherExpensesAction = ({
   form,
@@ -8,6 +9,7 @@ export const useOtherExpensesAction = ({
   setIsLoading,
   closeModal,
 }) => {
+  const [editingId, setEditingId] = useState(null);
   const validate = (state) => {
     const errors = {};
     if (!state.categoryName) errors.categoryName = "Category name is required!";
@@ -50,6 +52,11 @@ export const useOtherExpensesAction = ({
       setIsLoading(false);
     }
   };
+  const handleEdit = async (id) => {
+    await form.loadForEdit(id);
+    openModal();
+    setEditingId(id);
+  };
 
   const handleDelete = async (id) => {
     try {
@@ -69,5 +76,6 @@ export const useOtherExpensesAction = ({
   return {
     handleDelete,
     handleSubmit,
+    handleEdit,
   };
 };

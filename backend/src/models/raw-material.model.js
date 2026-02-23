@@ -95,7 +95,9 @@ export const getRawMaterials = async (
 };
 
 export const getRawMaterialsById = async (createdBy, id) => {
-  const query = `SELECT material_name, pack_unit, base_unit, units_per_pack, price_per_pack, cost_per_unit FROM raw_materials WHERE created_by = $1 AND raw_material_id = $2`;
+  const query = `SELECT material_name, pack_unit, base_unit, units_per_pack, price_per_pack, cost_per_unit 
+                  FROM raw_materials 
+                  WHERE created_by = $1 AND raw_material_id = $2`;
   const result = await pool.query(query, [createdBy, id]);
   return result.rows[0];
 };

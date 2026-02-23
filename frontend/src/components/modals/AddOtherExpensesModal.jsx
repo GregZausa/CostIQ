@@ -1,13 +1,7 @@
 import React, { useState } from "react";
 import AddOtherExpensesForm from "../forms/AddOtherExpensesForm";
-import useOtherExpenses from "../../hooks/other-expenses/useOtherExpenses";
 
-const AddOtherExpensesModal = ({ closeModal }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const { form, actions } = useOtherExpenses({
-    closeModal,
-    setIsLoading,
-  });
+const AddOtherExpensesModal = ({ closeModal, form, actions, isLoading, setIsLoading }) => {
   return (
     <>
       <div

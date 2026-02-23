@@ -1,6 +1,7 @@
 import {
   deleteOtherExpense,
   getOtherExpenses,
+  getOtherExpensesById,
   insertOtherExpense,
 } from "../models/other-expense.model.js";
 import { getPaginationParams } from "../utils/pagination.js";
@@ -42,6 +43,24 @@ export const fetchOtherExpenses = async (req, res) => {
     res
       .status(500)
       .json({ message: "Failed to fetch other expenses", error: err.message });
+  }
+};
+
+export const fetchOtherExpensesById = async (req, res) => {
+  try {
+    const createdBy = req.user.id;
+    const { id } = req.params;
+
+    const otherExpense = await getOtherExpensesById(createdBy, id);
+
+    if (!otherExpense) {
+      res.status(404).json({ message: "Expense not found" });
+    }
+    res.json(otherExpense);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Failed to fetch expense", error: err.message });
   }
 };
 

@@ -6,17 +6,15 @@ import useOtherExpenses from "../hooks/other-expenses/useOtherExpenses";
 
 const OtherExpenses = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const openModal = (id = null) => {
-    setEditingId(id);
+  const openModal = () => {
     setIsModalOpen(true);
   };
   const closeModal = () => {
-    setEditingId(null);
     setIsModalOpen(false);
   };
-  const { query } = useOtherExpenses(closeModal, openModal);
+  const { query, form, actions } = useOtherExpenses(closeModal, openModal);
   return (
     <div>
       <div className="flex items-center text-center justify-between">
@@ -33,10 +31,13 @@ const OtherExpenses = () => {
             closeModal();
             query.load();
           }}
-          editingId={editingId}
+          form={form}
+          actions={actions}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
         />
       )}
-      <OtherExpensesTable />
+      <OtherExpensesTable query={query} actions={actions} />
     </div>
   );
 };

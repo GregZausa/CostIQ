@@ -48,6 +48,14 @@ export const getOtherExpenses = async (
   };
 };
 
+export const getOtherExpensesById = async (createdBy, id) => {
+  const query = `SELECT category_name, quantity, expense_cost 
+                  FROM other_expenses 
+                  WHERE created_by = $1 AND other_expense_id = $2`;
+
+  const result = await pool.query(query, [createdBy, id]);
+  return result.rows[0];
+};
 export const deleteOtherExpense = async (id) => {
   const query = `DELETE FROM other_expenses WHERE other_expense_id = $1 RETURNING *`;
   const { rows } = await pool.query(query, [id]);
