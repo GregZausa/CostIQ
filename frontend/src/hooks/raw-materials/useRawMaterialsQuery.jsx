@@ -5,6 +5,7 @@ import { apiUrl } from "../../config/apiUrl";
 export const useRawMaterialsQuery = () => {
   const [data, setData] = useState([]);
   const [mostExpensive, setMostExpensive] = useState(0);
+  const [totalAllRows, setTotalAllRows] = useState(0);
   const [columns, setColumns] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -16,17 +17,22 @@ export const useRawMaterialsQuery = () => {
   const load = useCallback(async () => {
     const urlParams = new URLSearchParams({ search, page, limit: 8 });
     if (selectedUnit) urlParams.append("packUnit", selectedUnit);
+    try {
     const res = await authFetch(
       `${apiUrl}/raw-materials?${urlParams.toString()}`,
     );
     const result = await res.json();
 
     setData(result.rows);
+    setTotalAllRows(result.totalAllRows);
     setMostExpensive(result.mostExpensive);
     setColumns(result.headers);
     setTotalRows(result.totalRows);
     setPage(result.page);
     setTotalPages(result.totalPages);
+  }catch(err) {
+    console.error(err);
+  }
   }, [search, page, selectedUnit]);
 
   useEffect(() => {
@@ -50,6 +56,7 @@ export const useRawMaterialsQuery = () => {
     selectedUnit,
     setSelectedUnit,
     mostExpensive,
+    totalAllRows,
     load,
   };
 };

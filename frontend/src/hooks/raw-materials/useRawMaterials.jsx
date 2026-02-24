@@ -15,7 +15,7 @@ const useRawMaterials = ({ closeModal, openModal, setIsLoading } = {}) => {
     setIsLoading,
   });
 
-  const totalRawMaterials = query.totalRows;
+  const totalRawMaterials = query.totalAllRows;
   const mostExpensiveMaterial = query.mostExpensive;
 
   return {

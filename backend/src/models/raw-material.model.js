@@ -46,7 +46,7 @@ export const updateRawMaterial = async (
     createdBy,
     id,
   ];
-  const {rows } = await pool.query(query, values);  
+  const { rows } = await pool.query(query, values);
   return rows[0];
 };
 
@@ -69,6 +69,14 @@ export const getRawMaterials = async (
                 base_unit, units_per_pack, price_per_pack, cost_per_unit 
                 FROM raw_materials 
                 WHERE created_by = $1 AND material_name ILIKE $2`;
+
+  const totalAllQuery = `SELECT COUNT(*) 
+                          AS total 
+                          FROM raw_materials 
+                          WHERE created_by = $1`;
+
+  const totalAllResult = await pool.query(totalAllQuery, [createdBy]);
+  const totalAllRows = Number(totalAllResult.rows[0].total);
 
   let values = [createdBy, searchValue];
 
@@ -93,6 +101,7 @@ export const getRawMaterials = async (
     page,
     totalPages,
     totalRows,
+    totalAllRows,
   };
 };
 
@@ -116,7 +125,7 @@ export const getMostExpenseiveMaterial = async (createdBy) => {
                   FROM raw_materials 
                   WHERE created_by = $1 
                   ORDER BY cost_per_unit DESC 
-                  LIMIT 1`
+                  LIMIT 1`;
   const result = await pool.query(query, [createdBy]);
   return result.rows[0] || null;
-}
+};

@@ -5,6 +5,7 @@ import unitRoutes from "./src/routes/unit.route.js";
 import rawMaterialRoutes from "./src/routes/raw-materials.route.js";
 import employeeRoutes from "./src/routes/employee.route.js";
 import otherExpenseRoutes from "./src/routes/other-expense.route.js";
+import positionRoutes from "./src/routes/position.routes.js";
 import dotenv from "dotenv";
 dotenv.config();
 import "./src/config/db.js";
@@ -27,6 +28,7 @@ app.use("/api", unitRoutes);
 app.use("/api", rawMaterialRoutes);
 app.use("/api", employeeRoutes);
 app.use("/api", otherExpenseRoutes);
+app.use("/api", positionRoutes);
 
 app.listen(port, () => {
   console.log(`Server started at ${port}`);

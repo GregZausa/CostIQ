@@ -6,6 +6,7 @@ import { apiUrl } from "../../config/apiUrl";
 const initialState = createInitialState({
   employeeFirstName: "",
   employeeLastName: "",
+  position: "",
   ratePerHr: "",
 });
 
@@ -17,22 +18,20 @@ export const useEmployeeForm = () => {
     dispatch({ type: "UPDATE_FIELD", field: name, value });
   };
 
-    const loadForEdit = async (id) => {
-      try {
-        const res = await authFetch(`${apiUrl}/employees/${id}`);
-        const result = await res.json();
-        dispatch({
-          type:"SET_FORM",
-          payload: {
-            employeeFirstName: result.first_name,
-            employeeLastName: result.last_name,
-            ratePerHr: result.rate_per_hr
-          }
-        })
-      }catch(err) {
-
-      }
-    }
+  const loadForEdit = async (id) => {
+    try {
+      const res = await authFetch(`${apiUrl}/employees/${id}`);
+      const result = await res.json();
+      dispatch({
+        type: "SET_FORM",
+        payload: {
+          employeeFirstName: result.first_name,
+          employeeLastName: result.last_name,
+          ratePerHr: result.rate_per_hr,
+        },
+      });
+    } catch (err) {}
+  };
   const resetForm = () => dispatch({ type: "RESET_FORM" });
   return {
     handleChange,
