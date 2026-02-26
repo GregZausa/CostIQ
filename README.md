@@ -1,34 +1,64 @@
 # 📊 Business Costing System
 
-A full-stack **Business Costing System** designed to help businesses accurately manage raw materials, labor cost, utilties, and cost calculations for their products.  
-This system provides a centralized way to track material costs, convert units, and generate clear cost insights for better decision-making.
+A full-stack **Business Costing System** for calculating accurate product costs by combining **raw materials, labor, utilities, and other business expenses**.
 
 ---
 
 ## 🚀 Features
 
-- 📦 **Raw Materials Management**
-  - Add, edit, and delete raw materials
-  - Store price per pack and base unit cost
-  - Automatic cost-per-unit calculation
+### Raw Materials
+- Add / edit / delete raw materials
+- Define pack unit → base unit conversion
+- Store price per pack and units per pack
+- Automatic cost per base unit calculation
 
-- ⚖️ **Unit Management**
-  - Define pack units and base units
-  - Flexible unit conversions (e.g., box → pieces, kg → grams)
+### Labor Costs
+- Define labor roles
+- Set hourly or daily wages
+- Track working hours
+- Automatic labor cost per batch / product
 
-- 📊 **Cost Summary Dashboard**
-  - Overview of total materials
-  - Average cost per unit
-  - High-level statistics (dashboard-lite)
+### Utilities
+- Track monthly utilities:
+  - Electricity
+  - Water
+  - Gas
+  - Internet
+  - Rent
+- Distribute utility costs per batch or product
 
-- 🔐 **Authentication**
-  - JWT-based authentication
-  - Secure login and protected routes
-  - Token expiration handling
+### Other Expenses
+- Track operational expenses:
+  - Packaging
+  - Transportation
+  - Maintenance
+  - Supplies
+- Supports quantity-based and fixed costs
 
-- 🌐 **API-Driven Architecture**
-  - RESTful backend
-  - Clean separation of frontend and backend logic
+### Product Costing
+- Combines:
+  - Raw materials
+  - Labor
+  - Utilities
+  - Other expenses
+- Calculates:
+  - Cost per batch
+  - Cost per unit
+
+### Dashboard
+- Total raw material cost
+- Total labor cost
+- Utilities & overhead
+- Overall production cost
+
+### Authentication
+- JWT-based authentication
+- Protected routes
+- Token expiration handling
+
+### API
+- RESTful backend
+- Frontend–backend separation
 
 ---
 
@@ -37,10 +67,14 @@ This system provides a centralized way to track material costs, convert units, a
 ### Frontend
 - React
 - Tailwind CSS
+- Headless UI
 - Lucide Icons
-- HeadlessUI
-- React Hooks (`useState`, `useEffect`, `useReducer`, 'useMemo')
-- Custom Hooks for API logic
+- React Hooks:
+  - useState
+  - useEffect
+  - useReducer
+  - useMemo
+- Custom hooks
 
 ### Backend
 - Node.js
