@@ -13,9 +13,11 @@ const EmployeeModal = ({
   const { positionOptions, positionQuery, positionActions, positionForm } =
     usePosition();
   const [isPositionModalOpen, setIsPositionModalOpen] = useState(false);
+  const [opened, setOpened] = useState("");
 
-  const openPositionModal = () => {
+  const openPositionModal = (params) => {
     setIsPositionModalOpen(true);
+    setOpened(params);
   };
   const closePositionModal = () => {
     setIsPositionModalOpen(false);
@@ -42,15 +44,16 @@ const EmployeeModal = ({
           positionOptions={positionOptions}
           setIsLoading={setIsLoading}
         />
-        {isPositionModalOpen && (
-          <PositionModal
-            closePositionModal={closePositionModal}
-            query={positionQuery}
-            form={positionForm}
-            actions={positionActions}
-          />
-        )}
       </div>
+      {isPositionModalOpen && (
+        <PositionModal
+          opened={opened}
+          closePositionModal={closePositionModal}
+          query={positionQuery}
+          form={positionForm}
+          actions={positionActions}
+        />
+      )}
     </>
   );
 };

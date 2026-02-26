@@ -51,12 +51,13 @@ const AddEmployeeForm = ({
             type="button"
             label={"Add Position"}
             backgroundAndText={"bg-gray-800 text-white hover:text-gray-400"}
-            onClick={() => openPositionModal()}
+            onClick={() => openPositionModal("add")}
           />
           <Button
             type="button"
             label={"View Positions"}
             backgroundAndText={"bg-gray-800 text-white hover:text-gray-400"}
+            onClick={() => openPositionModal("table")}
           />
         </div>
       </div>

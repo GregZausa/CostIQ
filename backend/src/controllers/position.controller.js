@@ -1,4 +1,8 @@
-import { getPositions, insertPosition } from "../models/position.model.js";
+import {
+  deletePositions,
+  getPositions,
+  insertPosition,
+} from "../models/position.model.js";
 
 export const createPosition = async (req, res) => {
   try {
@@ -25,5 +29,20 @@ export const fetchPositions = async (req, res) => {
     res.json(positions);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch position", error: err });
+  }
+};
+
+export const removePosition = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const position = await deletePositions(id);
+    if (!position) {
+      res.status(404).json({ message: "Position not found" });
+    }
+    res.json(position);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Failed to delete position", error: err.message });
   }
 };
