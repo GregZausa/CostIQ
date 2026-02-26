@@ -21,7 +21,13 @@ export const usePositionQuery = () => {
   useEffect(() => {
     loadPosition();
   }, [loadPosition]);
+
+  const positionOptions = positions.map((p) => ({
+    label: p.position_name,
+    value: p.position_id,
+  }));
   return {
+    positionOptions,
     columns,
     data,
     positions,

@@ -9,13 +9,11 @@ const usePosition = () => {
     positionForm,
   });
 
-  const positionOptions = positionQuery.positions.map((p) => ({
-    label: p.position_name.toUpperCase(),
-    value: p.position_id,
-  }));
+  const positions = positionQuery.positions;
+
 
   return {
-    positionOptions,
+    positions,
     positionForm,
     positionActions,
     positionQuery,

@@ -10,8 +10,7 @@ const EmployeeModal = ({
   isLoading,
   setIsLoading,
 }) => {
-  const { positionOptions, positionQuery, positionActions, positionForm } =
-    usePosition();
+  const { positionQuery, positionActions, positionForm } = usePosition();
   const [isPositionModalOpen, setIsPositionModalOpen] = useState(false);
   const [opened, setOpened] = useState("");
 
@@ -41,7 +40,7 @@ const EmployeeModal = ({
           handleChange={form.handleChange}
           handleSubmit={actions.handleSubmit}
           isLoading={isLoading}
-          positionOptions={positionOptions}
+          positionOptions={positionQuery.positionOptions}
           setIsLoading={setIsLoading}
         />
       </div>

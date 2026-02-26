@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useEffect, useMemo, useReducer } from "react";
 import { createInitialState, reducer } from "../../utils/reducer";
 import { authFetch } from "../../utils/authFetch";
 import { apiUrl } from "../../config/apiUrl";
@@ -10,8 +10,21 @@ const initialState = createInitialState({
   ratePerHr: "",
 });
 
-export const useEmployeeForm = () => {
+export const useEmployeeForm = ({ positions = [] } = {}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    const selected = positions.find(
+      (p) => p.position_id === state?.position,
+    );
+    if (selected) {
+      dispatch({
+        type: "UPDATE_FIELD",
+        field: "ratePerHr",
+        value: selected.default_rate_per_hr,
+      });
+    }
+  }, [state?.position, positions]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
