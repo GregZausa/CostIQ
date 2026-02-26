@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import AddRawMaterialsForm from "../forms/AddRawMaterialsForm";
 import useUnits from "../../hooks/useUnits";
 
-const AddRawMaterialModal = ({
+const RawMaterialsModal = ({
   closeModal,
   form,
   actions,
@@ -37,4 +37,4 @@ const AddRawMaterialModal = ({
   );
 };
 
-export default AddRawMaterialModal;
+export default RawMaterialsModal;

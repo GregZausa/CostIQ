@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Button from "../components/ui/Button";
-import AddOtherExpensesModal from "../components/modals/AddOtherExpensesModal";
+import OtherExpensesModal from "../components/modals/OtherExpensesModal";
 import OtherExpensesTable from "../tables/OtherExpensesTable";
 import useOtherExpenses from "../hooks/other-expenses/useOtherExpenses";
 
@@ -30,7 +30,7 @@ const OtherExpenses = () => {
         />
       </div>
       {isModalOpen && (
-        <AddOtherExpensesModal
+        <OtherExpensesModal
           closeModal={() => {
             closeModal();
             query.load();

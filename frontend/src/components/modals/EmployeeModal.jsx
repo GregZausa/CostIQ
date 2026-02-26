@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import AddEmployeeForm from "../forms/AddEmployeeForm";
 import usePosition from "../../hooks/positions/usePosition";
-import AddPositionModal from "./AddPositionModal";
+import PositionModal from "./PositionModal";
 
-const AddEmployeeModal = ({
+const EmployeeModal = ({
   closeModal,
   form,
   actions,
@@ -43,7 +43,7 @@ const AddEmployeeModal = ({
           setIsLoading={setIsLoading}
         />
         {isPositionModalOpen && (
-          <AddPositionModal
+          <PositionModal
             closePositionModal={closePositionModal}
             query={positionQuery}
             form={positionForm}
@@ -55,4 +55,4 @@ const AddEmployeeModal = ({
   );
 };
 
-export default AddEmployeeModal;
+export default EmployeeModal;

@@ -1,6 +1,6 @@
 import React, { act, useState } from "react";
 import Button from "../components/ui/Button";
-import AddRawMaterialModal from "../components/modals/AddRawMaterialModal";
+import RawMaterialsModal from "../components/modals/RawMaterialsModal";
 import RawMaterialsTable from "../tables/RawMaterialsTable";
 import RawMaterialsCard from "../components/cards/RawMaterialsCard";
 import useRawMaterials from "../hooks/raw-materials/useRawMaterials";
@@ -29,7 +29,7 @@ const RawMaterials = () => {
         />
       </div>
       {isModalOpen && (
-        <AddRawMaterialModal
+        <RawMaterialsModal
           closeModal={() => {
             closeModal();
             query.load();

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Button from "../components/ui/Button";
-import AddEmployeeModal from "../components/modals/AddEmployeeModal";
+import EmployeeModal from "../components/modals/EmployeeModal";
 import EmployeesTable from "../tables/EmployeesTable";
 import useEmployee from "../hooks/employees/useEmployee";
 
@@ -30,7 +30,7 @@ const Employee = () => {
         />
       </div>
       {isModalOpen && (
-        <AddEmployeeModal
+        <EmployeeModal
           closeModal={() => {
             closeModal();
             query.load();

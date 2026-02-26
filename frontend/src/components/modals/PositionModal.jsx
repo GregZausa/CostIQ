@@ -1,7 +1,7 @@
 import React from "react";
 import AddPositionForm from "../forms/AddPositionForm";
 
-const AddPositionModal = ({ closePositionModal, query, form, actions }) => {
+const PositionModal = ({ closePositionModal, query, form, actions }) => {
   return (
     <>
       <div
@@ -25,4 +25,4 @@ const AddPositionModal = ({ closePositionModal, query, form, actions }) => {
   );
 };
 
-export default AddPositionModal;
+export default PositionModal;

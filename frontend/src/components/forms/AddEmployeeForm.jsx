@@ -46,12 +46,19 @@ const AddEmployeeForm = ({
           value={state.position}
           options={positionOptions}
         />
-        <Button
-          type="button"
-          label={"Add Position"}
-          backgroundAndText={"bg-gray-800 text-white hover:text-gray-400"}
-          onClick={() => openPositionModal()}
-        />
+        <div className="grid md:grid-cols-2 gap-2">
+          <Button
+            type="button"
+            label={"Add Position"}
+            backgroundAndText={"bg-gray-800 text-white hover:text-gray-400"}
+            onClick={() => openPositionModal()}
+          />
+          <Button
+            type="button"
+            label={"View Positions"}
+            backgroundAndText={"bg-gray-800 text-white hover:text-gray-400"}
+          />
+        </div>
       </div>
 
       <FloatingLabelInput

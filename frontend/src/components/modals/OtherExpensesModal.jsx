@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import AddOtherExpensesForm from "../forms/AddOtherExpensesForm";
 
-const AddOtherExpensesModal = ({ closeModal, form, actions, isLoading, setIsLoading }) => {
+const OtherExpensesModal = ({ closeModal, form, actions, isLoading, setIsLoading }) => {
   return (
     <>
       <div
@@ -27,4 +27,4 @@ const AddOtherExpensesModal = ({ closeModal, form, actions, isLoading, setIsLoad
   );
 };
 
-export default AddOtherExpensesModal;
+export default OtherExpensesModal;
