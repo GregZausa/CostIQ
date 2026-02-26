@@ -39,7 +39,7 @@ const OtherExpensesTable = ({ query, actions }) => {
         toolbar={
           <div className="grid md:grid-cols-2 gap-2.5 max-w-4xl mt-4">
             <TextInput
-              placeholder="Search for material name..."
+              placeholder="Search for category name..."
               value={query.search}
               onChange={query.setSearch}
             />

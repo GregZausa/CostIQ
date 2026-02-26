@@ -22,7 +22,7 @@ const AddEmployeeForm = ({
           }
           name="employeeLastName"
           type="text"
-          value={state.employeeLastName}
+          value={state?.employeeLastName}
           label="Last Name"
         />
         <FloatingLabelInput
@@ -31,7 +31,7 @@ const AddEmployeeForm = ({
           }
           name="employeeFirstName"
           type="text"
-          value={state.employeeFirstName}
+          value={state?.employeeFirstName}
           label="First Name"
         />
       </div>
@@ -43,7 +43,7 @@ const AddEmployeeForm = ({
           }
           name="position"
           placeholder="Select Position"
-          value={state.position}
+          value={state?.position}
           options={positionOptions}
         />
         <div className="grid md:grid-cols-2 gap-2">
@@ -69,7 +69,7 @@ const AddEmployeeForm = ({
         name="ratePerHr"
         type="number"
         label="Rate per hour"
-        value={state.ratePerHr}
+        value={state?.ratePerHr}
       />
       <div className="flex justify-end space-x-4">
         <Button

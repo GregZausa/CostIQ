@@ -32,7 +32,7 @@ const PositionModal = ({
           </div>
         ) : (
           <div>
-            <h1>Position List</h1>
+            <h1 className="text-xl font-bold mb-4">Position List</h1>
             <PositionsTable query={query} actions={actions} />
           </div>
         )}

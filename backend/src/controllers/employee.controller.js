@@ -10,11 +10,12 @@ import { getPaginationParams } from "../utils/pagination.js";
 export const createEmployee = async (req, res) => {
   try {
     const createdBy = req.user.id;
-    const { last_name, first_name, rate_per_hr } = req.body;
+    const { last_name, first_name, position, rate_per_hr  } = req.body;
 
     const employee = await insertEmployee({
       last_name,
       first_name,
+      position,
       rate_per_hr,
       created_by: createdBy,
     });

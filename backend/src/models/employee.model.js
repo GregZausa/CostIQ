@@ -3,13 +3,14 @@ import pool from "../config/db.js";
 export const insertEmployee = async ({
   last_name,
   first_name,
+  position,
   rate_per_hr,
   created_by,
 }) => {
-  const query = `INSERT INTO employees(last_name, first_name, rate_per_hr, created_by)
-    VALUES($1, $2, $3, $4) RETURNING *`;
+  const query = `INSERT INTO employees(last_name, first_name, position_id, rate_per_hr, created_by)
+    VALUES($1, $2, $3, $4, $5) RETURNING *`;
 
-  const values = [last_name, first_name, rate_per_hr, created_by];
+  const values = [last_name, first_name, position,  rate_per_hr, created_by];
 
   const { rows } = await pool.query(query, values);
   return rows[0];
@@ -48,9 +49,11 @@ export const getEmployees = async (
   const countResult = await pool.query(countQuery, [createdBy, searchValue]);
   const totalRows = Number(countResult.rows[0].total);
   const totalPages = Math.ceil(totalRows / limit);
-  const query = `SELECT employee_id, last_name, first_name, rate_per_hr FROM employees 
-                  WHERE created_by = $1 AND (first_name ILIKE $2 OR last_name ILIKE $2) 
-                  ORDER BY first_name ASC, last_name ASC
+  const query = `SELECT e.employee_id, e.last_name, e.first_name, e.rate_per_hr , p.position_name 
+                  FROM employees e
+                  JOIN positions p ON e.position_id = p.position_id
+                  WHERE e.created_by = $1 AND (e.first_name ILIKE $2 OR e.last_name ILIKE $2) 
+                  ORDER BY e.first_name ASC, e.last_name ASC
                   LIMIT $3 OFFSET $4`;
 
   const values = [createdBy, searchValue, limit, offset];
@@ -65,7 +68,10 @@ export const getEmployees = async (
 };
 
 export const getEmployeesById = async (createdBy, id) => {
-  const query = `SELECT last_name, first_name, rate_per_hr FROM employees WHERE created_by = $1 AND employee_id = $2`;
+  const query = `SELECT e.last_name, e.first_name, e.rate_per_hr, p.position_name 
+                FROM employees e
+                JOIN positions p ON e.position_id = p.position_id
+                WHERE e.created_by = $1 AND e.employee_id = $2`;
   const result = await pool.query(query, [createdBy, id]);
   return result.rows[0];
 };

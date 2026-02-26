@@ -14,9 +14,7 @@ export const useEmployeeForm = ({ positions = [] } = {}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    const selected = positions.find(
-      (p) => p.position_id === state?.position,
-    );
+    const selected = positions.find((p) => p.position_id === state?.position);
     if (selected) {
       dispatch({
         type: "UPDATE_FIELD",
@@ -40,6 +38,7 @@ export const useEmployeeForm = ({ positions = [] } = {}) => {
         payload: {
           employeeFirstName: result.first_name,
           employeeLastName: result.last_name,
+          position: result.position_name,
           ratePerHr: result.rate_per_hr,
         },
       });
