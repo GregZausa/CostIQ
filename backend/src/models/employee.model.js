@@ -19,15 +19,16 @@ export const insertEmployee = async ({
 export const updateEmployee = async (
   last_name,
   first_name,
+  position,
   rate_per_hr,
   createdBy,
   id,
 ) => {
   const query = `UPDATE employees 
-                  SET last_name = $1, first_name = $2, rate_per_hr = $3 
-                  WHERE created_by = $4 AND employee_id = $5 RETURNING *`;
+                  SET last_name = $1, first_name = $2, position_id = $3, rate_per_hr = $4 
+                  WHERE created_by = $5 AND employee_id = $6 RETURNING *`;
 
-  const values = [last_name, first_name, rate_per_hr, createdBy, id];
+  const values = [last_name, first_name, position, rate_per_hr, createdBy, id];
   const { rows } = await pool.query(query, values);
   return rows[0];
 };
@@ -68,7 +69,7 @@ export const getEmployees = async (
 };
 
 export const getEmployeesById = async (createdBy, id) => {
-  const query = `SELECT e.last_name, e.first_name, e.rate_per_hr, p.position_name 
+  const query = `SELECT e.last_name, e.first_name, e.rate_per_hr, e.position_id, p.position_name 
                 FROM employees e
                 JOIN positions p ON e.position_id = p.position_id
                 WHERE e.created_by = $1 AND e.employee_id = $2`;

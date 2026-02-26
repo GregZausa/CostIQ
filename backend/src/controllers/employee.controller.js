@@ -31,10 +31,11 @@ export const editEmployee = async (req, res) => {
   try {
     const createdBy = req.user.id;
     const { id } = req.params;
-    const { last_name, first_name, rate_per_hr } = req.body;
+    const { last_name, first_name, position, rate_per_hr } = req.body;
     const editedEmployee = await updateEmployee(
       last_name,
       first_name,
+      position,
       rate_per_hr,
       createdBy,
       id,
