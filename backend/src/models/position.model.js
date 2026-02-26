@@ -39,8 +39,8 @@ export const getPositions = async (createdBy) => {
 export const deletePositions = async (id) => {
   const query = `UPDATE positions
                   SET is_active = false
-                  WHERE position_id = $1`;
+                  WHERE position_id = $1 RETURNING *`;
 
-  const { rows } = await query.pool(query, [id]);
+  const { rows } = await pool.query(query, [id]);
   return rows[0];
 };
