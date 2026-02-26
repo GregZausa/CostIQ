@@ -27,7 +27,7 @@ const AddOtherExpensesForm = ({
         }
         name="quantity"
         type="number"
-        value={state.quantity}
+        value={state?.quantity}
         label="Quantity"
       />
       <FloatingLabelInput
@@ -36,7 +36,7 @@ const AddOtherExpensesForm = ({
         }
         name="cost"
         type="number"
-        value={state.cost}
+        value={state?.cost}
         label="Cost"
       />
       <div className="flex justify-end space-x-4">

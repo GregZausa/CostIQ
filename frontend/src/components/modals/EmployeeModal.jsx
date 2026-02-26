@@ -9,6 +9,7 @@ const EmployeeModal = ({
   actions,
   isLoading,
   setIsLoading,
+  editingId,
 }) => {
   const { positionQuery, positionActions, positionForm } = usePosition();
   const [isPositionModalOpen, setIsPositionModalOpen] = useState(false);
@@ -32,7 +33,9 @@ const EmployeeModal = ({
                       shadow-lg transform -translate-x-1/2 -translate-y-1/2 p-6 hover:shadow-2xl hover:scale-102 transition-all
                       duration-300 ease-in-out text-black overflow-hidden"
       >
-        <h1 className="text-xl font-bold mb-4">Add Employee</h1>
+        <h1 className="text-xl font-bold mb-4">
+          {editingId !== null ? "Edit Employee" : "Add Employee"}
+        </h1>
         <AddEmployeeForm
           openPositionModal={openPositionModal}
           closeModal={closeModal}
@@ -44,6 +47,7 @@ const EmployeeModal = ({
           setIsLoading={setIsLoading}
         />
       </div>
+
       {isPositionModalOpen && (
         <PositionModal
           opened={opened}

@@ -33,6 +33,7 @@ const OtherExpenses = () => {
         <OtherExpensesModal
           closeModal={() => {
             closeModal();
+            form.resetForm();
             query.load();
           }}
           form={form}

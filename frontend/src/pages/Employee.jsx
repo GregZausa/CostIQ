@@ -31,8 +31,10 @@ const Employee = () => {
       </div>
       {isModalOpen && (
         <EmployeeModal
+          editingId={actions.editingId}
           closeModal={() => {
             closeModal();
+            form.resetForm();
             query.load();
           }}
           form={form}

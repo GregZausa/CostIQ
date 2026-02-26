@@ -32,6 +32,7 @@ const RawMaterials = () => {
         <RawMaterialsModal
           closeModal={() => {
             closeModal();
+            form.resetForm();
             query.load();
           }}
           form={form}
