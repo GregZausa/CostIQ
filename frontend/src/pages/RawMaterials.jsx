@@ -5,6 +5,7 @@ import RawMaterialsTable from "../tables/RawMaterialsTable";
 import RawMaterialsCard from "../components/cards/RawMaterialsCard";
 import useRawMaterials from "../hooks/raw-materials/useRawMaterials";
 import { Box, TrendingUp } from "lucide-react";
+import Headers from "../components/layout/Headers";
 const RawMaterials = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,14 +33,11 @@ const RawMaterials = () => {
 
   return (
     <div>
-      <div className="flex items-center text-center justify-between">
-        <h1 className="font-bold text-2xl">Raw Materials</h1>
-        <Button
-          label="Add Raw Materials"
-          onClick={openModal}
-          backgroundAndText={"bg-gray-800 text-white"}
-        />
-      </div>
+      <Headers
+        title={"Raw Materials"}
+        buttonLabel={"Add Raw Materials"}
+        openModal={openModal}
+      />
       {isModalOpen && (
         <RawMaterialsModal
           editingId={actions.editingId}

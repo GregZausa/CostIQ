@@ -7,11 +7,13 @@ import {
   Calculator,
   IdCardLanyard,
   LayoutDashboardIcon,
+  ShoppingBagIcon,
   Toolbox,
 } from "lucide-react";
 import RawMaterials from "../pages/RawMaterials";
 import Employee from "../pages/Employee";
 import OtherExpenses from "../pages/OtherExpenses";
+import Products from "../pages/Products";
 
 export const routes = [
   {
@@ -34,6 +36,17 @@ export const routes = [
     ),
     sidebar: true,
     label: "Dashboard",
+  },
+  {
+    path: "/products",
+    icon: ShoppingBagIcon,
+    element: (
+      <MainLayout>
+        <Products />
+      </MainLayout>
+    ),
+    sidebar: true,
+    label: "Products",
   },
   {
     icon: Calculator,
