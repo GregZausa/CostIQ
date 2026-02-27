@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import AddEmployeeForm from "../forms/AddEmployeeForm";
 import usePosition from "../../hooks/positions/usePosition";
 import PositionModal from "./PositionModal";
@@ -11,17 +11,28 @@ const EmployeeModal = ({
   setIsLoading,
   editingId,
 }) => {
-  const { positionQuery, positionActions, positionForm } = usePosition();
   const [isPositionModalOpen, setIsPositionModalOpen] = useState(false);
   const [opened, setOpened] = useState("");
+
+  const onSuccessRef = useRef(null);
 
   const openPositionModal = (params) => {
     setIsPositionModalOpen(true);
     setOpened(params);
   };
+
+  const { positionQuery, positionActions, positionForm } = usePosition({
+    openPositionModal,
+    onSuccess: () => onSuccessRef.current?.(),
+  });
+
   const closePositionModal = () => {
     setIsPositionModalOpen(false);
+    positionForm.resetForm();
+    positionQuery.loadPosition();
   };
+
+  onSuccessRef.current = closePositionModal;
   return (
     <>
       <div

@@ -53,7 +53,8 @@ export const getEmployees = async (
   const query = `SELECT e.employee_id, e.last_name, e.first_name, e.rate_per_hr , p.position_name 
                   FROM employees e
                   JOIN positions p ON e.position_id = p.position_id
-                  WHERE e.created_by = $1 AND (e.first_name ILIKE $2 OR e.last_name ILIKE $2) 
+                  WHERE e.created_by = $1 
+                  AND (e.first_name ILIKE $2 OR e.last_name ILIKE $2)
                   ORDER BY e.first_name ASC, e.last_name ASC
                   LIMIT $3 OFFSET $4`;
 
