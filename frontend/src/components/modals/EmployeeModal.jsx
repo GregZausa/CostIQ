@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import AddEmployeeForm from "../forms/AddEmployeeForm";
 import usePosition from "../../hooks/positions/usePosition";
 import PositionModal from "./PositionModal";
+import ModalLayout from "../layout/ModalLayout";
 
 const EmployeeModal = ({
   closeModal,
@@ -35,15 +36,7 @@ const EmployeeModal = ({
   onSuccessRef.current = closePositionModal;
   return (
     <>
-      <div
-        className="z-50 fixed inset-0 backdrop-blur-sm"
-        onClick={closeModal}
-      />
-      <div
-        className="fixed top-1/2 left-1/2 z-60 w-150 max-w-full bg-white/80 border border-white/20 rounded-xl 
-                      shadow-lg transform -translate-x-1/2 -translate-y-1/2 p-6 hover:shadow-2xl hover:scale-102 transition-all
-                      duration-300 ease-in-out text-black overflow-hidden"
-      >
+      <ModalLayout closeModal={closeModal} widthStyle={"w-150"}>
         <h1 className="text-xl font-bold mb-4">
           {editingId !== null ? "Edit Employee" : "Add Employee"}
         </h1>
@@ -57,7 +50,7 @@ const EmployeeModal = ({
           positionOptions={positionQuery.positionOptions}
           setIsLoading={setIsLoading}
         />
-      </div>
+      </ModalLayout>
 
       {isPositionModalOpen && (
         <PositionModal
