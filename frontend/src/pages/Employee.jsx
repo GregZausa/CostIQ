@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Button from "../components/ui/Button";
 import EmployeeModal from "../components/modals/EmployeeModal";
 import EmployeesTable from "../tables/EmployeesTable";
@@ -8,17 +8,26 @@ const Employee = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const onSuccessRef = useRef(null);
+
   const openModal = () => {
     setIsModalOpen(true);
   };
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+
   const { query, actions, form } = useEmployee({
-    closeModal,
     openModal,
     setIsLoading,
+    onSuccess: () => onSuccessRef.current?.(),
   });
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    form.resetForm();
+    actions.setEditingId(null);
+    query.load();
+  };
+
+  onSuccessRef.current = closeModal;
   return (
     <div>
       <div className="flex items-center text-center justify-between">
@@ -32,11 +41,7 @@ const Employee = () => {
       {isModalOpen && (
         <EmployeeModal
           editingId={actions.editingId}
-          closeModal={() => {
-            closeModal();
-            form.resetForm();
-            query.load();
-          }}
+          closeModal={closeModal}
           form={form}
           actions={actions}
           isLoading={isLoading}

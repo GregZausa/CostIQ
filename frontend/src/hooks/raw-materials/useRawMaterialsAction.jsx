@@ -6,7 +6,7 @@ import { useState } from "react";
 export const useRawMaterialsAction = ({
   form,
   query,
-  closeModal,
+  onSuccess,
   openModal,
   setIsLoading,
 }) => {
@@ -55,11 +55,8 @@ export const useRawMaterialsAction = ({
           ? `${form.state.materialName} updated successfully!`
           : `${form.state.materialName} added successfully!`,
       );
-      form.resetForm();
-      closeModal();
-      setEditingId(null);
       query.setPage(1);
-      query.load();
+      onSuccess?.();
       return;
     } catch (err) {
       toast.error(err.message);
@@ -92,6 +89,8 @@ export const useRawMaterialsAction = ({
   return {
     handleSubmit,
     handleDelete,
+    setEditingId,
+    editingId,
     handleEdit,
   };
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { act, useRef, useState } from "react";
 import Button from "../components/ui/Button";
 import OtherExpensesModal from "../components/modals/OtherExpensesModal";
 import OtherExpensesTable from "../tables/OtherExpensesTable";
@@ -8,17 +8,27 @@ const OtherExpenses = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const onSuccessRef = useRef(null);
+
   const openModal = () => {
     setIsModalOpen(true);
   };
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+
   const { query, form, actions } = useOtherExpenses({
-    closeModal,
     openModal,
     setIsLoading,
+    onSuccess: () => onSuccessRef.current?.(),
   });
+  
+  const closeModal = () => {
+    setIsModalOpen(false);
+    form.resetForm();
+    actions.setEditingId(null);
+    query.load();
+  };
+
+  onSuccessRef.current = closeModal;
+
   return (
     <div>
       <div className="flex items-center text-center justify-between">
@@ -31,11 +41,8 @@ const OtherExpenses = () => {
       </div>
       {isModalOpen && (
         <OtherExpensesModal
-          closeModal={() => {
-            closeModal();
-            form.resetForm();
-            query.load();
-          }}
+          editingId={actions.editingId}
+          closeModal={closeModal}
           form={form}
           actions={actions}
           isLoading={isLoading}

@@ -3,14 +3,14 @@ import { useRawMaterialsAction } from "./useRawMaterialsAction";
 import { useRawMaterialsForm } from "./useRawMaterialsForm";
 import { useRawMaterialsQuery } from "./useRawMaterialsQuery";
 
-const useRawMaterials = ({ closeModal, openModal, setIsLoading } = {}) => {
+const useRawMaterials = ({ onSuccess, openModal, setIsLoading } = {}) => {
   const { units } = useUnits();
   const form = useRawMaterialsForm({ units });
   const query = useRawMaterialsQuery();
   const actions = useRawMaterialsAction({
     form,
     query,
-    closeModal,
+    onSuccess,
     openModal,
     setIsLoading,
   });

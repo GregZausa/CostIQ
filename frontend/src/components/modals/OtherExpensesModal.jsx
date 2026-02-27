@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import AddOtherExpensesForm from "../forms/AddOtherExpensesForm";
 
-const OtherExpensesModal = ({ closeModal, form, actions, isLoading, setIsLoading }) => {
+const OtherExpensesModal = ({
+  closeModal,
+  form,
+  actions,
+  isLoading,
+  setIsLoading,
+  editingId,
+}) => {
   return (
     <>
       <div
@@ -13,7 +20,9 @@ const OtherExpensesModal = ({ closeModal, form, actions, isLoading, setIsLoading
                       shadow-lg transform -translate-x-1/2 -translate-y-1/2 p-6 hover:shadow-2xl hover:scale-102 transition-all
                       duration-300 ease-in-out text-black overflow-hidden"
       >
-        <h1 className="text-xl font-bold mb-4">Add Other Expenses</h1>
+        <h1 className="text-xl font-bold mb-4">
+          {editingId ? "Edit Expenses" : "Add Expenses"}
+        </h1>
         <AddOtherExpensesForm
           closeModal={closeModal}
           handleSubmit={actions.handleSubmit}

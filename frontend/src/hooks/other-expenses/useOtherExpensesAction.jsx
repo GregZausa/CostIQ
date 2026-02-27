@@ -7,7 +7,7 @@ export const useOtherExpensesAction = ({
   form,
   query,
   setIsLoading,
-  closeModal,
+  onSuccess,
   openModal,
 }) => {
   const [editingId, setEditingId] = useState(null);
@@ -52,11 +52,8 @@ export const useOtherExpensesAction = ({
           ? `${form.state.categoryName} updated successfully!`
           : `${form.state.categoryName} added successfully!`,
       );
-      form.resetForm();
-      closeModal();
-      setEditingId(null);
       query.setPage(1);
-      query.load();
+      onSuccess?.();
       return;
     } catch (err) {
       toast.error(err.message);
@@ -86,6 +83,8 @@ export const useOtherExpensesAction = ({
     }
   };
   return {
+    editingId,
+    setEditingId,
     handleDelete,
     handleSubmit,
     handleEdit,

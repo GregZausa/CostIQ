@@ -6,7 +6,7 @@ import { useState } from "react";
 export const useEmployeeAction = ({
   form,
   query,
-  closeModal,
+  onSuccess,
   openModal,
   setIsLoading,
 }) => {
@@ -59,11 +59,8 @@ export const useEmployeeAction = ({
           ? `Employee ${form.state.employeeFirstName} ${form.state.employeeLastName} added succesfully`
           : `Employee ${form.state.employeeFirstName} ${form.state.employeeLastName} added successfully!`,
       );
-      form.resetForm();
-      closeModal();
-      setEditingId(null);
       query.setPage(1);
-      query.load();
+      onSuccess?.();
       return;
     } catch (err) {
     } finally {
@@ -94,6 +91,7 @@ export const useEmployeeAction = ({
   };
   return {
     editingId,
+    setEditingId,
     handleDelete,
     handleSubmit,
     handleEdit,

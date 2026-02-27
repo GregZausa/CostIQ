@@ -1,4 +1,4 @@
-import React, { act, useState } from "react";
+import React, { act, useRef, useState } from "react";
 import Button from "../components/ui/Button";
 import RawMaterialsModal from "../components/modals/RawMaterialsModal";
 import RawMaterialsTable from "../tables/RawMaterialsTable";
@@ -8,16 +8,28 @@ import { Box, TrendingUp } from "lucide-react";
 const RawMaterials = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const onSuccessRef = useRef(null);
 
   const openModal = () => {
     setIsModalOpen(true);
   };
+
+  const { totalRawMaterials, query, actions, form, mostExpensiveMaterial } =
+    useRawMaterials({
+      openModal,
+      setIsLoading,
+      onSuccess: () => onSuccessRef.current?.(),
+    });
+
   const closeModal = () => {
     setIsModalOpen(false);
     form.resetForm();
+    actions.setEditingId(null);
+    query.load();
   };
-  const { totalRawMaterials, query, actions, form, mostExpensiveMaterial } =
-    useRawMaterials({ closeModal, openModal, setIsLoading });
+
+  onSuccessRef.current = closeModal;
+
   return (
     <div>
       <div className="flex items-center text-center justify-between">
@@ -30,11 +42,8 @@ const RawMaterials = () => {
       </div>
       {isModalOpen && (
         <RawMaterialsModal
-          closeModal={() => {
-            closeModal();
-            form.resetForm();
-            query.load();
-          }}
+          editingId={actions.editingId}
+          closeModal={closeModal}
           form={form}
           actions={actions}
           isLoading={isLoading}
