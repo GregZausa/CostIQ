@@ -1,5 +1,4 @@
 import React, { act, useRef, useState } from "react";
-import Button from "../components/ui/Button";
 import OtherExpensesModal from "../components/modals/OtherExpensesModal";
 import OtherExpensesTable from "../tables/OtherExpensesTable";
 import useOtherExpenses from "../hooks/other-expenses/useOtherExpenses";
@@ -20,7 +19,7 @@ const OtherExpenses = () => {
     setIsLoading,
     onSuccess: () => onSuccessRef.current?.(),
   });
-  
+
   const closeModal = () => {
     setIsModalOpen(false);
     form.resetForm();
@@ -33,9 +32,10 @@ const OtherExpenses = () => {
   return (
     <div>
       <Headers
-      title={"Other Expenses"}
-      buttonLabel={"Add Other Expenses"}
-      openModal={openModal}/>
+        title={"Other Expenses"}
+        buttonLabel={"Add Other Expenses"}
+        openModal={openModal}
+      />
       {isModalOpen && (
         <OtherExpensesModal
           editingId={actions.editingId}

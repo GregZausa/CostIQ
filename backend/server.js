@@ -9,6 +9,7 @@ import positionRoutes from "./src/routes/position.routes.js";
 import dotenv from "dotenv";
 dotenv.config();
 import "./src/config/db.js";
+import "./src/jobs/cleanupPositions.js"
 
 const app = express();
 const port = process.env.PORT || "5001";

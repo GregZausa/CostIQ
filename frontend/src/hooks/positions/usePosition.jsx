@@ -2,13 +2,14 @@ import { usePositionAction } from "./usePositionAction";
 import { usePositionForm } from "./usePositionForm";
 import { usePositionQuery } from "./usePositionQuery";
 
-const usePosition = ({onSuccess} = {}) => {
+const usePosition = ({ onSuccess, openPositionModal } = {}) => {
   const positionForm = usePositionForm();
   const positionQuery = usePositionQuery();
   const positionActions = usePositionAction({
     positionForm,
     positionQuery,
     onSuccess,
+    openPositionModal,
   });
 
   const positions = positionQuery.positions;

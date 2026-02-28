@@ -63,8 +63,8 @@ export const useOtherExpensesAction = ({
   };
   const handleEdit = async (id) => {
     await form.loadForEdit(id);
-    openModal();
     setEditingId(id);
+    openModal();
   };
 
   const handleDelete = async (id) => {

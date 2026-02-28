@@ -86,8 +86,8 @@ export const useEmployeeAction = ({
   };
   const handleEdit = async (id) => {
     await form.loadForEdit(id);
-    openModal();
     setEditingId(id);
+    openModal();
   };
   return {
     editingId,

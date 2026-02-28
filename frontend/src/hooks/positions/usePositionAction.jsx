@@ -1,8 +1,15 @@
 import toast from "react-hot-toast";
 import { apiUrl } from "../../config/apiUrl";
 import { authFetch } from "../../utils/authFetch";
+import { useState } from "react";
 
-export const usePositionAction = ({ positionForm, onSuccess }) => {
+export const usePositionAction = ({
+  positionForm,
+  onSuccess,
+  openPositionModal,
+}) => {
+  const [editingId, setEditingId] = useState(null);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const payload = {
@@ -11,17 +18,24 @@ export const usePositionAction = ({ positionForm, onSuccess }) => {
     };
 
     try {
-      const res = await authFetch(`${apiUrl}/positions`, {
-        method: "POST",
-        body: JSON.stringify(payload),
-      });
-      const result = await res.json();
-
-      if (!res.ok) {
-        toast.error(result.message);
-        return;
+      if (editingId !== null) {
+        await authFetch(`${apiUrl}/positions/${editingId}`, {
+          method: "PUT",
+          body: JSON.stringify(payload),
+        });
+      } else {
+        await authFetch(`${apiUrl}/positions`, {
+          method: "POST",
+          body: JSON.stringify(payload),
+        });
       }
-      toast.success("Position added successfully!");
+      toast.success(
+        editingId !== null
+          ? "Position updated successfully!"
+          : "Position added successfully!",
+      );
+      onSuccess?.();
+      return;
     } catch (err) {
       toast.error("Failed to add position");
     }
@@ -37,7 +51,14 @@ export const usePositionAction = ({ positionForm, onSuccess }) => {
       onSuccess?.();
     } catch (err) {}
   };
+
+  const handleEdit = async (id) => {
+    await positionForm.loadForEdit(id);
+    setEditingId(id);
+    openPositionModal("add");
+  };
   return {
+    handleEdit,
     handleSubmit,
     handleDelete,
   };

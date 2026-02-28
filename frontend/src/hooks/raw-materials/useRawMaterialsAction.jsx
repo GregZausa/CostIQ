@@ -66,9 +66,8 @@ export const useRawMaterialsAction = ({
   };
   const handleEdit = async (id) => {
     await form.loadForEdit(id);
-    openModal();
     setEditingId(id);
-
+    openModal();
   };
   const handleDelete = async (id) => {
     try {
