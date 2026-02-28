@@ -28,18 +28,6 @@ const HeadlessUIDropdown = ({ id, onDelete, onEdit }) => {
             <button
               className={`${active ? "bg-gray-800" : ""}
             ${buttonClassName}`}
-              onClick={() => console.log("Edit", row.id)}
-            >
-              <Copy className="w-4 h-4" />
-              Duplicate
-            </button>
-          )}
-        </MenuItem>
-        <MenuItem>
-          {({ active }) => (
-            <button
-              className={`${active ? "bg-gray-800" : ""}
-            ${buttonClassName}`}
               onClick={() => onDelete(id)}
             >
               <TrashIcon className="w-4 h-4" />

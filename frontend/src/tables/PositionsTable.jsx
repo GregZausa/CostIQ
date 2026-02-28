@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import Table from "../components/ui/Table";
 import HeadlessUIDropdown from "../components/ui/HeadlessUIDropdown";
+import TextInput from "../components/ui/TextInput";
 
 const PositionsTable = ({ query, actions }) => {
   const cols = useMemo(
@@ -27,7 +28,18 @@ const PositionsTable = ({ query, actions }) => {
   );
   return (
     <>
-      <Table columns={cols} data={query.data} />
+      <Table columns={cols} data={query.data} 
+      page={query.page}
+      totalPages={query.totalPages}
+      onPageChange={query.setPage}
+      toolbar={
+        <div>
+          <TextInput
+          placeholder="Search position..."
+          value={query.search}
+          onChange={query.setSearch}/>
+        </div>
+      }/>
     </>
   );
 };

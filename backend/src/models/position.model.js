@@ -30,10 +30,35 @@ export const updatePositions = async (
   return rows[0];
 };
 
-export const getPositions = async (createdBy) => {
+export const getPositions = async (
+  createdBy,
+  searchTerm = "",
+  limit = 8,
+  offset = 0,
+  page = 1,
+) => {
+  const searchValue = searchTerm ? `%${searchTerm}%` : "%";
   const optionsQuery =
     "SELECT * FROM positions WHERE created_by = $1 AND is_active = true";
-  const result = await pool.query(optionsQuery, [createdBy]);
+  const optionResult = await pool.query(optionsQuery, [createdBy]);
+
+  const countQuery = `SELECT COUNT(*) AS total
+                      FROM positions
+                      WHERE created_by = $1 
+                      AND is_active = true
+                      AND position_name ILIKE $2`;
+
+  const countResult = await pool.query(countQuery, [createdBy, searchValue]);
+  const totalRows = Number(countResult.rows[0].total);
+  const totalPages = Math.ceil(totalRows / limit);
+
+  const query = `SELECT * FROM positions
+                  WHERE created_by = $1 AND is_active = true
+                  AND position_name ILIKE $2
+                  LIMIT $3 OFFSET $4`;
+
+  const values = [createdBy, searchValue, limit, offset];
+  const result = await pool.query(query, values);
 
   return {
     headers: result.fields
@@ -47,7 +72,10 @@ export const getPositions = async (createdBy) => {
           name !== "updated_at",
       ),
     rows: result.rows,
-    positionOptions: result.rows,
+    page,
+    totalPages,
+    totalRows,
+    positionOptions: optionResult.rows,
   };
 };
 

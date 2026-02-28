@@ -5,6 +5,7 @@ import {
   insertPosition,
   updatePositions,
 } from "../models/position.model.js";
+import { getPaginationParams } from "../utils/pagination.js";
 
 export const createPosition = async (req, res) => {
   const { position_name, default_rate_per_hr } = req.body;
@@ -55,8 +56,15 @@ export const editPosition = async (req, res) => {
 
 export const fetchPositions = async (req, res) => {
   try {
-    const createdBy = req.user.id;
-    const positions = await getPositions(createdBy);
+    const { page, limit, offset, searchTerm, createdBy } =
+      getPaginationParams(req);
+    const positions = await getPositions(
+      createdBy,
+      searchTerm,
+      limit,
+      offset,
+      page,
+    );
     res.json(positions);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch position", error: err });
