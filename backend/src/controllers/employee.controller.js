@@ -1,23 +1,16 @@
 import {
-  deleteEmployee,
-  getEmployees,
-  getEmployeesById,
-  insertEmployee,
-  updateEmployee,
-} from "../models/employee.model.js";
-import { getPaginationParams } from "../utils/pagination.js";
+  createEmployeeService,
+  editedEmployeeService,
+  fetchEmployeesByIdService,
+  fetchEmployeesService,
+  removeEmployeesService,
+} from "../services/employee.services.js";
 
 export const createEmployee = async (req, res) => {
   try {
-    const createdBy = req.user.id;
-    const { last_name, first_name, position, rate_per_hr  } = req.body;
-
-    const employee = await insertEmployee({
-      last_name,
-      first_name,
-      position,
-      rate_per_hr,
-      created_by: createdBy,
+    const employee = await createEmployeeService({
+      userId: req.user.id,
+      body: req.body,
     });
     res.status(201).json({ message: "Employee added successfully!", employee });
   } catch (err) {
@@ -27,77 +20,52 @@ export const createEmployee = async (req, res) => {
   }
 };
 
-export const editEmployee = async (req, res) => {
+export const editedEmployee = async (req, res) => {
   try {
-    const createdBy = req.user.id;
-    const { id } = req.params;
-    const { last_name, first_name, position, rate_per_hr } = req.body;
-    const editedEmployee = await updateEmployee(
-      last_name,
-      first_name,
-      position,
-      rate_per_hr,
-      createdBy,
-      id,
-    );
-    if (!editedEmployee) {
-      res.status(404).json({ message: "Employee not found" });
-    }
-
-    res.status(200).json({
-      message: "Employee credential updated successfully!",
-      editedEmployee,
+    const data = await editedEmployeeService({
+      userId: req.user.id,
+      id: req.params.id,
+      body: req.body,
     });
+    res
+      .status(200)
+      .json({ message: "Employee updated successfully!", data });
   } catch (err) {
-    res.status(500).json({
-      message: "Failed to edit employee credentials",
-      error: err.message,
-    });
+    const status = err.message === "Employee not found" ? 404 : 500;
+    res.status(status).json({ message: err.message });
   }
 };
 
 export const fetchEmployees = async (req, res) => {
   try {
-    const { page, limit, offset, searchTerm, createdBy } =
-      getPaginationParams(req);
-    const employees = await getEmployees(
-      createdBy,
-      searchTerm,
-      limit,
-      offset,
-      page,
-    );
-    res.json(employees);
+    const result = await fetchEmployeesService(req);
+    res.json(result);
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch employees", error: err });
+    res
+      .json(500)
+      .json({ message: "Failed to fetch employees", error: err.message });
   }
 };
 
 export const fetchEmployeesById = async (req, res) => {
   try {
-    const createdBy = req.user.id;
-    const { id } = req.params;
-    const employeeById = await getEmployeesById(createdBy, id);
-    if (!employeeById) {
-      res.status(404).json({ message: "Employee not found" });
-    }
-    res.json(employeeById);
+    const employee = await fetchEmployeesByIdService({
+      userId: req.user.id,
+      id: req.params.id,
+    });
+    res.json(employee);
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Failed to fetch employee", error: err.message });
+    const status = err.message === "Employee not found" ? 404 : 500;
+    res.status(status).json({ message: err.message });
   }
 };
 
 export const removeEmployees = async (req, res) => {
   try {
-    const { id } = req.params;
-    const employee = await deleteEmployee(id);
-    if (!employee) {
-      res.status(404).json({ message: "Employee not found", error: err });
-    }
-    res.json(employee);
+    const deleted = await removeEmployeesService(req.params.id);
+    res.json(deleted);
   } catch (err) {
-    res.status(500).json({ message: "Failed to delete employee", error: err });
+    const status = err.message === "Employee not found" ? 404 : 500;
+    res.status(status).json({ message: err.message });
   }
 };

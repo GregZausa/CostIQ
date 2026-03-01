@@ -11,17 +11,22 @@ export const useEmployeeQuery = () => {
 
   const load = useCallback(async () => {
     const urlParams = new URLSearchParams({ search, page, limit: 8 });
-    const res = await authFetch(`${apiUrl}/employees?${urlParams.toString()}`);
+    try {
+      const res = await authFetch(
+        `${apiUrl}/employees?${urlParams.toString()}`,
+      );
 
-    const result = await res.json();
+      const result = await res.json();
 
-    setData(result.rows);
-    setColumns(result.headers);
-    setPage(result.page);
-    setTotalPages(result.totalPages);
+      const rows = result.rows ?? [];
+      setData(rows);
+      if (rows.length > 0) setColumns(Object.keys(rows[0]));
+      setPage(result.page);
+      setTotalPages(result.totalPages);
+    } catch (err) {
+      console.error(err);
+    }
   }, [search, page]);
-
-
 
   useEffect(() => {
     load();

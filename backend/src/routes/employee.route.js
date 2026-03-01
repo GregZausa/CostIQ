@@ -3,7 +3,7 @@ import { globalLimiter } from "../middleware/rate-limiter.js";
 import { requireAuth } from "../middleware/auth.middleware.js";
 import {
   createEmployee,
-  editEmployee,
+  editedEmployee,
   fetchEmployees,
   fetchEmployeesById,
   removeEmployees,
@@ -16,6 +16,6 @@ router.post("/employees", globalLimiter, createEmployee);
 router.get("/employees",  fetchEmployees);
 router.get("/employees/:id",  fetchEmployeesById);
 router.delete("/employees/:id",  removeEmployees);
-router.put("/employees/:id", globalLimiter,  editEmployee);
+router.put("/employees/:id", globalLimiter,  editedEmployee);
 
 export default router;
