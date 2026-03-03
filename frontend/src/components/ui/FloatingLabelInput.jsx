@@ -9,7 +9,10 @@ const FloatingLabelInput = ({
   className,
   required = false,
   readOnly = false,
-  
+  min,
+  max,
+  step,
+  suffix,
 }) => {
   const [onFocus, setOnFocus] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -21,21 +24,29 @@ const FloatingLabelInput = ({
       <input
         type={inputType}
         value={value}
+        min={min}
+        max={max}
+        step={step}
         onFocus={() => setOnFocus(true)}
         onBlur={() => setOnFocus(false)}
         onChange={(e) => onChange(e.target.value)}
-        className={`border border-gray-300 rounded-md px-3 py-2 min-w-full focus:outline-none focus:ring-2 focus:ring-transparent ${className}`}
-        readOnly = {readOnly}
+        className={`border border-gray-300 rounded-md px-3 py-2 min-w-full focus:outline-none focus:ring-2 focus:ring-transparent ${suffix ? "pr-10" : ""} ${className}`}
+        readOnly={readOnly}
       />
       <label
         className={`absolute left-3 transition-all duration-300 pointer-events-none ${
           onFocus || value
             ? "top-0 -translate-y-1/2 text-xs text-blue-500 bg-transparent px-2 z-10"
-            : "top-1/2 -translate-y-1/2 text-gray-500"
+            : "top-1/2 -translate-y-1/2 text-gray-500 font-medium"
         }`}
       >
         {label} {required && <span className="text-red-500"></span>}
       </label>
+      {suffix && (
+        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+          {suffix}
+        </span>
+      )}
       {type === "password" && (
         <button
           type="button"

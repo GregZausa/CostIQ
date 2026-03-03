@@ -39,18 +39,18 @@ const ImageInput = ({
         onChange={handleChange}
       />
       <div
-        className="relative group h-48 w-full cursor-pointer rounded-xl border-2 border-dashed border-gray-300
+        className="relative group h-64 w-full cursor-pointer rounded-xl border-2 border-dashed border-gray-300
        bg-gray-50 hover:border-indigo-500 hover:bg-indigo-50 transition flex items-center justify-center overflow-hidden"
-        onClick={() => fileRef.current.onClick()}
+        onClick={() => fileRef.current.click()}
       >
         {preview ? (
           <>
             <img
               src={preview}
               alt="Preview"
-              className="absolute inset-0 h-full w-full object-cover"
+              className="absolute inset-0 h-full w-full object-contain object-center"
             />
-            <div className="absolute inset-8 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
               <span className="text-white text-sm font-medium">
                 Change Image
               </span>
