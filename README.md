@@ -1,83 +1,57 @@
 # 📊 Business Costing System
 
-A full-stack **Business Costing System** for calculating accurate product costs by combining **raw materials, labor, utilities, and other business expenses**.
+> A full-stack web application for calculating accurate product costs by combining **raw materials**, **labor**, **utilities**, and **other business expenses**.
+
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white)
 
 ---
 
-## 🚀 Features
+## ✨ Features
 
-### Raw Materials
-- Add / edit / delete raw materials
-- Define pack unit → base unit conversion
-- Store price per pack and units per pack
-- Automatic cost per base unit calculation
-
-### Labor Costs
-- Define labor roles
-- Set hourly or daily wages
-- Track working hours
-- Automatic labor cost per batch / product
-
-### Utilities
-- Track monthly utilities:
-  - Electricity
-  - Water
-  - Gas
-  - Internet
-  - Rent
-- Distribute utility costs per batch or product
-
-### Other Expenses
-- Track operational expenses:
-  - Packaging
-  - Transportation
-  - Maintenance
-  - Supplies
-- Supports quantity-based and fixed costs
-
-### Product Costing
-- Combines:
-  - Raw materials
-  - Labor
-  - Utilities
-  - Other expenses
-- Calculates:
-  - Cost per batch
-  - Cost per unit
-
-### Dashboard
-- Total raw material cost
-- Total labor cost
-- Utilities & overhead
-- Overall production cost
-
-### Authentication
-- JWT-based authentication
-- Protected routes
-- Token expiration handling
-
-### API
-- RESTful backend
-- Frontend–backend separation
+| Module | Highlights |
+|---|---|
+| 🧪 **Raw Materials** | Add/edit/delete materials, pack-to-base unit conversion, auto cost calculation |
+| 👷 **Labor** | Define roles, hourly/daily wages, auto batch cost computation |
+| ⚡ **Utilities** | Track electricity, water, gas, internet & rent — distributed per batch |
+| 📦 **Other Expenses** | Packaging, transport, maintenance — fixed or quantity-based |
+| 🏭 **Product Costing** | Full cost breakdown: cost per batch and cost per unit |
+| 📊 **Dashboard** | Overview of all production costs at a glance |
+| 🔐 **Authentication** | JWT-based login, protected routes, token expiry handling |
 
 ---
 
 ## 🛠 Tech Stack
 
 ### Frontend
-- React
-- Tailwind CSS
-- Headless UI
-- Lucide Icons
-- React Hooks:
-  - useState
-  - useEffect
-  - useReducer
-  - useMemo
-- Custom hooks
+- **React** with `useState`, `useEffect`, `useReducer`, `useMemo`,`useRef`, `useCallback`, and custom hooks
+- **Tailwind CSS** for styling
+- **Headless UI** for accessible components
+- **Lucide Icons**
 
 ### Backend
-- Node.js
-- Express.js
-- PostgreSQL
-- JWT Authentication
+- **Node.js** + **Express.js** — RESTful API
+- **PostgreSQL** — relational database
+- **JWT** — authentication & route protection
+
+---
+
+## 🚀 Getting Started
+
+> _Setup & installation guide coming soon._
+
+---
+
+## 📌 Roadmap
+
+- [ ] Setup & installation guide
+- [ ] API documentation
+- [ ] Docker support
+- [ ] Export reports to PDF / CSV
+- [ ] Multi-user / team support
+
+---
