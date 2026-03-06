@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import Button from "../components/ui/Button";
 import EmployeeModal from "../components/modals/EmployeeModal";
 import EmployeesTable from "../tables/EmployeesTable";
 import useEmployee from "../hooks/employees/useEmployee";

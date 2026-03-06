@@ -19,11 +19,23 @@ const FloatingLabelInput = ({
 
   const inputType =
     type === "password" ? (showPassword ? "text" : "password") : type;
+
+  const blockInvalidKeys = (e) => {
+    if (type === "number" && ["e", "E", "+", "-", "="].includes(e.key)) {
+      e.preventDefault();
+    }
+  };
+  const handlePaste = (e) => {
+    const pasted = e.clipboardData.getData("text");
+    if (!/^\d*\.?\d*$/.test(pasted)) e.preventDefault();
+  };
   return (
     <div className="relative">
       <input
         type={inputType}
         value={value}
+        onKeyDown={blockInvalidKeys}
+        onPaste={handlePaste}
         min={min}
         max={max}
         step={step}

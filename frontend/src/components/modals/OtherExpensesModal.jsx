@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import AddOtherExpensesForm from "../forms/AddOtherExpensesForm";
 import ModalLayout from "../layout/ModalLayout";
 

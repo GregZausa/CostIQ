@@ -1,4 +1,4 @@
-import React, { act, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import OtherExpensesModal from "../components/modals/OtherExpensesModal";
 import OtherExpensesTable from "../tables/OtherExpensesTable";
 import useOtherExpenses from "../hooks/other-expenses/useOtherExpenses";
