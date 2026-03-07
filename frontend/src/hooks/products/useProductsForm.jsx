@@ -29,7 +29,7 @@ export const useProductsForm = () => {
     dispatch({
       type: "UPDATE_FIELD",
       field: "totalSellableUnits",
-      value: totalSellable.toFixed(2),
+      value: Math.floor(totalSellable),
     });
   }, [state?.totalInput, state?.unitsPerProduct]);
   return {

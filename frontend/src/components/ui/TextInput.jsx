@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Search } from "lucide-react";
 
 const TextInput = ({
   type = "text",
@@ -36,10 +36,16 @@ const TextInput = ({
           disabled={disabled}
           className={`w-full px-4 py-2 ${
             type === "password" ? "pr-10" : ""
-          } border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+          }${type === "search" ? "pl-9" : ""} border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
             disabled ? "bg-gray-100 cursor-not-allowed" : "bg-white"
           } ${error ? "border-red-500" : "border-gray-300"}`}
         />
+        {type === "search" && (
+          <Search
+            size={15}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+          />
+        )}
 
         {type === "password" && (
           <button

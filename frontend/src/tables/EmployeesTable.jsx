@@ -50,6 +50,7 @@ const EmployeesTable = ({ query, actions }) => {
         toolbar={
           <div className="grid md:grid-cols-2 gap-2.5 max-w-4xl mt-4">
             <TextInput
+            type="search"
               placeholder="Search for employee name..."
               value={query.search}
               onChange={query.setSearch}

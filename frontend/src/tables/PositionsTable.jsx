@@ -35,6 +35,7 @@ const PositionsTable = ({ query, actions }) => {
       toolbar={
         <div>
           <TextInput
+          type="search"
           placeholder="Search position..."
           value={query.search}
           onChange={query.setSearch}/>
