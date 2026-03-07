@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import ModalLayout from "../layout/ModalLayout";
 import AddProductForm from "../forms/AddProductForm";
 
-const ProductsModal = ({ closeModal, form }) => {
+const ProductsModal = ({ closeModal, form, query }) => {
   const [openModal, setOpenModal] = useState(null);
+  const { handleChange } = form;
 
   const handleMaterialsConfirm = (items) => {
     handleChange({ target: { name: "directMaterials", value: items } });
@@ -30,6 +31,8 @@ const ProductsModal = ({ closeModal, form }) => {
         handleMaterialsConfirm={handleMaterialsConfirm}
         handleExpensesConfirm={handleExpensesConfirm}
         clamped={clamped}
+        form={form}
+        query={query}
       />
     </ModalLayout>
   );

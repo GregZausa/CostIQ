@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { } from "react";
 import FloatingLabelInput from "../ui/FloatingLabelInput";
 import ImageInput from "../ui/ImageInput";
 import Button from "../ui/Button";
@@ -6,6 +6,8 @@ import { Box, IdCardLanyard, Toolbox } from "lucide-react";
 import SelectRawMaterialsModal from "../modals/SelectRawMaterialsModal";
 
 const AddProductForm = ({
+  form,
+  query,
   handleChange,
   state,
   setOpenModal,
@@ -116,7 +118,7 @@ const AddProductForm = ({
           />
         </div>
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-2">
-          <div>
+          <div className="relative">
             <Button
               label={
                 state?.directMaterials?.length
@@ -129,13 +131,13 @@ const AddProductForm = ({
               icon={<Box size={12} />}
             />
 
-            {state?.directMaterials?.length && (
+            {state?.directMaterials?.length > 0 && (
               <span className="absolute -top-1.5 -right-1.5 bg-green-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
                 {state.directMaterials.length}
               </span>
             )}
           </div>
-          <div>
+          <div className="relative">
             <Button
               label={
                 state?.employees?.length
@@ -153,7 +155,7 @@ const AddProductForm = ({
               </span>
             )}
           </div>
-          <div>
+          <div className="relative">
             <Button
               label={
                 state?.otherExpenses?.length
@@ -175,6 +177,8 @@ const AddProductForm = ({
       </form>
       {openModal === "materials" && (
         <SelectRawMaterialsModal
+        query={query}
+          totalSellableUnits={form.state?.totalSellableUnits}
           closeModal={() => setOpenModal(null)}
           onConfirm={handleMaterialsConfirm}
           selected={state?.directMaterials || []}

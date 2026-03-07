@@ -10,6 +10,8 @@ const TextInput = ({
   className = "",
   required = false,
   disabled = false,
+  onClick,
+  min,
   error = "",
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,7 +32,9 @@ const TextInput = ({
         <input
           type={inputType}
           value={value}
+          min={min}
           onChange={(e) => onChange(e.target.value)}
+          onClick={onClick}
           placeholder={placeholder}
           required={required}
           disabled={disabled}

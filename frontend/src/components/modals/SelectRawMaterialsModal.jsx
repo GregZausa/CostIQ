@@ -1,16 +1,102 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import ModalLayout from "../layout/ModalLayout";
-import { Box, Search } from "lucide-react";
+import { Box} from "lucide-react";
 import TextInput from "../ui/TextInput";
-import useRawMaterials from "../../hooks/raw-materials/useRawMaterials";
 import Table from "../ui/Table";
+import Button from "../ui/Button";
 
-const SelectRawMaterialsModal = ({ closeModal, onConfrim, selected = [] }) => {
+const SelectRawMaterialsModal = ({ closeModal, onConfirm, selected = [], totalSellableUnits, query }) => {
   const [search, setSearch] = useState("");
   const [selectedItems, setSelectedItems] = useState(
-    selected.map((s) => ({ ...s })),
+    Array.isArray(selected) ? selected.map((s) => ({ ...s })) : [],
   );
-  const { query } = useRawMaterials();
+
+  const excludedHeaders = new Set([
+    "material_name",
+    "price_per_pack",
+    "units_per_pack",
+    "base_unit",
+    "cost_per_unit",
+    "raw_material_id",
+    "pack_unit",
+  ]);
+
+  const handleUnitsNeededChange = (raw_material_id, value) => {
+    setSelectedItems((prev) =>
+      prev.map((item) =>
+        item.raw_material_id === raw_material_id
+          ? {
+              ...item,
+              unitsNeeded: value,
+              cpr: Number(item.cost_per_unit) * Number(value || 0),
+              cpp: totalSellableUnits ?
+                (Number(item.cost_per_unit) * Number(value || 0)) /
+                Number(totalSellableUnits || 0)
+                : 0,
+            }
+          : item,
+      ),
+    );
+  };
+  const cols = useMemo(
+    () => [
+      {
+        key: "list_of_ingredients",
+        label: "List of Ingredients",
+        render: (row) => `${row.material_name?.trim() || ""}`,
+      },
+      {
+        key: "price",
+        label: "Price",
+        render: (row) => `${row.price_per_pack?.trim() || ""}`,
+      },
+      {
+        key: "number_of_units",
+        label: "Number of Units",
+        render: (row) =>
+          `${row.units_per_pack?.trim() || ""} ${row.base_unit || ""} `,
+      },
+      {
+        key: "cost_per_unit",
+        label: "Cost Per Unit",
+        render: (row) => `${row.cost_per_unit || ""}`,
+      },
+      {
+        key: "units_needed",
+        label: "Units Needed",
+        render: (row) => (
+          <TextInput
+            type="number"
+            min={1}
+            value={row.unitsNeeded ?? 1}
+            onClick={(e) => e.stopPropagation()}
+            onChange={(value) =>
+              handleUnitsNeededChange(row.raw_material_id, Number(value))
+            }
+          />
+        ),
+      },
+      ...query.columns
+        .filter((header) => !excludedHeaders.has(header))
+        .map((header) => ({
+          key: header,
+          label: header
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, (c) => c.toUpperCase()),
+        })),
+      {
+        key: "cpr",
+        label: "Cost Per Recipe",
+        render: (row) => `₱${(row.cpr || 0).toFixed(2)}`,
+      },
+      {
+        key: "cpp",
+        label: "Cost Per Product",
+        render: (row) => `₱${(row.cpp || 0).toFixed(2)}`,
+      },
+    ],
+    [handleUnitsNeededChange],
+  );
   const filtered = query.data.filter((d) =>
     d.material_name.toLowerCase().includes(search.toLowerCase()),
   );
@@ -25,9 +111,13 @@ const SelectRawMaterialsModal = ({ closeModal, onConfrim, selected = [] }) => {
     } else {
       setSelectedItems((prev) => [
         ...prev,
-        { ...material, unitsNeeded: 1, cpr: 0, cpp: 0 },
+        { ...material, unitsNeeded: "", cpr: 0, cpp: 0 },
       ]);
     }
+  };
+  const handleConfirm = () => {
+    onConfirm(selectedItems);
+    closeModal();
   };
   return (
     <>
@@ -35,7 +125,7 @@ const SelectRawMaterialsModal = ({ closeModal, onConfrim, selected = [] }) => {
         className="z-60 fixed inset-0 backdrop-blur-sm"
         onClick={closeModal}
       />
-      <ModalLayout widthStyle={"w-150"}>
+      <ModalLayout widthStyle={"w-300"}>
         <div className="flex items-center gap-2 mb-5">
           <Box size={20} className="text-gray-700" />
           <h1 className="text-xl font-bold">Select Direct Materials</h1>
@@ -125,11 +215,18 @@ const SelectRawMaterialsModal = ({ closeModal, onConfrim, selected = [] }) => {
               </span>
             </div>
             <div className="overflow-x-auto">
-              <Table
-              />
+              <Table columns={cols} data={selectedItems} />
             </div>
           </div>
         )}
+        <div className="flex justify-end gap-2 pt-2">
+          <Button
+          onClick={closeModal}
+          label="Cancel"/>
+          <Button
+          onClick={handleConfirm}
+          label="Confirm"/>
+        </div>
       </ModalLayout>
     </>
   );

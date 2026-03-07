@@ -10,6 +10,7 @@ const initialState = createInitialState({
   profitMargin: "",
   discount: "",
   salesTax: "",
+  directMaterials: {},
   errors: {},
 });
 
@@ -25,7 +26,7 @@ export const useProductsForm = () => {
   useEffect(() => {
     const totalInput = Number(state?.totalInput) || 0;
     const unitsPerProduct = Number(state?.unitsPerProduct) || 0;
-    const totalSellable = totalInput ? totalInput / unitsPerProduct : 0;
+    const totalSellable = totalInput && unitsPerProduct ? totalInput / unitsPerProduct : 0;
     dispatch({
       type: "UPDATE_FIELD",
       field: "totalSellableUnits",
