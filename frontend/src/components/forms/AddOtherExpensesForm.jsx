@@ -23,15 +23,6 @@ const AddOtherExpensesForm = ({
       />
       <FloatingLabelInput
         onChange={(val) =>
-          handleChange({ target: { name: "quantity", value: val } })
-        }
-        name="quantity"
-        type="number"
-        value={state?.quantity}
-        label="Quantity"
-      />
-      <FloatingLabelInput
-        onChange={(val) =>
           handleChange({ target: { name: "cost", value: val } })
         }
         name="cost"

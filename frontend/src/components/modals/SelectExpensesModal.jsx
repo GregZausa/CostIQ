@@ -1,47 +1,32 @@
 import React, { useMemo, useState } from "react";
 import ModalLayout from "../layout/ModalLayout";
-import { IdCardLanyard } from "lucide-react";
-import TextInput from "../ui/TextInput";
+import { Toolbox } from "lucide-react";
 import Table from "../ui/Table";
+import TextInput from "../ui/TextInput";
 import Button from "../ui/Button";
 
-const SelectEmployeeModal = ({
+const SelectExpensesModal = ({
   closeModal,
-  onConfirm,
-  totalSellableUnits,
   selected = [],
-  employeeQuery,
+  totalSellableUnits,
+  expensesQuery,
+  onConfirm,
 }) => {
   const [search, setSearch] = useState("");
   const [selectedItems, setSelectedItems] = useState(
     Array.isArray(selected) ? selected.map((s) => ({ ...s })) : [],
   );
-  const isSelected = (employee_id) =>
-    selectedItems.some((s) => s.employee_id === employee_id);
-  const toggleSelect = (employee) => {
-    if (isSelected(employee.employee_id)) {
-      setSelectedItems((prev) =>
-        prev.filter((s) => s.employee_id !== employee.employee_id),
-      );
-    } else {
-      setSelectedItems((prev) => [
-        ...prev,
-        { ...employee, cpr: 0, cpp: 0 },
-      ]);
-    }
-  };
-
-  const handlePrepTimeChange = (employee_id, value) => {
+  const handleQuantityChange = (other_expense_id, value) => {
     setSelectedItems((prev) =>
       prev.map((item) =>
-        item.employee_id === employee_id
+        item.other_expense_id === other_expense_id
           ? {
               ...item,
-              prep_time: value,
-              cpr: Number(item.rate_per_hr) * (value || 0),
+              quantity: value,
+              cpr: Number(item.expense_cost) * Number(value || 0),
               cpp: totalSellableUnits
-                ? (Number(item.rate_per_hr) * (value || 0)) /
-                  Number(totalSellableUnits || 0)
+                ? (Number(item.expense_cost) * Number(value || 0)) /
+                  Number(totalSellableUnits)
                 : 0,
             }
           : item,
@@ -51,35 +36,29 @@ const SelectEmployeeModal = ({
 
   const cols = useMemo(() => [
     {
-      key: "employee_list",
-      label: "Employee List",
-      render: (row) =>
-        `${row.first_name?.trim() || ""} ${row.last_name?.trim() || ""}`,
+      key: "category_name",
+      label: "Category Name",
+      render: (row) => `${row.category_name?.trim() || ""}`,
     },
     {
-      key: "position_name",
-      label: "Position Name",
-      render: (row) => `${row.position_name?.trim() || ""}`,
-    },
-    {
-      key: "rate_per_hr",
-      label: "Rate Per Hr.",
-      render: (row) => `₱${row.rate_per_hr?.trim() || ""}`,
-    },
-    {
-      key: "prep_time",
-      label: "Prep Time",
+      key: "quantity",
+      label: "Quantity",
       render: (row) => (
         <TextInput
           type="number"
           min={1}
-          value={row.prep_time ?? 0}
+          value={row.quantity ?? 0}
           onClick={(e) => e.stopPropagation()}
           onChange={(value) =>
-            handlePrepTimeChange(row.employee_id, Number(value))
+            handleQuantityChange(row.other_expense_id, Number(value))
           }
         />
       ),
+    },
+    {
+      key: "expense_cost",
+      label: "Expense Cost",
+      render: (row) => `₱${row.expense_cost?.trim() || ""}`,
     },
     {
       key: "cpr",
@@ -93,10 +72,21 @@ const SelectEmployeeModal = ({
     },
   ]);
 
-  const filtered = employeeQuery.data.filter(
-    (e) =>
-      e.last_name.toLowerCase().includes(search.toLowerCase()) ||
-      e.first_name.toLowerCase().includes(search.toLowerCase()),
+  const isSelected = (other_expense_id) =>
+    selectedItems.some((s) => s.other_expense_id === other_expense_id);
+
+  const toggleSelect = (expense) => {
+    if (isSelected(expense.other_expense_id)) {
+      setSelectedItems((prev) =>
+        prev.filter((s) => s.other_expense_id !== expense.other_expense_id),
+      );
+    } else {
+      setSelectedItems((prev) => [...prev, { ...expense, cpr: 0, cpp: 0 }]);
+    }
+  };
+
+  const filtered = expensesQuery.data.filter((e) =>
+    e.category_name.toLowerCase().includes(search.toLowerCase() || ""),
   );
 
   const handleConfirm = () => {
@@ -111,10 +101,9 @@ const SelectEmployeeModal = ({
       />
       <ModalLayout widthStyle={"w-300"}>
         <div className="flex items-center gap-2 mb-5">
-          <IdCardLanyard size={20} className="text-gray-700" />
-          <h1 className="text-xl font-bold">Select Employees</h1>
+          <Toolbox size={20} className="text-gray-700" />
+          <h1 className="text-xl font-bold">Select Other Expenses</h1>
         </div>
-
         <div className="relative mb-4">
           <TextInput type="search" value={search} onChange={setSearch} />
         </div>
@@ -125,41 +114,37 @@ const SelectEmployeeModal = ({
                 Select
               </span>
               <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                Employee Name
+                Category
               </span>
               <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                Position Name
-              </span>
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                Rate Per Hr.
+                Expense Cost
               </span>
             </div>
           </div>
           <div className="max-h-48 overflow-y-auto divide-y divide-gray-100">
             {filtered.length === 0 ? (
               <span className="text-center py-10 text-gray-500 italic font-semibold text-sm">
-                No employee found
+                No expenses found
               </span>
             ) : (
-              filtered.map((employee) => (
+              filtered.map((expense) => (
                 <div
-                  key={employee.employee_id}
-                  onClick={() => toggleSelect(employee)}
-                  className={`flex items-center text-center justify-between px-4 py-2.5 cursor-pointer transition-colors ${
-                    isSelected(employee.employee_id)
+                  key={expense.other_expense_id}
+                  onClick={() => toggleSelect(expense)}
+                  className={`flex items-center justify-between text-center px-4 py-2.5 cursor-pointer transition-colors ${
+                    isSelected(expense.other_expense_id)
                       ? "bg-gray-800 text-white"
                       : "hover:bg-gray-50 text-gray-700"
                   }`}
                 >
                   <div
-                    className={`w-4 h-4 rounded border-2 flex items-center justify-center shrink-0 transition-colors 
-                        ${
-                          isSelected(employee.employee_id)
-                            ? "bg-white border-white"
-                            : "border-gray-300"
-                        }`}
+                    className={`w-4 h-4 rounded border-2 flex items-center justify-center shrink-0 transition-colors ${
+                      isSelected(expense.other_expense_id)
+                        ? "bg-white border-white"
+                        : "border-gray-300"
+                    }`}
                   >
-                    {isSelected(employee.employee_id) && (
+                    {isSelected(expense.other_expense_id) && (
                       <svg
                         className="w-2.5 h-2.5 text-gray-800"
                         fill="currentColor"
@@ -177,13 +162,10 @@ const SelectEmployeeModal = ({
                     )}
                   </div>
                   <span className="text-sm font-medium">
-                    {`${employee.first_name} ${employee.last_name}`}
+                    {expense.category_name}
                   </span>
                   <span className="text-sm font-medium">
-                    {employee.position_name}
-                  </span>
-                  <span className="text-sm font-medium">
-                    {employee.rate_per_hr}
+                    {expense.expense_cost}
                   </span>
                 </div>
               ))
@@ -197,9 +179,7 @@ const SelectEmployeeModal = ({
                 Selected({selectedItems.length})
               </span>
             </div>
-            <div className="overflow-x-auto">
-              <Table columns={cols} data={selectedItems} />
-            </div>
+            <Table columns={cols} data={selectedItems} />
           </div>
         )}
         <div className="flex justify-end gap-2 pt-2">
@@ -215,4 +195,4 @@ const SelectEmployeeModal = ({
   );
 };
 
-export default SelectEmployeeModal;
+export default SelectExpensesModal;

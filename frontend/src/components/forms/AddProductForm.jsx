@@ -5,11 +5,13 @@ import Button from "../ui/Button";
 import { Box, IdCardLanyard, Toolbox } from "lucide-react";
 import SelectRawMaterialsModal from "../modals/SelectRawMaterialsModal";
 import SelectEmployeeModal from "../modals/SelectEmployeeModal";
+import SelectExpensesModal from "../modals/SelectExpensesModal";
 
 const AddProductForm = ({
   form,
   materialQuery,
   employeeQuery,
+  expensesQuery,
   handleChange,
   state,
   setOpenModal,
@@ -161,7 +163,7 @@ const AddProductForm = ({
             <Button
               label={
                 state?.otherExpenses?.length
-                  ? `Other Expenses ${state.otherExpenses}`
+                  ? `Other Expenses ${state.otherExpenses.length}`
                   : "Select Other Expenses"
               }
               onClick={() => setOpenModal("expenses")}
@@ -171,7 +173,7 @@ const AddProductForm = ({
             />
             {state?.otherExpenses?.length && (
               <span className="absolute -top-1.5 -right-1.5 bg-green-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
-                {state.otherExpenses.length}
+                {state?.otherExpenses?.length}
               </span>
             )}
           </div>
@@ -193,6 +195,15 @@ const AddProductForm = ({
           closeModal={() => setOpenModal(null)}
           onConfirm={handleEmployeesConfirm}
           selected={state?.employees || []}
+        />
+      )}
+      {openModal === "expenses" && (
+        <SelectExpensesModal
+          expensesQuery={expensesQuery}
+          totalSellableUnits={form.state?.totalSellableUnits}
+          closeModal={() => setOpenModal(null)}
+          onConfirm={handleExpensesConfirm}
+          selected={state?.otherExpenses || []}
         />
       )}
     </>

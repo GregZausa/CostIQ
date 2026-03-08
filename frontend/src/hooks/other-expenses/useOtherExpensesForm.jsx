@@ -5,7 +5,6 @@ import { apiUrl } from "../../config/apiUrl";
 
 const initialState = createInitialState({
   categoryName: "",
-  quantity: "",
   cost: "",
 });
 
@@ -26,7 +25,6 @@ export const useOtherExpensesForm = () => {
         type: "SET_FORM",
         payload: {
           categoryName: result.category_name,
-          quantity: result.quantity,
           cost: result.expense_cost,
         },
       });

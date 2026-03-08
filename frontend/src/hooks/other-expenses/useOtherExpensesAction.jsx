@@ -14,8 +14,6 @@ export const useOtherExpensesAction = ({
   const validate = (state) => {
     const errors = {};
     if (!state.categoryName) errors.categoryName = "Category name is required!";
-    if (!state.quantity || state.quantity < 0)
-      errors.quantity = "Quantity must be > 0";
     if (!state.cost || state.cost < 0) errors.cost = "Cost must be > 0";
     return errors;
   };

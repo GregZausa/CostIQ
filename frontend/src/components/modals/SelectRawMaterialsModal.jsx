@@ -33,7 +33,7 @@ const SelectRawMaterialsModal = ({
         item.raw_material_id === raw_material_id
           ? {
               ...item,
-              unitsNeeded: value,
+              units_needed: value,
               cpr: Number(item.cost_per_unit) * Number(value || 0),
               cpp: totalSellableUnits
                 ? (Number(item.cost_per_unit) * Number(value || 0)) /
@@ -74,7 +74,7 @@ const SelectRawMaterialsModal = ({
           <TextInput
             type="number"
             min={1}
-            value={row.unitsNeeded ?? 1}
+            value={row.units_needed ?? 0}
             onClick={(e) => e.stopPropagation()}
             onChange={(value) =>
               handleUnitsNeededChange(row.raw_material_id, Number(value))
@@ -109,7 +109,7 @@ const SelectRawMaterialsModal = ({
     } else {
       setSelectedItems((prev) => [
         ...prev,
-        { ...material, unitsNeeded: "", cpr: 0, cpp: 0 },
+        { ...material, cpr: 0, cpp: 0 },
       ]);
     }
   };

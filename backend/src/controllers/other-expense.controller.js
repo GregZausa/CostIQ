@@ -10,11 +10,10 @@ import { getPaginationParams } from "../utils/pagination.js";
 export const createOtherExpense = async (req, res) => {
   try {
     const createdBy = req.user.id;
-    const { category_name, quantity, cost } = req.body;
+    const { category_name, cost } = req.body;
 
     const otherExpense = await insertOtherExpense({
       category_name,
-      quantity,
       cost,
       created_by: createdBy,
     });
@@ -32,11 +31,10 @@ export const editOtherExpense = async (req, res) => {
   try {
     const createdBy = req.user.id;
     const { id } = req.params;
-    const { category_name, quantity, cost } = req.body;
+    const { category_name,  cost } = req.body;
 
     const otherExpense = await updateOtherExpense(
       category_name,
-      quantity,
       cost,
       createdBy,
       id,

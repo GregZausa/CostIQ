@@ -2,12 +2,11 @@ import pool from "../config/db.js";
 
 export const insertOtherExpense = async ({
   category_name,
-  quantity,
   cost,
   created_by,
 }) => {
-  const query = `INSERT INTO other_expenses (category_name, quantity, expense_cost, created_by) VALUES($1, $2, $3, $4) RETURNING *`;
-  const values = [category_name, quantity, cost, created_by];
+  const query = `INSERT INTO other_expenses (category_name, expense_cost, created_by) VALUES($1, $2, $3) RETURNING *`;
+  const values = [category_name, cost, created_by];
 
   const { rows } = await pool.query(query, values);
   return rows[0];
@@ -15,16 +14,15 @@ export const insertOtherExpense = async ({
 
 export const updateOtherExpense = async (
   category_name,
-  quantity,
   cost,
   createdBy,
   id,
 ) => {
-  const query = `UPDATE other_expenses SET category_name = $1, quantity = $2, expense_cost = $3
-                  WHERE created_by = $4
-                  AND other_expense_id = $5`;
+  const query = `UPDATE other_expenses SET category_name = $1, expense_cost = $2
+                  WHERE created_by = $3
+                  AND other_expense_id = $4`;
 
-  const values = [category_name, quantity, cost, createdBy, id];
+  const values = [category_name, cost, createdBy, id];
   const { rows } = await pool.query(query, values);
   return rows[0];
 };
@@ -47,7 +45,7 @@ export const getOtherExpenses = async (
   const totalRows = Number(countResult.rows[0].total);
   const totalPages = Math.ceil(totalRows / limit);
 
-  const query = `SELECT other_expense_id, category_name, quantity, expense_cost 
+  const query = `SELECT other_expense_id, category_name, expense_cost 
                   FROM other_expenses
                   WHERE created_by = $1
                   AND category_name ILIKE $2
@@ -66,7 +64,7 @@ export const getOtherExpenses = async (
 };
 
 export const getOtherExpensesById = async (createdBy, id) => {
-  const query = `SELECT category_name, quantity, expense_cost 
+  const query = `SELECT category_name, expense_cost 
                   FROM other_expenses 
                   WHERE created_by = $1 AND other_expense_id = $2`;
 

@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import ModalLayout from "../layout/ModalLayout";
 import AddProductForm from "../forms/AddProductForm";
 
-const ProductsModal = ({ closeModal, form, materialQuery, employeeQuery }) => {
+const ProductsModal = ({
+  closeModal,
+  form,
+  materialQuery,
+  employeeQuery,
+  expensesQuery,
+}) => {
   const [openModal, setOpenModal] = useState(null);
   const { handleChange } = form;
 
@@ -34,6 +40,7 @@ const ProductsModal = ({ closeModal, form, materialQuery, employeeQuery }) => {
         form={form}
         materialQuery={materialQuery}
         employeeQuery={employeeQuery}
+        expensesQuery={expensesQuery}
       />
     </ModalLayout>
   );
