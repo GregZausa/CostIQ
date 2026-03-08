@@ -1,42 +1,47 @@
 import React, { useMemo, useState } from "react";
 import ModalLayout from "../layout/ModalLayout";
-import { Box } from "lucide-react";
+import { IdCardLanyard } from "lucide-react";
 import TextInput from "../ui/TextInput";
 import Table from "../ui/Table";
+import SelectBox from "../ui/SelectBox";
 import Button from "../ui/Button";
 
-const SelectRawMaterialsModal = ({
+const SelectEmployeeModal = ({
   closeModal,
   onConfirm,
-  selected = [],
   totalSellableUnits,
-  materialQuery,
+  selected = [],
+  employeeQuery,
 }) => {
   const [search, setSearch] = useState("");
   const [selectedItems, setSelectedItems] = useState(
     Array.isArray(selected) ? selected.map((s) => ({ ...s })) : [],
   );
+  const isSelected = (employee_id) =>
+    selectedItems.some((s) => s.employee_id === employee_id);
+  const toggleSelect = (employee) => {
+    if (isSelected(employee.employee_id)) {
+      setSelectedItems((prev) =>
+        prev.filter((s) => s.employee_id !== employee.employee_id),
+      );
+    } else {
+      setSelectedItems((prev) => [
+        ...prev,
+        { ...employee, prepTime: "", cpr: 0, cpp: 0 },
+      ]);
+    }
+  };
 
-  const excludedHeaders = new Set([
-    "material_name",
-    "price_per_pack",
-    "units_per_pack",
-    "base_unit",
-    "cost_per_unit",
-    "raw_material_id",
-    "pack_unit",
-  ]);
-
-  const handleUnitsNeededChange = (raw_material_id, value) => {
+  const handlePrepTimeChange = (employee_id, value) => {
     setSelectedItems((prev) =>
       prev.map((item) =>
-        item.raw_material_id === raw_material_id
+        item.employee_id === employee_id
           ? {
               ...item,
-              unitsNeeded: value,
-              cpr: Number(item.cost_per_unit) * Number(value || 0),
+              prepTime: value,
+              cpr: Number(item.rate_per_hr) * (value || 0),
               cpp: totalSellableUnits
-                ? (Number(item.cost_per_unit) * Number(value || 0)) /
+                ? (Number(item.rate_per_hr) * (value || 0)) /
                   Number(totalSellableUnits || 0)
                 : 0,
             }
@@ -44,75 +49,57 @@ const SelectRawMaterialsModal = ({
       ),
     );
   };
-  const cols = useMemo(
-    () => [
-      {
-        key: "list_of_ingredients",
-        label: "List of Ingredients",
-        render: (row) => `${row.material_name?.trim() || ""}`,
-      },
-      {
-        key: "price",
-        label: "Price",
-        render: (row) => `${row.price_per_pack?.trim() || ""}`,
-      },
-      {
-        key: "number_of_units",
-        label: "Number of Units",
-        render: (row) =>
-          `${row.units_per_pack?.trim() || ""} ${row.base_unit || ""} `,
-      },
-      {
-        key: "cost_per_unit",
-        label: "Cost Per Unit",
-        render: (row) => `${row.cost_per_unit || ""}`,
-      },
-      {
-        key: "units_needed",
-        label: "Units Needed",
-        render: (row) => (
-          <TextInput
-            type="number"
-            min={1}
-            value={row.unitsNeeded ?? 1}
-            onClick={(e) => e.stopPropagation()}
-            onChange={(value) =>
-              handleUnitsNeededChange(row.raw_material_id, Number(value))
-            }
-          />
-        ),
-      },
-      {
-        key: "cpr",
-        label: "Cost Per Recipe",
-        render: (row) => `₱${(row.cpr || 0).toFixed(2)}`,
-      },
-      {
-        key: "cpp",
-        label: "Cost Per Product",
-        render: (row) => `₱${(row.cpp || 0).toFixed(2)}`,
-      },
-    ],
-    [handleUnitsNeededChange],
-  );
-  const filtered = materialQuery.data.filter((d) =>
-    d.material_name.toLowerCase().includes(search.toLowerCase()),
-  );
-  const isSelected = (raw_material_id) =>
-    selectedItems.some((s) => s.raw_material_id === raw_material_id);
 
-  const toggleSelect = (material) => {
-    if (isSelected(material.raw_material_id)) {
-      setSelectedItems((prev) =>
-        prev.filter((s) => s.raw_material_id !== material.raw_material_id),
-      );
-    } else {
-      setSelectedItems((prev) => [
-        ...prev,
-        { ...material, unitsNeeded: "", cpr: 0, cpp: 0 },
-      ]);
-    }
-  };
+  const cols = useMemo(() => [
+    {
+      key: "employee_list",
+      label: "Employee List",
+      render: (row) =>
+        `${row.first_name?.trim() || ""} ${row.last_name?.trim() || ""}`,
+    },
+    {
+      key: "position_name",
+      label: "Position Name",
+      render: (row) => `${row.position_name || ""}`,
+    },
+    {
+      key: "rate_per_hr",
+      label: "Rate Per Hr.",
+      render: (row) => `${row.rate_per_hr || ""}`,
+    },
+    {
+      key: "prep_time",
+      label: "Prep Time",
+      render: (row) => (
+        <TextInput
+          type="number"
+          min={1}
+          value={row.prepTime ?? 1}
+          onClick={(e) => e.stopPropagation()}
+          onChange={(value) =>
+            handlePrepTimeChange(row.employee_id, Number(value))
+          }
+        />
+      ),
+    },
+    {
+      key: "cpr",
+      label: "Cost Per Recipe",
+      render: (row) => `₱${(row.cpr || 0).toFixed(2)}`,
+    },
+    {
+      key: "cpp",
+      label: "Cost Per Product",
+      render: (row) => `₱${(row.cpp || 0).toFixed(2)}`,
+    },
+  ]);
+
+  const filtered = employeeQuery.data.filter(
+    (e) =>
+      e.last_name.toLowerCase().includes(search.toLowerCase()) ||
+      e.first_name.toLowerCase().includes(search.toLowerCase()),
+  );
+
   const handleConfirm = () => {
     onConfirm(selectedItems);
     closeModal();
@@ -123,10 +110,10 @@ const SelectRawMaterialsModal = ({
         className="z-60 fixed inset-0 backdrop-blur-sm"
         onClick={closeModal}
       />
-      <ModalLayout widthStyle={"w-300"} closeModal={closeModal}>
+      <ModalLayout widthStyle={"w-300"}>
         <div className="flex items-center gap-2 mb-5">
-          <Box size={20} className="text-gray-700" />
-          <h1 className="text-xl font-bold">Select Direct Materials</h1>
+          <IdCardLanyard size={20} className="text-gray-700" />
+          <h1 className="text-xl font-bold">Select Employees</h1>
         </div>
 
         <div className="relative mb-4">
@@ -139,42 +126,41 @@ const SelectRawMaterialsModal = ({
                 Select
               </span>
               <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                Available Materials
+                Employee Name
               </span>
               <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                Number of Units
+                Position Name
               </span>
               <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                Cost Per Unit
+                Rate Per Hr.
               </span>
             </div>
           </div>
           <div className="max-h-48 overflow-y-auto divide-y divide-gray-100">
             {filtered.length === 0 ? (
               <span className="text-center py-10 text-gray-500 italic font-semibold text-sm">
-                No materials found
+                No employee found
               </span>
             ) : (
-              filtered.map((material) => (
+              filtered.map((employee) => (
                 <div
-                  key={material.raw_material_id}
-                  onClick={() => toggleSelect(material)}
-                  className={`flex items-center text-center justify-between px-4 py-2.5 cursor-pointer transition-colors 
-                    ${
-                      isSelected(material.raw_material_id)
-                        ? "bg-gray-800 text-white"
-                        : "hover:bg-gray-50 text-gray-700"
-                    }`}
+                  key={employee.employee_id}
+                  onClick={() => toggleSelect(employee)}
+                  className={`flex items-center text-center justify-between px-4 py-2.5 cursor-pointer transition-colors ${
+                    isSelected(employee.employee_id)
+                      ? "bg-gray-800 text-white"
+                      : "hover:bg-gray-50 text-gray-700"
+                  }`}
                 >
                   <div
                     className={`w-4 h-4 rounded border-2 flex items-center justify-center shrink-0 transition-colors 
                         ${
-                          isSelected(material.raw_material_id)
+                          isSelected(employee.employee_id)
                             ? "bg-white border-white"
                             : "border-gray-300"
                         }`}
                   >
-                    {isSelected(material.raw_material_id) && (
+                    {isSelected(employee.employee_id) && (
                       <svg
                         className="w-2.5 h-2.5 text-gray-800"
                         fill="currentColor"
@@ -192,13 +178,13 @@ const SelectRawMaterialsModal = ({
                     )}
                   </div>
                   <span className="text-sm font-medium">
-                    {material.material_name}
+                    {`${employee.first_name} ${employee.last_name}`}
                   </span>
                   <span className="text-sm font-medium">
-                    {material.units_per_pack} {material.base_unit}
+                    {employee.position_name}
                   </span>
-                  <span className={`font-medium`}>
-                    ₱{material.cost_per_unit}
+                  <span className="text-sm font-medium">
+                    {employee.rate_per_hr}
                   </span>
                 </div>
               ))
@@ -209,7 +195,7 @@ const SelectRawMaterialsModal = ({
           <div className="border border-gray-200 rounded-lg overflow-hidden mb-5">
             <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
               <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                Selected ({selectedItems.length})
+                Selected({selectedItems.length})
               </span>
             </div>
             <div className="overflow-x-auto">
@@ -230,4 +216,4 @@ const SelectRawMaterialsModal = ({
   );
 };
 
-export default SelectRawMaterialsModal;
+export default SelectEmployeeModal;

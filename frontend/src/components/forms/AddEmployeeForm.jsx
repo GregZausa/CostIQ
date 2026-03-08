@@ -79,7 +79,7 @@ const AddEmployeeForm = ({
             handleSubmit;
             setIsLoading(!isLoading);
           }}
-          backgroundAndText={"bg-blue-700 hover:bg-blue-500 text-white"}
+          backgroundAndText={"bg-gray-800 hover:bg-blue-500 text-white"}
         />
         <Button
           onClick={closeModal}

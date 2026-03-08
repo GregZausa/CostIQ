@@ -46,7 +46,7 @@ const LoginForm = ({
           onClick={onLogin}
           disabled={isLoading}
           className={"w-45"}
-          backgroundAndText={"bg-blue-700 hover:bg-blue-500 text-white"}
+          backgroundAndText={"bg-gray-800 hover:gray-500 text-white"}
         />
         <Button
           label={"Register"}

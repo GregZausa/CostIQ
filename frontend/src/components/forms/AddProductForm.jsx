@@ -1,13 +1,15 @@
-import React, { } from "react";
+import React from "react";
 import FloatingLabelInput from "../ui/FloatingLabelInput";
 import ImageInput from "../ui/ImageInput";
 import Button from "../ui/Button";
 import { Box, IdCardLanyard, Toolbox } from "lucide-react";
 import SelectRawMaterialsModal from "../modals/SelectRawMaterialsModal";
+import SelectEmployeeModal from "../modals/SelectEmployeeModal";
 
 const AddProductForm = ({
   form,
-  query,
+  materialQuery,
+  employeeQuery,
   handleChange,
   state,
   setOpenModal,
@@ -177,11 +179,20 @@ const AddProductForm = ({
       </form>
       {openModal === "materials" && (
         <SelectRawMaterialsModal
-        query={query}
+          materialQuery={materialQuery}
           totalSellableUnits={form.state?.totalSellableUnits}
           closeModal={() => setOpenModal(null)}
           onConfirm={handleMaterialsConfirm}
           selected={state?.directMaterials || []}
+        />
+      )}
+      {openModal === "employees" && (
+        <SelectEmployeeModal
+          employeeQuery={employeeQuery}
+          totalSellableUnits={form.state?.totalSellableUnits}
+          closeModal={() => setOpenModal(null)}
+          onConfirm={handleEmployeesConfirm}
+          selected={state?.employees || []}
         />
       )}
     </>

@@ -11,6 +11,7 @@ const initialState = createInitialState({
   discount: "",
   salesTax: "",
   directMaterials: {},
+  employees: {},
   errors: {},
 });
 
