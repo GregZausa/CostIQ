@@ -1,5 +1,6 @@
 import {
   deleteRawMaterials,
+  getLeastExpensiveMaterial,
   getMostExpenseiveMaterial,
   getRawMaterials,
   getRawMaterialsById,
@@ -54,12 +55,14 @@ export const fetchRawMaterialsService = async (req) => {
   const { page, limit, offset, searchTerm, createdBy } =
     getPaginationParams(req);
 
-  const [rows, totalRows, totalAllRows, mostExpensive] = await Promise.all([
-    getRawMaterials(createdBy, searchTerm, selectedUnit, limit, offset),
-    getRawMaterialsCount(createdBy, searchTerm, selectedUnit),
-    getRawMaterialsTotalCount(createdBy),
-    getMostExpenseiveMaterial(createdBy),
-  ]);
+  const [rows, totalRows, totalAllRows, mostExpensive, leastExpensive] =
+    await Promise.all([
+      getRawMaterials(createdBy, searchTerm, selectedUnit, limit, offset),
+      getRawMaterialsCount(createdBy, searchTerm, selectedUnit),
+      getRawMaterialsTotalCount(createdBy),
+      getMostExpenseiveMaterial(createdBy),
+      getLeastExpensiveMaterial(createdBy),
+    ]);
 
   const totalPages = Math.ceil(totalAllRows / limit);
 
@@ -70,6 +73,7 @@ export const fetchRawMaterialsService = async (req) => {
     totalRows,
     totalAllRows,
     mostExpensive,
+    leastExpensive,
   };
 };
 

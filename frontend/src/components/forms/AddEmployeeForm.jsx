@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import FloatingLabelInput from "../ui/FloatingLabelInput";
 import Button from "../ui/Button";
 import SelectBox from "../ui/SelectBox";
@@ -15,7 +15,7 @@ const AddEmployeeForm = ({
 }) => {
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
-      <div className="grid md:grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <FloatingLabelInput
           onChange={(val) =>
             handleChange({ target: { name: "employeeLastName", value: val } })
@@ -36,7 +36,7 @@ const AddEmployeeForm = ({
         />
       </div>
 
-      <div className="grid md:grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <SelectBox
           onChange={(val) =>
             handleChange({ target: { name: "position", value: val } })
@@ -46,16 +46,18 @@ const AddEmployeeForm = ({
           value={state?.position}
           options={positionOptions}
         />
-        <div className="grid md:grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-2">
           <Button
             type="button"
             label={"Add Position"}
+            className={"w-full"}
             backgroundAndText={"bg-gray-800 text-white hover:text-gray-400"}
             onClick={() => openPositionModal("add")}
           />
           <Button
             type="button"
             label={"View Positions"}
+            className={"w-full"}
             backgroundAndText={"bg-gray-800 text-white hover:text-gray-400"}
             onClick={() => openPositionModal("table")}
           />
@@ -71,6 +73,7 @@ const AddEmployeeForm = ({
         label="Rate per hour"
         value={state?.ratePerHr}
       />
+
       <div className="flex justify-end space-x-4">
         <Button
           type="submit"
@@ -84,9 +87,7 @@ const AddEmployeeForm = ({
         <Button
           onClick={closeModal}
           label="Cancel"
-          backgroundAndText={
-            "bg-white hover:bg-gray-400 text-black border-none"
-          }
+          backgroundAndText={"bg-white hover:bg-gray-100 text-black border border-gray-300"}
           disabled={isLoading}
         />
       </div>

@@ -42,7 +42,7 @@ const FloatingLabelInput = ({
         onFocus={() => setOnFocus(true)}
         onBlur={() => setOnFocus(false)}
         onChange={(e) => onChange(e.target.value)}
-        className={`border border-gray-300 rounded-md px-3 py-2 min-w-full focus:outline-none focus:ring-2 focus:ring-transparent ${suffix ? "pr-10" : ""} ${className}`}
+        className={`border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-transparent ${suffix ? "pr-10" : ""} ${className}`}
         readOnly={readOnly}
       />
       <label

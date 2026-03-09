@@ -131,3 +131,14 @@ export const getMostExpenseiveMaterial = async (createdBy) => {
   const result = await pool.query(query, [createdBy]);
   return result.rows[0] || null;
 };
+
+export const getLeastExpensiveMaterial = async (createdBy) => {
+  const query = `SELECT * 
+                  FROM raw_materials 
+                  WHERE created_by = $1 
+                  ORDER BY cost_per_unit ASC 
+                  LIMIT 1`;
+  const result = await pool.query(query, [createdBy]);
+  return result.rows[0] || null;
+};
+

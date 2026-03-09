@@ -17,6 +17,7 @@ const useRawMaterials = ({ onSuccess, openModal, setIsLoading } = {}) => {
 
   const totalRawMaterials = query.totalAllRows;
   const mostExpensiveMaterial = query.mostExpensive;
+  const leastExpensiveMaterial = query.leastExpensive;
 
   return {
     form,
@@ -24,6 +25,7 @@ const useRawMaterials = ({ onSuccess, openModal, setIsLoading } = {}) => {
     actions,
     totalRawMaterials,
     mostExpensiveMaterial,
+    leastExpensiveMaterial,
   };
 };
 

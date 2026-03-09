@@ -3,7 +3,7 @@ import RawMaterialsModal from "../components/modals/RawMaterialsModal";
 import RawMaterialsTable from "../tables/RawMaterialsTable";
 import RawMaterialsCard from "../components/cards/RawMaterialsCard";
 import useRawMaterials from "../hooks/raw-materials/useRawMaterials";
-import { Box, TrendingUp } from "lucide-react";
+import { Box, Tag, TrendingDown, TrendingUp } from "lucide-react";
 import Headers from "../components/layout/Headers";
 
 const RawMaterials = () => {
@@ -15,12 +15,18 @@ const RawMaterials = () => {
     setIsModalOpen(true);
   };
 
-  const { totalRawMaterials, query, actions, form, mostExpensiveMaterial } =
-    useRawMaterials({
-      openModal,
-      setIsLoading,
-      onSuccess: () => onSuccessRef.current?.(),
-    });
+  const {
+    totalRawMaterials,
+    query,
+    actions,
+    form,
+    mostExpensiveMaterial,
+    leastExpensiveMaterial,
+  } = useRawMaterials({
+    openModal,
+    setIsLoading,
+    onSuccess: () => onSuccessRef.current?.(),
+  });
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -64,6 +70,16 @@ const RawMaterials = () => {
           }
           description={mostExpensiveMaterial?.material_name}
           icon={<TrendingUp size={18} />}
+        />
+        <RawMaterialsCard
+          title={"Lowest Cost / Unit"}
+          value={
+            leastExpensiveMaterial
+              ? `₱ ${Number(leastExpensiveMaterial.cost_per_unit).toLocaleString()}`
+              : "-"
+          }
+          description={leastExpensiveMaterial?.material_name}
+          icon={<Tag size={18} />}
         />
       </div>
       <div>
