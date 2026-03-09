@@ -4,6 +4,7 @@ import { Box } from "lucide-react";
 import TextInput from "../ui/TextInput";
 import Table from "../ui/Table";
 import Button from "../ui/Button";
+import SelectorLayout from "../layout/SelectorLayout";
 
 const SelectRawMaterialsModal = ({
   closeModal,
@@ -16,16 +17,6 @@ const SelectRawMaterialsModal = ({
   const [selectedItems, setSelectedItems] = useState(
     Array.isArray(selected) ? selected.map((s) => ({ ...s })) : [],
   );
-
-  const excludedHeaders = new Set([
-    "material_name",
-    "price_per_pack",
-    "units_per_pack",
-    "base_unit",
-    "cost_per_unit",
-    "raw_material_id",
-    "pack_unit",
-  ]);
 
   const handleUnitsNeededChange = (raw_material_id, value) => {
     setSelectedItems((prev) =>
@@ -107,10 +98,7 @@ const SelectRawMaterialsModal = ({
         prev.filter((s) => s.raw_material_id !== material.raw_material_id),
       );
     } else {
-      setSelectedItems((prev) => [
-        ...prev,
-        { ...material, cpr: 0, cpp: 0 },
-      ]);
+      setSelectedItems((prev) => [...prev, { ...material, cpr: 0, cpp: 0 }]);
     }
   };
   const handleConfirm = () => {
@@ -118,115 +106,61 @@ const SelectRawMaterialsModal = ({
     closeModal();
   };
   return (
-    <>
-      <div
-        className="z-60 fixed inset-0 backdrop-blur-sm"
-        onClick={closeModal}
+    <ModalLayout widthStyle={"w-300"} closeModal={closeModal}>
+      <SelectorLayout
+        search={search}
+        setSearch={setSearch}
+        filtered={filtered}
+        toggleSelect={toggleSelect}
+        isSelected={isSelected}
+        Icon={<Box size={20} className="text-gray-700" />}
+        title="Select Raw Materials"
+        idKey="raw_material_id"
+        columns={[
+          {
+            key: "material_name",
+            label: "Available Materials",
+            render: (e) => e.material_name,
+          },
+          {
+            key: "number_of_units",
+            label: "Number of Units",
+            render: (e) => `${e.units_per_pack} ${e.base_unit}`,
+          },
+          {
+            key: "cost_per_unit",
+            label: "Cost Per Unit",
+            render: (e) => e.cost_per_unit,
+          },
+        ]}
       />
-      <ModalLayout widthStyle={"w-300"} closeModal={closeModal}>
-        <div className="flex items-center gap-2 mb-5">
-          <Box size={20} className="text-gray-700" />
-          <h1 className="text-xl font-bold">Select Direct Materials</h1>
-        </div>
-
-        <div className="relative mb-4">
-          <TextInput type="search" value={search} onChange={setSearch} />
-        </div>
+      {selectedItems.length > 0 && (
         <div className="border border-gray-200 rounded-lg overflow-hidden mb-5">
-          <div className="bg-gray-50 px-4 border-b border-gray-200">
-            <div className="flex justify-between">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                Select
-              </span>
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                Available Materials
-              </span>
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                Number of Units
-              </span>
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                Cost Per Unit
-              </span>
-            </div>
+          <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
+            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+              Selected ({selectedItems.length})
+            </span>
           </div>
-          <div className="max-h-48 overflow-y-auto divide-y divide-gray-100">
-            {filtered.length === 0 ? (
-              <span className="text-center py-10 text-gray-500 italic font-semibold text-sm">
-                No materials found
-              </span>
-            ) : (
-              filtered.map((material) => (
-                <div
-                  key={material.raw_material_id}
-                  onClick={() => toggleSelect(material)}
-                  className={`flex items-center text-center justify-between px-4 py-2.5 cursor-pointer transition-colors 
-                    ${
-                      isSelected(material.raw_material_id)
-                        ? "bg-gray-800 text-white"
-                        : "hover:bg-gray-50 text-gray-700"
-                    }`}
-                >
-                  <div
-                    className={`w-4 h-4 rounded border-2 flex items-center justify-center shrink-0 transition-colors 
-                        ${
-                          isSelected(material.raw_material_id)
-                            ? "bg-white border-white"
-                            : "border-gray-300"
-                        }`}
-                  >
-                    {isSelected(material.raw_material_id) && (
-                      <svg
-                        className="w-2.5 h-2.5 text-gray-800"
-                        fill="currentColor"
-                        viewBox="0 0 12 12"
-                      >
-                        <path
-                          d="M10 3L5 8.5 2 5.5"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          fill="none"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    )}
-                  </div>
-                  <span className="text-sm font-medium">
-                    {material.material_name}
-                  </span>
-                  <span className="text-sm font-medium">
-                    {material.units_per_pack} {material.base_unit}
-                  </span>
-                  <span className={`font-medium`}>
-                    ₱{material.cost_per_unit}
-                  </span>
-                </div>
-              ))
-            )}
+          <div className="overflow-x-auto">
+            <Table columns={cols} data={selectedItems} />
           </div>
         </div>
-        {selectedItems.length > 0 && (
-          <div className="border border-gray-200 rounded-lg overflow-hidden mb-5">
-            <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                Selected ({selectedItems.length})
-              </span>
-            </div>
-            <div className="overflow-x-auto">
-              <Table columns={cols} data={selectedItems} />
-            </div>
-          </div>
-        )}
-        <div className="flex justify-end gap-2 pt-2">
-          <Button onClick={closeModal} label="Cancel" />
-          <Button
-            onClick={handleConfirm}
-            label="Confirm"
-            backgroundAndText={"bg-gray-800 hover:bg-blue-500 text-white"}
-          />
-        </div>
-      </ModalLayout>
-    </>
+      )}
+      <div className="flex justify-end gap-2 pt-2">
+        <Button
+          onClick={closeModal}
+          label="Cancel"
+          backgroundAndText={
+            "bg-white hover:bg-gray-400 text-black border-none"
+          }
+        />
+        <Button
+          onClick={handleConfirm}
+          label="Confirm"
+          backgroundAndText={"bg-gray-800 hover:bg-blue-500 text-white"}
+        />
+      </div>
+    </ModalLayout>
   );
 };
 

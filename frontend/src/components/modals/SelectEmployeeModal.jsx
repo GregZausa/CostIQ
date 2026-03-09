@@ -4,6 +4,7 @@ import { IdCardLanyard } from "lucide-react";
 import TextInput from "../ui/TextInput";
 import Table from "../ui/Table";
 import Button from "../ui/Button";
+import SelectorLayout from "../layout/SelectorLayout";
 
 const SelectEmployeeModal = ({
   closeModal,
@@ -24,10 +25,7 @@ const SelectEmployeeModal = ({
         prev.filter((s) => s.employee_id !== employee.employee_id),
       );
     } else {
-      setSelectedItems((prev) => [
-        ...prev,
-        { ...employee, cpr: 0, cpp: 0 },
-      ]);
+      setSelectedItems((prev) => [...prev, { ...employee, cpr: 0, cpp: 0 }]);
     }
   };
 
@@ -110,86 +108,33 @@ const SelectEmployeeModal = ({
         onClick={closeModal}
       />
       <ModalLayout widthStyle={"w-300"}>
-        <div className="flex items-center gap-2 mb-5">
-          <IdCardLanyard size={20} className="text-gray-700" />
-          <h1 className="text-xl font-bold">Select Employees</h1>
-        </div>
-
-        <div className="relative mb-4">
-          <TextInput type="search" value={search} onChange={setSearch} />
-        </div>
-        <div className="border border-gray-200 rounded-lg overflow-hidden mb-5">
-          <div className="bg-gray-50 px-4 border-b border-gray-200">
-            <div className="flex justify-between">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                Select
-              </span>
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                Employee Name
-              </span>
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                Position Name
-              </span>
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                Rate Per Hr.
-              </span>
-            </div>
-          </div>
-          <div className="max-h-48 overflow-y-auto divide-y divide-gray-100">
-            {filtered.length === 0 ? (
-              <span className="text-center py-10 text-gray-500 italic font-semibold text-sm">
-                No employee found
-              </span>
-            ) : (
-              filtered.map((employee) => (
-                <div
-                  key={employee.employee_id}
-                  onClick={() => toggleSelect(employee)}
-                  className={`flex items-center text-center justify-between px-4 py-2.5 cursor-pointer transition-colors ${
-                    isSelected(employee.employee_id)
-                      ? "bg-gray-800 text-white"
-                      : "hover:bg-gray-50 text-gray-700"
-                  }`}
-                >
-                  <div
-                    className={`w-4 h-4 rounded border-2 flex items-center justify-center shrink-0 transition-colors 
-                        ${
-                          isSelected(employee.employee_id)
-                            ? "bg-white border-white"
-                            : "border-gray-300"
-                        }`}
-                  >
-                    {isSelected(employee.employee_id) && (
-                      <svg
-                        className="w-2.5 h-2.5 text-gray-800"
-                        fill="currentColor"
-                        viewBox="0 0 12 12"
-                      >
-                        <path
-                          d="M10 3L5 8.5 2 5.5"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          fill="none"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    )}
-                  </div>
-                  <span className="text-sm font-medium">
-                    {`${employee.first_name} ${employee.last_name}`}
-                  </span>
-                  <span className="text-sm font-medium">
-                    {employee.position_name}
-                  </span>
-                  <span className="text-sm font-medium">
-                    {employee.rate_per_hr}
-                  </span>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
+        <SelectorLayout
+          search={search}
+          setSearch={setSearch}
+          filtered={filtered}
+          isSelected={isSelected}
+          toggleSelect={toggleSelect}
+          Icon={<IdCardLanyard size={20} className="text-gray-700" />}
+          title="Select Employee"
+          idKey="employee_id"
+          columns={[
+            {
+              key: "name",
+              label: "Employee Name",
+              render: (e) => `${e.first_name} ${e.last_name}`,
+            },
+            {
+              key: "position_name",
+              label: "Position Name",
+              render: (e) => e.position_name,
+            },
+            {
+              key: "rate_per_hr",
+              label: "Rate Per Hr.",
+              render: (e) => e.rate_per_hr,
+            },
+          ]}
+        />
         {selectedItems.length > 0 && (
           <div className="border border-gray-200 rounded-lg overflow-hidden mb-5">
             <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
@@ -203,7 +148,13 @@ const SelectEmployeeModal = ({
           </div>
         )}
         <div className="flex justify-end gap-2 pt-2">
-          <Button onClick={closeModal} label="Cancel" />
+          <Button
+            onClick={closeModal}
+            label="Cancel"
+            backgroundAndText={
+              "bg-white hover:bg-gray-400 text-black border-none"
+            }
+          />
           <Button
             onClick={handleConfirm}
             label="Confirm"

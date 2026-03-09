@@ -26,7 +26,7 @@ const ProductsModal = ({
   const clamped = (val, min = 0, max = 100) =>
     Math.min(max, Math.max(min, Number(val)));
   return (
-    <ModalLayout closeModal={closeModal} widthStyle={"w-170"}>
+    <ModalLayout closeModal={closeModal} widthStyle={"w-250"}>
       <h1 className="text-xl font-bold mb-4">Add Product</h1>
       <AddProductForm
         handleChange={form.handleChange}
