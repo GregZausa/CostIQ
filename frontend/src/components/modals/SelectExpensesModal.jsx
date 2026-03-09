@@ -1,10 +1,11 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ModalLayout from "../layout/ModalLayout";
 import { Toolbox } from "lucide-react";
 import Table from "../ui/Table";
 import TextInput from "../ui/TextInput";
 import Button from "../ui/Button";
 import SelectorLayout from "../layout/SelectorLayout";
+import SelectorTableLayout from "../layout/SelectorTableLayout";
 
 const SelectExpensesModal = ({
   closeModal,
@@ -17,23 +18,39 @@ const SelectExpensesModal = ({
   const [selectedItems, setSelectedItems] = useState(
     Array.isArray(selected) ? selected.map((s) => ({ ...s })) : [],
   );
-  const handleQuantityChange = (other_expense_id, value) => {
+
+  useEffect(() => {
     setSelectedItems((prev) =>
-      prev.map((item) =>
-        item.other_expense_id === other_expense_id
-          ? {
-              ...item,
-              quantity: value,
-              cpr: Number(item.expense_cost) * Number(value || 0),
-              cpp: totalSellableUnits
-                ? (Number(item.expense_cost) * Number(value || 0)) /
-                  Number(totalSellableUnits)
-                : 0,
-            }
-          : item,
-      ),
+      prev.map((item) => ({
+        ...item,
+        cpp:
+          totalSellableUnits && item.quantity
+            ? (Number(item.expense_cost) * Number(item.quantity)) /
+              Number(totalSellableUnits)
+            : 0,
+      })),
     );
-  };
+  }, [totalSellableUnits]);
+  const handleQuantityChange = useCallback(
+    (other_expense_id, value) => {
+      setSelectedItems((prev) =>
+        prev.map((item) =>
+          item.other_expense_id === other_expense_id
+            ? {
+                ...item,
+                quantity: value,
+                cpr: Number(item.expense_cost) * Number(value || 0),
+                cpp: totalSellableUnits
+                  ? (Number(item.expense_cost) * Number(value || 0)) /
+                    Number(totalSellableUnits)
+                  : 0,
+              }
+            : item,
+        ),
+      );
+    },
+    [totalSellableUnits],
+  );
 
   const cols = useMemo(() => [
     {
@@ -124,14 +141,7 @@ const SelectExpensesModal = ({
           ]}
         />
         {selectedItems.length > 0 && (
-          <div className="border border-gray-200 rounded-lg overflow-hidden mb-5">
-            <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                Selected({selectedItems.length})
-              </span>
-            </div>
-            <Table columns={cols} data={selectedItems} />
-          </div>
+          <SelectorTableLayout selectedItems={selectedItems} cols={cols} />
         )}
         <div className="flex justify-end gap-2 pt-2">
           <Button

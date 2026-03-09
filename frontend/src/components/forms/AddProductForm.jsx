@@ -20,7 +20,9 @@ const AddProductForm = ({
   handleExpensesConfirm,
   handleEmployeesConfirm,
   clamped,
+  handleOpenModal,
 }) => {
+
   return (
     <>
       <form className="space-y-4">
@@ -129,7 +131,7 @@ const AddProductForm = ({
                   ? `Direct Materials ${state.directMaterials.length}`
                   : "Select Direct Materials"
               }
-              onClick={() => setOpenModal("materials")}
+              onClick={() => handleOpenModal("materials")}
               className={"w-full"}
               backgroundAndText={"bg-gray-800 text-white hover:text-gray-400"}
               icon={<Box size={12} />}
@@ -148,7 +150,7 @@ const AddProductForm = ({
                   ? `Employees ${state.employees.length}`
                   : "Select Employees"
               }
-              onClick={() => setOpenModal("employees")}
+              onClick={() => handleOpenModal("employees")}
               className={"w-full"}
               backgroundAndText={"bg-gray-800 text-white hover:text-gray-400"}
               icon={<IdCardLanyard size={12} />}
@@ -166,7 +168,7 @@ const AddProductForm = ({
                   ? `Other Expenses ${state.otherExpenses.length}`
                   : "Select Other Expenses"
               }
-              onClick={() => setOpenModal("expenses")}
+              onClick={() => handleOpenModal("expenses")}
               className={"w-full"}
               backgroundAndText={"bg-gray-800 text-white hover:text-gray-400"}
               icon={<Toolbox size={12} />}

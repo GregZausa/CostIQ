@@ -1,10 +1,10 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ModalLayout from "../layout/ModalLayout";
 import { Box } from "lucide-react";
 import TextInput from "../ui/TextInput";
-import Table from "../ui/Table";
 import Button from "../ui/Button";
 import SelectorLayout from "../layout/SelectorLayout";
+import SelectorTableLayout from "../layout/SelectorTableLayout";
 
 const SelectRawMaterialsModal = ({
   closeModal,
@@ -18,23 +18,39 @@ const SelectRawMaterialsModal = ({
     Array.isArray(selected) ? selected.map((s) => ({ ...s })) : [],
   );
 
-  const handleUnitsNeededChange = (raw_material_id, value) => {
+  useEffect(() => {
     setSelectedItems((prev) =>
-      prev.map((item) =>
-        item.raw_material_id === raw_material_id
-          ? {
-              ...item,
-              units_needed: value,
-              cpr: Number(item.cost_per_unit) * Number(value || 0),
-              cpp: totalSellableUnits
-                ? (Number(item.cost_per_unit) * Number(value || 0)) /
-                  Number(totalSellableUnits || 0)
-                : 0,
-            }
-          : item,
-      ),
+      prev.map((item) => ({
+        ...item,
+        cpp:
+          totalSellableUnits && item.units_needed
+            ? (Number(item.cost_per_unit) * Number(item.units_needed)) /
+              Number(totalSellableUnits)
+            : 0,
+      })),
     );
-  };
+  }, [totalSellableUnits]);
+
+  const handleUnitsNeededChange = useCallback(
+    (raw_material_id, value) => {
+      setSelectedItems((prev) =>
+        prev.map((item) =>
+          item.raw_material_id === raw_material_id
+            ? {
+                ...item,
+                units_needed: value,
+                cpr: Number(item.cost_per_unit) * Number(value || 0),
+                cpp: totalSellableUnits
+                  ? (Number(item.cost_per_unit) * Number(value || 0)) /
+                    Number(totalSellableUnits || 0)
+                  : 0,
+              }
+            : item,
+        ),
+      );
+    },
+    [totalSellableUnits],
+  );
   const cols = useMemo(
     () => [
       {
@@ -135,16 +151,7 @@ const SelectRawMaterialsModal = ({
         ]}
       />
       {selectedItems.length > 0 && (
-        <div className="border border-gray-200 rounded-lg overflow-hidden mb-5">
-          <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-              Selected ({selectedItems.length})
-            </span>
-          </div>
-          <div className="overflow-x-auto">
-            <Table columns={cols} data={selectedItems} />
-          </div>
-        </div>
+        <SelectorTableLayout selectedItems={selectedItems} cols={cols} />
       )}
       <div className="flex justify-end gap-2 pt-2">
         <Button
