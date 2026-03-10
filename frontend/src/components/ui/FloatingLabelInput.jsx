@@ -30,7 +30,7 @@ const FloatingLabelInput = ({
     if (!/^\d*\.?\d*$/.test(pasted)) e.preventDefault();
   };
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <input
         type={inputType}
         value={value}

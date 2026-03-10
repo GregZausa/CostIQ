@@ -12,7 +12,7 @@ const Products = () => {
   const openModal = () => {
     setIsModalOpen(true);
   };
-  const { form } = useProducts();
+  const { form, actions } = useProducts();
   const { query: materialQuery } = useRawMaterials();
   const { query: employeeQuery } = useEmployee();
   const { query: expensesQuery } = useOtherExpenses();
@@ -30,6 +30,7 @@ const Products = () => {
       {isModalOpen && (
         <ProductsModal
           closeModal={closeModal}
+          actions={actions}
           form={form}
           materialQuery={materialQuery}
           employeeQuery={employeeQuery}

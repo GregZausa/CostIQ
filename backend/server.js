@@ -6,10 +6,11 @@ import rawMaterialRoutes from "./src/routes/raw-materials.route.js";
 import employeeRoutes from "./src/routes/employee.route.js";
 import otherExpenseRoutes from "./src/routes/other-expense.route.js";
 import positionRoutes from "./src/routes/position.routes.js";
+import productRoutes from "./src/routes/product.route.js";
 import dotenv from "dotenv";
 dotenv.config();
 import "./src/config/db.js";
-import "./src/jobs/cleanupPositions.js"
+import "./src/jobs/cleanupPositions.js";
 
 const app = express();
 const port = process.env.PORT || "5001";
@@ -21,15 +22,14 @@ app.use(
   }),
 );
 
-app.use(express.json());
-
 //routes
-app.use("/api/auth", authRoutes);
-app.use("/api", unitRoutes);
-app.use("/api", rawMaterialRoutes);
-app.use("/api", employeeRoutes);
-app.use("/api", otherExpenseRoutes);
-app.use("/api", positionRoutes);
+app.use("/api/auth", express.json(), authRoutes);
+app.use("/api", express.json(), unitRoutes);
+app.use("/api", express.json(), rawMaterialRoutes);
+app.use("/api", express.json(), employeeRoutes);
+app.use("/api", express.json(), otherExpenseRoutes);
+app.use("/api", express.json(), positionRoutes);
+app.use("/api", productRoutes);
 
 app.listen(port, () => {
   console.log(`Server started at ${port}`);

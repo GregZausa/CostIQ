@@ -1,13 +1,16 @@
+import { useProductsAction } from "./useProductsAction";
 import { useProductsForm } from "./useProductsForm";
 import { useProductsQuery } from "./useProductsQuery";
 
 const useProducts = () => {
   const form = useProductsForm();
   const query = useProductsQuery();
+  const actions = useProductsAction({query, form})
 
   return {
     form,
     query,
+    actions,
   };
 };
 

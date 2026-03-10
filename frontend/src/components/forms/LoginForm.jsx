@@ -20,8 +20,8 @@ const LoginForm = ({
       <div className="flex items-center space-x-2.5">
         <Mail className="text-gray-500 shrink-0" />
         <FloatingLabelInput
-          type={"text"}
-          label={"Email"}
+          type="text"
+          label="Email"
           value={email}
           onChange={setEmail}
           className={"w-full"}
@@ -31,8 +31,8 @@ const LoginForm = ({
       <div className="flex items-center space-x-2.5">
         <Lock className="text-gray-500 shrink-0" />
         <FloatingLabelInput
-          type={"password"}
-          label={"Password"}
+          type="password"
+          label="Password"
           value={password}
           onChange={setPassword}
           className={"w-full"}

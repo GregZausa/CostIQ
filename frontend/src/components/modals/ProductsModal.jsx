@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 const ProductsModal = ({
   closeModal,
   form,
+  actions,
   materialQuery,
   employeeQuery,
   expensesQuery,
@@ -37,6 +38,8 @@ const ProductsModal = ({
     <ModalLayout closeModal={closeModal} widthStyle={"w-250"}>
       <h1 className="text-xl font-bold mb-4">Add Product</h1>
       <AddProductForm
+      handleSubmit={actions.handleSubmit}
+        closeModal={closeModal}
         handleChange={form.handleChange}
         state={form.state}
         openModal={openModal}
