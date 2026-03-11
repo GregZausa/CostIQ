@@ -5,6 +5,7 @@ import TextInput from "../ui/TextInput";
 import Button from "../ui/Button";
 import SelectorLayout from "../layout/SelectorLayout";
 import SelectorTableLayout from "../layout/SelectorTableLayout";
+import toast from "react-hot-toast";
 
 const SelectEmployeeModal = ({
   closeModal,
@@ -39,7 +40,7 @@ const SelectEmployeeModal = ({
             : 0,
       })),
     );
-  },[totalSellableUnits]);
+  }, [totalSellableUnits]);
 
   const handlePrepTimeChange = useCallback(
     (employee_id, value) => {
@@ -89,9 +90,7 @@ const SelectEmployeeModal = ({
             min={1}
             value={row.prep_time ?? 0}
             onClick={(e) => e.stopPropagation()}
-            onChange={(value) =>
-              handlePrepTimeChange(row.employee_id, Number(value))
-            }
+            onChange={(value) => handlePrepTimeChange(row.employee_id, value)}
           />
         ),
       },
@@ -116,6 +115,13 @@ const SelectEmployeeModal = ({
   );
 
   const handleConfirm = () => {
+    const hasValid = selectedItems.some(
+      (items) => !items.prep_time || Number(items.prep_time <= 0),
+    );
+    if (hasValid) {
+      toast.error("Prep time needed to be greater than 0");
+      return;
+    }
     onConfirm(selectedItems);
     closeModal();
   };

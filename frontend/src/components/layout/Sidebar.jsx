@@ -3,6 +3,7 @@ import { X, Menu, ChevronDown } from "lucide-react";
 import { routes } from "../../config/routes";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import logo from "../../../res/logo-icon-removebg-preview.png";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,7 +38,11 @@ const Sidebar = () => {
       <div
         className={`fixed top-0 left-0 h-full w-64 bg-gray-800 text-white flex flex-col p-4 space-y-6 transform transition-transform duration-300 ease-in-out z-40 ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:static md:block`}
       >
-        <div>This is Logo Placeholder</div>
+        <img
+          src={logo}
+          alt=""
+          className="rounded-full border border-gray-400/20"
+        />
         {routes
           .filter((route) => route.sidebar)
           .map(({ label, path, icon: Icon, children }) => (

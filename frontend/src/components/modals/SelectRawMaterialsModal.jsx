@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import toast from "react-hot-toast";
 import ModalLayout from "../layout/ModalLayout";
 import { Box } from "lucide-react";
 import TextInput from "../ui/TextInput";
@@ -81,10 +82,11 @@ const SelectRawMaterialsModal = ({
           <TextInput
             type="number"
             min={1}
+            max={Number(row.units_per_pack)}
             value={row.units_needed ?? 0}
             onClick={(e) => e.stopPropagation()}
             onChange={(value) =>
-              handleUnitsNeededChange(row.raw_material_id, Number(value))
+              handleUnitsNeededChange(row.raw_material_id, value)
             }
           />
         ),
@@ -118,6 +120,13 @@ const SelectRawMaterialsModal = ({
     }
   };
   const handleConfirm = () => {
+    const hasValid = selectedItems.some(
+      (item) => !item.units_needed || Number(item.units_needed) <= 0,
+    );
+    if (hasValid) {
+      toast.error("Units needed to be greated than 0");
+      return;
+    }
     onConfirm(selectedItems);
     closeModal();
   };

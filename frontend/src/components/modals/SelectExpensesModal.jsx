@@ -6,6 +6,7 @@ import TextInput from "../ui/TextInput";
 import Button from "../ui/Button";
 import SelectorLayout from "../layout/SelectorLayout";
 import SelectorTableLayout from "../layout/SelectorTableLayout";
+import toast from "react-hot-toast";
 
 const SelectExpensesModal = ({
   closeModal,
@@ -68,7 +69,7 @@ const SelectExpensesModal = ({
           value={row.quantity ?? 0}
           onClick={(e) => e.stopPropagation()}
           onChange={(value) =>
-            handleQuantityChange(row.other_expense_id, Number(value))
+            handleQuantityChange(row.other_expense_id, value)
           }
         />
       ),
@@ -108,6 +109,13 @@ const SelectExpensesModal = ({
   );
 
   const handleConfirm = () => {
+    const hasValid = selectedItems.some(
+      (item) => !item.quantity || Number(item.quantity) <= 0,
+    );
+    if (hasValid) {
+      toast.error("Prep time needed to be greated than 0");
+      return;
+    }
     onConfirm(selectedItems);
     closeModal();
   };

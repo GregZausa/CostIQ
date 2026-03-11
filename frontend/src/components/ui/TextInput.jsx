@@ -12,13 +12,23 @@ const TextInput = ({
   disabled = false,
   onClick,
   min,
+  max,
   error = "",
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const inputType =
     type === "password" ? (showPassword ? "text" : "password") : type;
+  const blockInvalidKeys = (e) => {
+    if (type === "number" && ["e", "E", "+", "-", "="].includes(e.key)) {
+      e.preventDefault();
+    }
+  };
 
+  const handlePaste = (e) => {
+    const pasted = e.clipboardData.getData("text");
+    if (!/^\d*\.?\d*$/.test(pasted)) e.preventDefault();
+  };
   return (
     <div className={`w-full ${className}`}>
       {label && (
@@ -33,7 +43,20 @@ const TextInput = ({
           type={inputType}
           value={value}
           min={min}
-          onChange={(e) => onChange(e.target.value)}
+          max={max}
+          onKeyDown={blockInvalidKeys}
+          onPaste={handlePaste}
+          onChange={(e) => {
+            let val = e.target.value;
+
+            if (type === "number") {
+              val = val.replace(/^0+(?=\d)/, "");
+              if (max !== undefined && Number(val) > Number(max)) {
+                val = String(max);
+              }
+            }
+            onChange(val);
+          }}
           onClick={onClick}
           placeholder={placeholder}
           required={required}

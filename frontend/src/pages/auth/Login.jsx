@@ -9,7 +9,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const {setIsAuthenticated } = useAuth();
+  const { setIsAuthenticated } = useAuth();
 
   const navigate = useNavigate();
 
@@ -35,10 +35,14 @@ const Login = () => {
       });
 
       const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.message || "Invalid email or password!");
+        return;
+      }
       localStorage.setItem("token", data.token);
       setIsAuthenticated(true);
       toast.success("Logged In Successfully!");
-      navigate("/dashboard", {replace: true})
+      navigate("/dashboard", { replace: true });
     } catch {
       toast.error("Something went wrong, please try again later");
     } finally {
