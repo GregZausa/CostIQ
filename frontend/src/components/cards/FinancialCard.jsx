@@ -1,38 +1,50 @@
-import { Package, Users, LayoutGrid, TrendingUp } from "lucide-react";
+import { DollarSign, Package, Percent, TrendingUp } from "lucide-react";
+import React from "react";
 
-const CostCard = ({
+const FinancialCard = ({
   title,
-  directMaterials = 0,
-  labor = 0,
-  others = 0,
-  total = 0,
+  breakEvenUnits = 0,
+  BreakEvenRevenue = 0,
+  NetProfitPerUnit = 0,
+  ROI = 0,
 }) => {
+  const formatPeso = (val) =>
+    `₱${Number(val).toLocaleString("en-PH", { minimumFractionDigits: 2 })}`;
+  
   const rows = [
     {
-      label: "Direct Materials",
-      value: directMaterials,
+      label: "Break-even Products",
+      value: breakEvenUnits,
       icon: Package,
       color: "text-indigo-500",
       bg: "bg-indigo-50",
+      format: (v) => Number(v).toLocaleString("en-PH"),
     },
     {
-      label: "Labor",
-      value: labor,
-      icon: Users,
+      label: "Break-even Revenue",
+      value: BreakEvenRevenue,
+      icon: DollarSign,
       color: "text-violet-500",
       bg: "bg-violet-50",
+      format: formatPeso,
     },
     {
-      label: "Others",
-      value: others,
-      icon: LayoutGrid,
+      label: "Net Profit / Unit",
+      value: NetProfitPerUnit,
+      icon: TrendingUp,
       color: "text-sky-500",
       bg: "bg-sky-50",
+      format: formatPeso,
+    },
+    {
+      label: "ROI %",
+      value: ROI,
+      icon: Percent,
+      color: "text-emerald-500",
+      bg: "bg-emerald-50",
+      format: (v) => `${Number(v).toFixed(2)}%`,
     },
   ];
-
-  const formatPeso = (val) =>
-    `₱${Number(val).toLocaleString("en-PH", { minimumFractionDigits: 2 })}`;
 
   return (
     <div className="w-full bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
@@ -47,7 +59,7 @@ const CostCard = ({
         </div>
       </div>
       <div className="divide-y divide-slate-100">
-        {rows.map(({ label, value, icon: Icon, color, bg }) => (
+        {rows.map(({ label, value, icon: Icon, color, bg, format }) => (
           <div
             key={label}
             className="flex items-center justify-between px-3 py-1.5 hover:bg-slate-50 transition-colors duration-150"
@@ -63,21 +75,13 @@ const CostCard = ({
               </span>
             </div>
             <span className="text-sm font-semibold text-slate-800 tabular-nums">
-              {formatPeso(value)}
+              {format(value)}
             </span>
           </div>
         ))}
-      </div>
-      <div className="flex items-center justify-between px-3 py-2 bg-gray-800 mt-0">
-        <span className="text-sm font-bold tracking-widest uppercase text-indigo-100">
-          Total
-        </span>
-        <span className="text-lg font-bold text-white tabular-nums">
-          {formatPeso(total)}
-        </span>
       </div>
     </div>
   );
 };
 
-export default CostCard;
+export default FinancialCard;

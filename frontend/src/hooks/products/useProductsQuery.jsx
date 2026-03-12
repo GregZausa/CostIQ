@@ -28,6 +28,7 @@ export const useProductsQuery = () => {
       const res = await authFetch(`${apiUrl}/products/${selectedProduct}`);
       const result = await res.json();
       setProductDetail(result);
+      console.log(productDetail);
     } catch (err) {
       console.error("Failed to fetch product", err);
     }
