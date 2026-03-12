@@ -2,16 +2,22 @@ import React from "react";
 
 const RawMaterialsCard = ({ title, value, description, icon }) => {
   return (
-    <div className="relative backdrop-blur-lg space-y-4 bg-white/10 border border-white/20 rounded-xl p-6 shadow-lg hover:shadow-2xl hover:scale-102 transition-all duration-300 ease-in-out text-black overflow-hidden">
-      <div className="absolute inset-0 rounded-2xl bg-linear-to-br from-white/10 to-white/5 pointer-events-none" />
-      <div>
-        <h3 className="text-lg font-semibold flex items-center justify-between gap-2">
-          <span className="font-semibold text-xl">{title}</span>
+    <div className="group relative bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:shadow-md hover:border-indigo-200 transition-all duration-300 overflow-hidden">
+      <div className="absolute inset-0 bg-linear-to-br from-indigo-50/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl" />
+      <div className="relative flex items-start justify-between gap-3 mb-4">
+        <div>
+          <p className="text-xs font-semibold tracking-widest uppercase text-slate-400 mb-0.5">
+            {title}
+          </p>
+          <p className="text-sm text-slate-500">{description}</p>
+        </div>
+        <div className="shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-indigo-50 text-indigo-500 group-hover:bg-indigo-100 transition-colors duration-300">
           {icon}
-        </h3>
-        <div className="text-sm text-gray-600 font-semibold">{description}</div>
+        </div>
       </div>
-      <div className="text-3xl font-bold">{value}</div>
+      <div className="relative text-3xl font-bold text-slate-800 tracking-tight">
+        {value}
+      </div>
     </div>
   );
 };

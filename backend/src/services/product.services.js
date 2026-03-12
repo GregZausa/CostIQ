@@ -57,6 +57,52 @@ export const createProductService = async ({ file, userId, body }) => {
   }
 };
 
-export const fetchProductService = async ({ userId }) => {
+export const fetchProductsService = async ({ userId }) => {
   return await getProduct(userId);
+};
+
+export const fetchProductCPBService = async ({ id, userId }) => {
+  const [materialCPB, employeeCPB, otherExpenseCPB] = await Promise.all([
+    getMaterialsCostPerBatch(id, userId),
+    getLaborCostPerBatch(id, userId),
+    getOtherExpenseCostPerBatch(id, userId),
+  ]);
+  return { materialCPB, employeeCPB, otherExpenseCPB };
+};
+
+export const productCompute = (product, cost) => {
+  const { materialCPB, employeeCPB, otherExpenseCPB } = cost;
+
+  const totalSellableUnits = Number(product?.total_sellable_units || 0);
+  const safeDivide = (value) =>
+    totalSellableUnits > 0 ? value / totalSellableUnits : 0;
+
+  const materialCPP = safeDivide(materialCPB);
+  const employeeCPP = safeDivide(employeeCPB);
+  const otherExpenseCPP = safeDivide(otherExpenseCPB);
+
+  const totalCPB = materialCPB + employeeCPB + otherExpenseCPB;
+  const totalCPP = materialCPP + employeeCPP + otherExpenseCPP;
+
+  return {
+    ...product,
+    materialCPB,
+    employeeCPB,
+    otherExpenseCPB,
+    totalCPB,
+    materialCPP,
+    employeeCPP,
+    otherExpenseCPP,
+    totalCPP,
+  };
+};
+
+export const fetchProductService = async ({ id, userId }) => {
+  const products = await fetchProductsService({ userId });
+  const product = products.find((p) => p.product_id === id);
+
+  const cost = await fetchProductCPBService({ id, userId });
+  const computedProduct = await productCompute(product, cost);
+
+  return { computedProduct };
 };

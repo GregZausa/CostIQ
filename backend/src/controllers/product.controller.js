@@ -1,6 +1,7 @@
 import {
   createProductService,
   fetchProductService,
+  fetchProductsService,
 } from "../services/product.services.js";
 
 export const createProduct = async (req, res) => {
@@ -22,13 +23,28 @@ export const createProduct = async (req, res) => {
   }
 };
 
-export const fetchProduct = async (req, res) => {
+export const fetchProducts = async (req, res) => {
   try {
-    const product = await fetchProductService({
+    const product = await fetchProductsService({
       userId: req.user.id,
     });
     res.json(product);
   } catch (err) {
     res.status(500).json({ message: "Product not found", error: err.message });
+  }
+};
+
+export const fetchProduct = async (req, res) => {
+  try {
+    const { computedProduct, products } = await fetchProductService({
+      id: req.params.id,
+      userId: req.user.id,
+    });
+
+    res.json({ computedProduct, products });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Failed to fetch product", error: err.message });
   }
 };

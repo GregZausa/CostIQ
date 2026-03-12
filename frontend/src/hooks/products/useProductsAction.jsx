@@ -4,7 +4,6 @@ import { authFetch } from "../../utils/authFetch";
 import { useState } from "react";
 
 export const useProductsAction = ({ query, form }) => {
-  const [selectedProduct, setSelectedProduct] = useState();
   const validate = (state) => {
     const errors = {};
     if (!state.productName) errors.prductName = "Product name is requried!";
@@ -54,9 +53,9 @@ export const useProductsAction = ({ query, form }) => {
       toast.error("Failed to add product");
     }
   };
+
+  
   return {
     handleSubmit,
-    selectedProduct,
-    setSelectedProduct,
   };
 };
