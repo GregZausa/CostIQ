@@ -61,7 +61,7 @@ export const getRawMaterials = async (
   let query = `SELECT raw_material_id, material_name, pack_unit, base_unit,
                 units_per_pack, price_per_pack, cost_per_unit
                 FROM raw_materials
-                WHERE created_by = $1 AND material_name ILIKE $2`;
+                WHERE created_by = $1 AND is_active = true AND material_name ILIKE $2`;
 
   let values = [createdBy, searchValue];
   if (selectedUnit) {
@@ -86,6 +86,7 @@ export const getRawMaterialsCount = async (
   let query = `SELECT COUNT(*) AS total
                 FROM raw_materials
                 WHERE created_by = $1
+                AND is_active = true
                 AND material_name ILIKE $2`;
 
   let values = [createdBy, searchValue];
@@ -101,7 +102,7 @@ export const getRawMaterialsCount = async (
 
 export const getRawMaterialsTotalCount = async (createdBy) => {
   const { rows } = await pool.query(
-    `SELECT COUNT(*) AS total FROM raw_materials WHERE created_by = $1`,
+    `SELECT COUNT(*) AS total FROM raw_materials WHERE created_by = $1 AND is_active = true`,
     [createdBy],
   );
   return Number(rows[0].total);
@@ -116,8 +117,7 @@ export const getRawMaterialsById = async (createdBy, id) => {
 };
 
 export const deleteRawMaterials = async (id) => {
-  const query = `DELETE FROM raw_materials 
-                  WHERE raw_material_id = $1 RETURNING *`;
+  const query = `UPDATE raw_materials SET is_active = false WHERE raw_material_id = $1`;
   const { rows } = await pool.query(query, [id]);
   return rows[0];
 };

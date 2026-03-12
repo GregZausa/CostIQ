@@ -25,7 +25,6 @@ export const createProduct = async (req, res) => {
 export const fetchProduct = async (req, res) => {
   try {
     const product = await fetchProductService({
-      id: req.params.id,
       userId: req.user.id,
     });
     res.json(product);

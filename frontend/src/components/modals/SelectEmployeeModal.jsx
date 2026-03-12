@@ -26,7 +26,7 @@ const SelectEmployeeModal = ({
         prev.filter((s) => s.employee_id !== employee.employee_id),
       );
     } else {
-      setSelectedItems((prev) => [...prev, { ...employee, cpr: 0, cpp: 0 }]);
+      setSelectedItems((prev) => [...prev, { ...employee, cpb: 0, cpp: 0 }]);
     }
   };
   useEffect(() => {
@@ -50,7 +50,7 @@ const SelectEmployeeModal = ({
             ? {
                 ...item,
                 prep_time: value,
-                cpr: Number(item.rate_per_hr) * (value || 0),
+                cpb: Number(item.rate_per_hr) * (value || 0),
                 cpp: totalSellableUnits
                   ? (Number(item.rate_per_hr) * (value || 0)) /
                     Number(totalSellableUnits || 0)
@@ -95,9 +95,9 @@ const SelectEmployeeModal = ({
         ),
       },
       {
-        key: "cpr",
-        label: "Cost Per Recipe",
-        render: (row) => `₱${(row.cpr || 0).toFixed(2)}`,
+        key: "cpb",
+        label: "Cost Per Batch",
+        render: (row) => `₱${(row.cpb || 0).toFixed(2)}`,
       },
       {
         key: "cpp",
@@ -164,6 +164,7 @@ const SelectEmployeeModal = ({
         )}
         <div className="flex justify-end gap-2 pt-2">
           <Button
+          variant="ghost"
             onClick={closeModal}
             label="Cancel"
             backgroundAndText={

@@ -1,9 +1,18 @@
 import React from "react";
 import Pagination from "../layout/Pagination";
+import { Inbox } from "lucide-react";
 
-const Table = ({ columns, data, toolbar, text, page, totalPages, onPageChange }) => {
+const Table = ({
+  columns,
+  data,
+  toolbar,
+  text = "No data available",
+  page,
+  totalPages,
+  onPageChange,
+}) => {
   return (
-    <div className="relative">
+    <div className="w-full space-y-3">
       <div className="flex items-center justify-between gap-3">
         <div className="flex-1">{toolbar}</div>
         {totalPages > 1 && (
@@ -14,42 +23,50 @@ const Table = ({ columns, data, toolbar, text, page, totalPages, onPageChange })
           />
         )}
       </div>
-      <table className="min-w-full border-separate border-spacing-y-1.5">
-        <thead className="bg-gray-800 focus:outline-none">
-          <tr>
-            {columns.map((col) => (
-              <th
-                key={col.key}
-                className="px-6 py-4 text-left border-b text-white"
-              >
-                {col.label}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {data.length > 0 ? (
-            data.map((row, idx) => (
-              <tr key={idx} className="hover:bg-gray-50">
-                {columns.map((col) => (
-                  <td key={col.key} className="px-4 py-2 text-left">
-                    {col.render ? col.render(row) : row[col.key]}
-                  </td>
-                ))}
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td
-                colSpan={columns.length}
-                className="text-center py-10 text-gray-500 italic font-semibold text-xl"
-              >
-                {text}
-              </td>
+      <div className="w-full rounded-2xl border border-slate-200 shadow-xs">
+        <table className="min-w-full">
+          <thead>
+            <tr className="bg-gray-800 border-b border-slate-200">
+              {columns.map((col) => (
+                <th
+                  key={col.key}
+                  className="px-5 py-3.5 text-left text-xs font-semibold tracking-widest uppercase text-white"
+                >
+                  {col.label}
+                </th>
+              ))}
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y divide-slate-100 bg-white">
+            {data.length > 0 ? (
+              data.map((row, idx) => (
+                <tr
+                  key={idx}
+                  className="hover:bg-indigo-50/40 transition-colors duration-150"
+                >
+                  {columns.map((col) => (
+                    <td
+                      key={col.key}
+                      className="px-5 py-3.5 text-sm text-slate-700"
+                    >
+                      {col.render ? col.render(row) : row[col.key]}
+                    </td>
+                  ))}
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={columns.length} className="py-16 text-center">
+                  <div className="flex flex-col items-center gap-2 text-slate-400">
+                    <Inbox size={32} strokeWidth={1.5} />
+                    <span className="text-sm font-medium">{text}</span>
+                  </div>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

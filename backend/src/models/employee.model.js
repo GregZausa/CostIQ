@@ -46,6 +46,7 @@ export const getEmployees = async (
                   JOIN positions p ON e.position_id = p.position_id
                   WHERE e.created_by = $1 
                   AND (e.first_name ILIKE $2 OR e.last_name ILIKE $2)
+                  AND e.is_active = true
                   ORDER BY e.first_name ASC, e.last_name ASC
                   LIMIT $3 OFFSET $4`;
 
@@ -81,7 +82,7 @@ export const getEmployeesById = async (createdBy, id) => {
 };
 
 export const deleteEmployee = async (id) => {
-  const query = `DELETE FROM employees WHERE employee_id = $1 RETURNING *`;
+  const query = `UPDATE employees SET is_active = false WHERE employee_id = $1`;
   const { rows } = await pool.query(query, [id]);
   return rows[0];
 };

@@ -4,6 +4,7 @@ import { routes } from "../../config/routes";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import logo from "../../../res/logo-icon-removebg-preview.png";
+import Button from "../ui/Button";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,7 +20,7 @@ const Sidebar = () => {
   };
 
   const navBar = ({ isActive }) =>
-    `flex items-center space-x-2 py-4 px-3 rounded-md transition font-bold ${isActive ? "bg-blue-600" : "hover:bg-gray-700"}`;
+    `flex items-center space-x-2 py-4 px-3 rounded-xl transition font-bold ${isActive ? "bg-blue-600" : "hover:bg-gray-700"}`;
   return (
     <div>
       <button
@@ -86,12 +87,13 @@ const Sidebar = () => {
               )}
             </div>
           ))}
-        <div
-          className="flex items-center space-x-2 py-4 px-3 rounded-md font-bold bg-red-600 hover:bg-red-500 cursor-pointer"
+        <Button
           onClick={logout}
-        >
-          <span>Logout</span>
-        </div>
+          size="lg"
+          variant="danger"
+          label="Logout"
+          className="w-full mt-auto"
+        />
       </div>
     </div>
   );

@@ -77,42 +77,13 @@ export const insertProductOtherExpenses = async (
 };
 
 export const getProduct = async (createdBy) => {
-  const query = `SELECT p.product_id, p.product_name, p.product_image, p.total_input, p.units_per_product, p.total_sellable_units, p.profit_margin, p.discount, p.sales_tax, 
-                  jsonb_agg(DISTINCT jsonb_build_object(
-                  'material_name', rm.material_name,
-                  'pack_unit', rm.pack_unit,
-                  'base_unit', rm.base_unit,
-                  'units_per_pack', rm.units_per_pack,
-                  'price_per_pack', rm.price_per_pack,
-                  'cost_per_units', rm.cost_per_unit,
-                  'units_needed', pi.units_needed
-                  )) AS ingredients,
-                  jsonb_agg(DISTINCT jsonb_build_object(
-                  'first_name', e.first_name,
-                  'last_name', e.last_name,
-                  'rate_per_hr', e.rate_per_hr,
-                  'prep_time_hrs', pe.prep_time_hrs
-                  )) AS employees,
-                  jsonb_agg(DISTINCT jsonb_build_object(
-                  'category_name', oe.category_name,
-                  'expense_cost', oe.expense_cost,
-                  'quantity', poe.quantity
-                  )) AS other_expenses
-                  FROM products as p 
-                  JOIN product_ingredients AS pi ON p.product_id = pi.product_id
-                  JOIN raw_materials AS rm ON pi.material_id = rm.raw_material_id
-                  JOIN product_employees AS pe ON p.product_id = pe.product_id
-                  JOIN employees AS e ON pe.employee_id = e.employee_id
-                  JOIN product_other_expenses AS poe ON p.product_id = poe.product_id
-                  JOIN other_expenses AS oe ON poe.other_expense_id = oe.other_expense_id
-                  WHERE p.created_by = $1 AND p.is_active = true
-                  GROUP BY p.product_id`;
+  const query = `SELECT * FROM products WHERE created_by = $1 AND is_active = true`;
 
   const { rows } = await pool.query(query, [createdBy]);
   return rows;
 };
 
-export const getMaterialsCostPerProduct = async (id, createdBy) => {
+export const getMaterialsCostPerBatch = async (id, createdBy) => {
   const query = `SELECT SUM(rm.cost_per_unit * pi.units_needed) AS total_material_cpp
                   FROM product_ingredients pi
                   JOIN raw_materials rm
@@ -126,7 +97,7 @@ export const getMaterialsCostPerProduct = async (id, createdBy) => {
   return parseFloat(result.rows[0]?.total_material_cpp) || 0;
 };
 
-export const getLaborCostPerProduct = async (id, createdBy) => {
+export const getLaborCostPerBatch = async (id, createdBy) => {
   const query = `SELECT SUM (e.rate_per_hr * pe.prep_time_hrs) AS total_labor_cpp
                   FROM product_employees pe
                   JOIN employees e
@@ -140,7 +111,7 @@ export const getLaborCostPerProduct = async (id, createdBy) => {
   return parseFloat(result.rows[0]?.total_labor_cpp) || 0;
 }
 
-export const getOtherExpenseCostPerProduct = async (id, createdBy) => {
+export const getOtherExpenseCostPerBatch = async (id, createdBy) => {
   const query = `SELECT SUM (oe.expense_cost * poe.quantity) AS total_other_expense_cpp
                 FROM product_other_expenses poe
                 JOIN other_expenses oe

@@ -72,6 +72,7 @@ const AddRawMaterialsForm = ({ state, handleChange, unitsPerPackEditable, unitOp
         type="button"
           onClick={closeModal}
           label="Cancel"
+          variant="ghost"
           backgroundAndText={
             "bg-white hover:bg-gray-400 text-black border-none"
           }

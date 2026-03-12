@@ -191,6 +191,7 @@ const AddProductForm = ({
           <Button
             onClick={closeModal}
             label="Cancel"
+            variant="ghost"
             backgroundAndText={
               "bg-white hover:bg-gray-400 text-black border-none"
             }

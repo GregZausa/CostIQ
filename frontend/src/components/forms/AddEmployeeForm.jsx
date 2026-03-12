@@ -87,6 +87,7 @@ const AddEmployeeForm = ({
         <Button
           onClick={closeModal}
           label="Cancel"
+          variant="ghost"
           backgroundAndText={"bg-white hover:bg-gray-100 text-black border border-gray-300"}
           disabled={isLoading}
         />

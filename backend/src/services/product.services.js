@@ -1,8 +1,8 @@
 import pool from "../config/db.js";
 import {
-  getLaborCostPerProduct,
-  getMaterialsCostPerProduct,
-  getOtherExpenseCostPerProduct,
+  getLaborCostPerBatch,
+  getMaterialsCostPerBatch,
+  getOtherExpenseCostPerBatch,
   getProduct,
   insertProduct,
   insertProductEmployees,
@@ -57,16 +57,6 @@ export const createProductService = async ({ file, userId, body }) => {
   }
 };
 
-export const fetchProductService = async ({ id, userId }) => {
-  //const products = await getProduct({ id, userId });
-
-  const [materialsCPP, employeesCPP, otherExpenseCPP] = await Promise.all([
-    getMaterialsCostPerProduct(id, userId),
-    getLaborCostPerProduct(id, userId),
-    getOtherExpenseCostPerProduct(id, userId),
-  ]);
-
-  const totalCPP = materialsCPP + employeesCPP + otherExpenseCPP;
-
-  return { materialsCPP, employeesCPP, otherExpenseCPP, totalCPP };
+export const fetchProductService = async ({ userId }) => {
+  return await getProduct(userId);
 };

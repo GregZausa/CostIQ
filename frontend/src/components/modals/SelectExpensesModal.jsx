@@ -40,7 +40,7 @@ const SelectExpensesModal = ({
             ? {
                 ...item,
                 quantity: value,
-                cpr: Number(item.expense_cost) * Number(value || 0),
+                cpb: Number(item.expense_cost) * Number(value || 0),
                 cpp: totalSellableUnits
                   ? (Number(item.expense_cost) * Number(value || 0)) /
                     Number(totalSellableUnits)
@@ -80,9 +80,9 @@ const SelectExpensesModal = ({
       render: (row) => `₱${row.expense_cost?.trim() || ""}`,
     },
     {
-      key: "cpr",
-      label: "Cost Per Recipe",
-      render: (row) => `₱${(row.cpr || 0).toFixed(2)}`,
+      key: "cpb",
+      label: "Cost Per Batch",
+      render: (row) => `₱${(row.cpb || 0).toFixed(2)}`,
     },
     {
       key: "cpp",
@@ -100,7 +100,7 @@ const SelectExpensesModal = ({
         prev.filter((s) => s.other_expense_id !== expense.other_expense_id),
       );
     } else {
-      setSelectedItems((prev) => [...prev, { ...expense, cpr: 0, cpp: 0 }]);
+      setSelectedItems((prev) => [...prev, { ...expense, cpb: 0, cpp: 0 }]);
     }
   };
 
@@ -154,6 +154,7 @@ const SelectExpensesModal = ({
         <div className="flex justify-end gap-2 pt-2">
           <Button
             onClick={closeModal}
+            variant="ghost"
             label="Cancel"
             backgroundAndText={
               "bg-white hover:bg-gray-400 text-black border-none"

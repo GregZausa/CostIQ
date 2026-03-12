@@ -39,6 +39,7 @@ export const getOtherExpenses = async (
   const countQuery = `SELECT COUNT(*) AS total
                       FROM other_expenses
                       WHERE created_by = $1
+                      AND is_active = true
                       AND category_name ILIKE $2`;
 
   const countResult = await pool.query(countQuery, [createdBy, searchValue]);
@@ -48,6 +49,7 @@ export const getOtherExpenses = async (
   const query = `SELECT other_expense_id, category_name, expense_cost 
                   FROM other_expenses
                   WHERE created_by = $1
+                  AND is_active = true
                   AND category_name ILIKE $2
                   ORDER BY created_at DESC
                   LIMIT $3 OFFSET $4`;
@@ -72,7 +74,7 @@ export const getOtherExpensesById = async (createdBy, id) => {
   return result.rows[0];
 };
 export const deleteOtherExpense = async (id) => {
-  const query = `DELETE FROM other_expenses WHERE other_expense_id = $1 RETURNING *`;
+  const query = `UPDATE other_expenses SET is_active = false WHERE other_expense_id = $1`;
   const { rows } = await pool.query(query, [id]);
   return rows[0];
 };

@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
 const FloatingLabelInput = ({
-  type,
+  type = "text",
   value,
   onChange,
   label,
-  className,
+  className = "",
   required = false,
   readOnly = false,
   min,
@@ -14,23 +14,27 @@ const FloatingLabelInput = ({
   step,
   suffix,
 }) => {
-  const [onFocus, setOnFocus] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const inputType =
     type === "password" ? (showPassword ? "text" : "password") : type;
+
+  const isFloated = isFocused || value !== "" && value !== undefined && value !== null;
 
   const blockInvalidKeys = (e) => {
     if (type === "number" && ["e", "E", "+", "-", "="].includes(e.key)) {
       e.preventDefault();
     }
   };
+
   const handlePaste = (e) => {
     const pasted = e.clipboardData.getData("text");
-    if (!/^\d*\.?\d*$/.test(pasted)) e.preventDefault();
+    if (type === "number" && !/^\d*\.?\d*$/.test(pasted)) e.preventDefault();
   };
+
   return (
-    <div className="relative w-full">
+    <div className={`relative w-full group ${className}`}>
       <input
         type={inputType}
         value={value}
@@ -39,33 +43,48 @@ const FloatingLabelInput = ({
         min={min}
         max={max}
         step={step}
-        onFocus={() => setOnFocus(true)}
-        onBlur={() => setOnFocus(false)}
-        onChange={(e) => onChange(e.target.value)}
-        className={`border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-transparent ${suffix ? "pr-10" : ""} ${className}`}
         readOnly={readOnly}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        onChange={(e) => onChange(e.target.value)}
+        className={`
+          peer w-full px-4 pt-5 pb-2 text-sm text-slate-800
+          bg-white rounded-xl border outline-none
+          transition-all duration-200
+          ${readOnly ? "cursor-default bg-slate-50 text-slate-500" : ""}
+          ${isFocused
+            ? "border-gray-800/50 ring-4 ring-indigo-100 shadow-sm"
+            : "border-slate-200 hover:border-slate-300 shadow-xs"
+          }
+          ${suffix || type === "password" ? "pr-10" : ""}
+        `}
       />
       <label
-        className={`absolute left-3 transition-all duration-300 pointer-events-none ${
-          onFocus || value
-            ? "top-0 -translate-y-1/2 text-xs text-blue-500 bg-transparent px-2 z-10"
-            : "top-1/2 -translate-y-1/2 text-gray-500 font-medium"
-        }`}
+        className={`
+          absolute left-4 pointer-events-none font-medium
+          transition-all duration-200 select-none
+          ${isFloated
+            ? "top-2 text-[10px] tracking-widest uppercase text-gray-800"
+            : "top-1/2 -translate-y-1/2 text-sm text-slate-400"
+          }
+        `}
       >
-        {label} {required && <span className="text-red-500"></span>}
+        {label}
+        {required && <span className="text-rose-400 ml-0.5">*</span>}
       </label>
-      {suffix && (
-        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+      {suffix && type !== "password" && (
+        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-medium text-slate-400">
           {suffix}
         </span>
       )}
+
       {type === "password" && (
         <button
           type="button"
-          onClick={() => setShowPassword(!showPassword)}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer"
+          onClick={() => setShowPassword((prev) => !prev)}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-indigo-500 transition-colors duration-150"
         >
-          {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+          {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
         </button>
       )}
     </div>

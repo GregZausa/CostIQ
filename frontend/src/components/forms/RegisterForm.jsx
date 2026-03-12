@@ -73,6 +73,7 @@ const RegisterForm = ({
         />
         <Button
           label={"Cancel"}
+          variant="ghost"
           onClick={onCancel}
           disabled={isLoading}
           className={"w-full"}

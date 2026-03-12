@@ -8,6 +8,6 @@ const router = express.Router();
 router.use(requireAuth);
 
 router.post("/products", globalLimiter, upload.single("product_image"), createProduct);
-router.get("/products/:id", globalLimiter, fetchProduct )
+router.get("/products", fetchProduct )
 
 export default router;

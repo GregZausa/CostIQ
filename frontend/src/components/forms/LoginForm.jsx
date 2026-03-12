@@ -47,16 +47,13 @@ const LoginForm = ({
           onClick={onLogin}
           disabled={isLoading}
           className={"w-full"}
-          backgroundAndText={"bg-gray-800 hover:gray-500 text-white"}
         />
         <Button
           label={"Register"}
+          variant="ghost"
           onClick={onRegister}
           disabled={isLoading}
           className={"w-full"}
-          backgroundAndText={
-            "bg-white hover:bg-gray-400 text-black border-none"
-          }
         />
       </div>
     </div>
