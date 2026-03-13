@@ -22,6 +22,7 @@ const RawMaterials = () => {
     form,
     mostExpensiveMaterial,
     leastExpensiveMaterial,
+    mostUsedMaterial,
   } = useRawMaterials({
     openModal,
     setIsLoading,
@@ -80,6 +81,16 @@ const RawMaterials = () => {
           }
           description={leastExpensiveMaterial?.material_name}
           icon={<Tag size={18} />}
+        />
+        <RawMaterialsCard
+          title={"Most Used Material"}
+          value={
+            mostUsedMaterial
+              ? `${Number(mostUsedMaterial.usage_count).toLocaleString()}`
+              : "-"
+          }
+          description={mostUsedMaterial?.material_name}
+          icon={<Box size={18} />}
         />
       </div>
       <div>

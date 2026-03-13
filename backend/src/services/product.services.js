@@ -98,11 +98,11 @@ export const productCompute = (product, cost) => {
   const breakEvenUnits =
     contributionMargin > 0 ? Math.ceil(totalCPB / contributionMargin) : null;
 
-  const breakEvenRevenue = breakEvenUnits * finalPrice;
+  const breakEvenRevenue = totalSellableUnits * finalPrice;
   const netProfitPerUnit = finalPrice - totalCPP;
   const netProfit = breakEvenRevenue - totalCPB;
   
-  const roi = (netProfit / totalCPB) * 100;
+  const roi = (netProfit  / totalCPB) * 100;
 
   return {
     ...product,

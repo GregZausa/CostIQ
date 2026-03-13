@@ -6,7 +6,7 @@ const RawMaterialsCard = ({ title, value, description, icon }) => {
       <div className="absolute inset-0 bg-linear-to-br from-indigo-50/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl" />
       <div className="relative flex items-start justify-between gap-3 mb-4">
         <div>
-          <p className="text-xs font-semibold tracking-widest uppercase text-slate-400 mb-0.5">
+          <p className="text-xs font-bold tracking-widest uppercase text-slate-400 mb-0.5">
             {title}
           </p>
           <p className="text-sm text-slate-500">{description}</p>

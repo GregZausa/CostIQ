@@ -6,6 +6,7 @@ export const useRawMaterialsQuery = () => {
   const [data, setData] = useState([]);
   const [mostExpensive, setMostExpensive] = useState(0);
   const [leastExpensive, setLeastExpensive] = useState(0);
+  const [mostUsed, setMostUsed] = useState(0);
   const [totalAllRows, setTotalAllRows] = useState(0);
   const [columns, setColumns] = useState([]);
   const [page, setPage] = useState(1);
@@ -31,6 +32,7 @@ export const useRawMaterialsQuery = () => {
       setTotalAllRows(result.totalAllRows);
       setMostExpensive(result.mostExpensive);
       setLeastExpensive(result.leastExpensive);
+      setMostUsed(result.mostUsed);
       setTotalRows(result.totalRows);
       setPage(result.page);
       setTotalPages(result.totalPages);
@@ -61,6 +63,7 @@ export const useRawMaterialsQuery = () => {
     setSelectedUnit,
     mostExpensive,
     leastExpensive,
+    mostUsed,
     totalAllRows,
     load,
   };

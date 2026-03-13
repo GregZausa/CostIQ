@@ -77,7 +77,7 @@ export const insertProductOtherExpenses = async (
 };
 
 export const getProduct = async (createdBy) => {
-  const query = `SELECT * FROM products WHERE created_by = $1 AND is_active = true`;
+  const query = `SELECT * FROM products WHERE created_by = $1 AND is_active = true ORDER BY created_at DESC`;
 
   const { rows } = await pool.query(query, [createdBy]);
   return rows;

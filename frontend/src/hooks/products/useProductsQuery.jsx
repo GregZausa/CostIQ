@@ -8,6 +8,10 @@ export const useProductsQuery = () => {
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productDetail, setProductDetail] = useState(null);
+  const productOptions = products.map((p) => ({
+    label: p.product_name.toUpperCase(),
+    value: p.product_id,
+  }));
 
   const loadProducts = useCallback(async () => {
     try {
@@ -21,6 +25,12 @@ export const useProductsQuery = () => {
   useEffect(() => {
     loadProducts();
   }, [loadProducts]);
+
+  useEffect(() => {
+    if (products.length > 0 && !selectedProduct) {
+      setSelectedProduct(productOptions[0].value);
+    }
+  }, [products]);
 
   const loadSelectedProduct = useCallback(async () => {
     if (!selectedProduct) return;
@@ -37,10 +47,6 @@ export const useProductsQuery = () => {
     loadSelectedProduct();
   }, [loadSelectedProduct]);
 
-  const productOptions = products.map((p) => ({
-    label: p.product_name.toUpperCase(),
-    value: p.product_id,
-  }));
   return {
     products,
     productOptions,

@@ -142,3 +142,17 @@ export const getLeastExpensiveMaterial = async (createdBy) => {
   return result.rows[0] || null;
 };
 
+export const getMostUsedMaterial = async (createdBy) => {
+  const query = `SELECT rm.raw_material_id, rm.material_name, 
+                  COUNT(pi.product_id) 
+                  AS usage_count
+                  FROM raw_materials rm
+                  JOIN product_ingredients pi ON rm.raw_material_id = pi.material_id
+                  WHERE created_by = $1
+                  GROUP BY rm.raw_material_id, rm.material_name
+                  ORDER BY usage_count DESC
+                  LIMIT 1`;
+
+  const result = await pool.query(query, [createdBy]);
+  return result.rows[0] || null;
+};
