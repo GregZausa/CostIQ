@@ -88,27 +88,29 @@ export const productCompute = (product, cost) => {
   const totalCPP = materialCPP + employeeCPP + otherExpenseCPP;
 
   const sellingPrice = totalCPP / (1 - Number(profitMargin) / 100);
-  const profit = sellingPrice - totalCPP;
-  const discount = sellingPrice * (discountPercent / 100);
-  const tax = sellingPrice * (taxPercent / 100);
-  const finalPrice = sellingPrice - discount + tax;
+  const discountCost = sellingPrice * (discountPercent / 100);
+  const discountedPrice = sellingPrice - discountCost;
+  const tax = discountedPrice * (taxPercent / 100);
+  const profit = discountedPrice - totalCPP;
+  const finalPrice = discountedPrice + tax;
 
-  const contributionMargin = finalPrice - totalCPP;
+  const contributionMargin = profit;
 
   const breakEvenUnits =
     contributionMargin > 0 ? Math.ceil(totalCPB / contributionMargin) : null;
 
-  const breakEvenRevenue = totalSellableUnits * finalPrice;
-  const netProfitPerUnit = finalPrice - totalCPP;
-  const netProfit = breakEvenRevenue - totalCPB;
-  
-  const roi = (netProfit  / totalCPB) * 100;
+  const breakEvenRevenue = breakEvenUnits ? breakEvenUnits * discountedPrice : null;
+  const netProfitPerUnit = profit;
+  const netProfit = netProfitPerUnit * totalSellableUnits;
+
+  const roi = totalCPB > 0 ?(netProfit / totalCPB) * 100 : 0;
 
   return {
     ...product,
+    sellingPrice,
     finalPrice,
     profit,
-    discount,
+    discountCost,
     tax,
     materialCPB,
     employeeCPB,
@@ -123,7 +125,6 @@ export const productCompute = (product, cost) => {
     netProfitPerUnit,
     netProfit,
     roi,
-
   };
 };
 

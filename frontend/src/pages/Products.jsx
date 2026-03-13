@@ -9,6 +9,7 @@ import useOtherExpenses from "../hooks/other-expenses/useOtherExpenses";
 import SelectBox from "../components/ui/SelectBox";
 import ProductImageCard from "../components/cards/ProductImageCard";
 import FinancialCard from "../components/cards/FinancialCard";
+import PricingSummaryCard from "../components/cards/PricingSummaryCard";
 
 const Products = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -52,8 +53,6 @@ const Products = () => {
             labor={query?.productDetail?.computedProduct?.employeeCPB}
             others={query?.productDetail?.computedProduct?.otherExpenseCPB}
           />
-        </div>
-        <div className="space-y-2">
           <CostCard
             title="Cost Per Product"
             total={query?.productDetail?.computedProduct?.totalCPP}
@@ -71,9 +70,26 @@ const Products = () => {
             BreakEvenRevenue={
               query?.productDetail?.computedProduct?.breakEvenRevenue
             }
-            NetProfitPerUnit={query?.productDetail?.computedProduct?.netProfitPerUnit}
+            NetProfitPerUnit={
+              query?.productDetail?.computedProduct?.netProfitPerUnit
+            }
             ROI={query?.productDetail?.computedProduct?.roi}
           />
+          <div className="space-y-2">
+            <PricingSummaryCard
+              title="Pricing Summary"
+              profit={query?.productDetail?.computedProduct?.profit}
+              profitMargin={
+                query?.productDetail?.computedProduct?.profit_margin
+              }
+              discount={query?.productDetail?.computedProduct?.discountCost}
+              discountPercent={query?.productDetail?.computedProduct?.discount}
+              salesTaxPercent={query?.productDetail?.computedProduct?.sales_tax}
+              salesTax={query?.productDetail?.computedProduct?.tax}
+              finalPrice={query?.productDetail?.computedProduct?.finalPrice}
+            />
+          </div>
+          <div className="space-y-2"></div>
         </div>
       </div>
 
