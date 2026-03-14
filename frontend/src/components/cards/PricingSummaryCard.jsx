@@ -1,7 +1,8 @@
 import { BadgePercent, FileText, Percent, Tag, TrendingUp } from "lucide-react";
 import React from "react";
+import ProductCardLayout from "../layout/ProductCardLayout";
 
-const ProfitAndTaxSummaryCard = ({
+const PricingSummaryCard = ({
   title,
   profitMargin = 0,
   profit = 0,
@@ -50,17 +51,7 @@ const ProfitAndTaxSummaryCard = ({
     },
   ];
   return (
-    <div className="w-full bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-      <div className="flex items-center justify-between px-3 py-2.5 border-b border-slate-100">
-        <div>
-          <p className="text-xs font-semibold tracking-widest uppercase text-slate-400">
-            {title}
-          </p>
-        </div>
-        <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-indigo-50 text-indigo-500">
-          <BadgePercent size={15} />
-        </div>
-      </div>
+    <ProductCardLayout title={title} icon={BadgePercent}>
       <div className="divide-y divide-slate-100">
         {rows.map(
           ({
@@ -75,12 +66,12 @@ const ProfitAndTaxSummaryCard = ({
           }) => (
             <div
               key={label}
-              className={`flex items-center justify-between px-3 py-1.5 hover:bg-slate-50 transition-colors duration-150
+              className={`flex items-center justify-between px-3 py-2 hover:bg-slate-50 transition-colors duration-150
                  ${isTotal ? "bg-slate-800 hover:bg-slate-700" : "hover:bg-slate-50"}`}
             >
               <div className="flex items-center gap-3">
                 <div
-                  className={`w-8 h-8 rounded-xl ${bg} flex items-center justify-center shrink-0`}
+                  className={`w-5 h-5 rounded-xl ${bg} flex items-center justify-center shrink-0`}
                 >
                   <Icon size={15} className={color} />
                 </div>
@@ -98,7 +89,7 @@ const ProfitAndTaxSummaryCard = ({
                 </span>
               )}
               <span
-                className={`text-sm font-medium tabular-nums ${isTotal ? "text-white"  : "text-slate-800"} min-w-18 text-right`}
+                className={`text-sm font-medium tabular-nums ${isTotal ? "text-white" : "text-slate-800"} min-w-18 text-right`}
               >
                 ₱{amountValue.toFixed(2)}
               </span>
@@ -106,8 +97,8 @@ const ProfitAndTaxSummaryCard = ({
           ),
         )}
       </div>
-    </div>
+    </ProductCardLayout>
   );
 };
 
-export default ProfitAndTaxSummaryCard;
+export default PricingSummaryCard;

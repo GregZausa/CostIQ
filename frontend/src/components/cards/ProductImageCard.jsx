@@ -3,7 +3,7 @@ import React from "react";
 const ProductImageCard = ({ src, alt = "Product", name, description }) => {
   return (
     <div className="group relative bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden hover:shadow-md hover:border-gray-200 transition-all duration-300">
-      <div className="relative h-103 overflow-hidden bg-slate-50 flex items-center justify-center">
+      <div className="relative h-89 overflow-hidden bg-slate-50 flex items-center justify-center">
         <img
           src={src}
           alt={alt}

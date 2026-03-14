@@ -10,92 +10,96 @@ import SelectBox from "../components/ui/SelectBox";
 import ProductImageCard from "../components/cards/ProductImageCard";
 import FinancialCard from "../components/cards/FinancialCard";
 import PricingSummaryCard from "../components/cards/PricingSummaryCard";
+import MarginScenarioChart from "../components/ui/MarginScenarioChart";
+import PricingGuideChart from "../components/ui/PricingGuideChart";
+import CostPerProductChart from "../components/ui/CostPerProductChart";
 
 const Products = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
   const { form, actions, query } = useProducts();
   const { query: materialQuery } = useRawMaterials();
   const { query: employeeQuery } = useEmployee();
   const { query: expensesQuery } = useOtherExpenses();
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  const computed = query?.productDetail?.computedProduct;
+
   return (
     <div className="relative">
       <Headers
-        openModal={openModal}
-        title={"Products"}
-        buttonLabel={"Add Products"}
+        openModal={() => setIsModalOpen(true)}
+        title="Products"
+        buttonLabel="Add Products"
       />
-      <div className="grid md:grid-cols-2 lg:grid-cols-5 shrink-0 py-4 gap-4">
+
+      <div className="grid grid-cols-4 gap-4 py-4">
+        {/* Column 1 — Product */}
         <div className="space-y-2">
           <SelectBox
             onChange={query.setSelectedProduct}
             options={query.productOptions}
             value={query.selectedProduct}
-            placeholder="Select product to view"
+            placeholder="Select product"
           />
-          <ProductImageCard
-            src={query?.productDetail?.computedProduct?.product_image}
-          />
+          <ProductImageCard src={computed?.product_image} />
         </div>
 
+        {/* Column 2 — Costs */}
         <div className="space-y-2">
           <CostCard
             title="Cost Per Batch"
-            total={query?.productDetail?.computedProduct?.totalCPB}
-            directMaterials={query?.productDetail?.computedProduct?.materialCPB}
-            labor={query?.productDetail?.computedProduct?.employeeCPB}
-            others={query?.productDetail?.computedProduct?.otherExpenseCPB}
+            total={computed?.totalCPB}
+            directMaterials={computed?.materialCPB}
+            labor={computed?.employeeCPB}
+            others={computed?.otherExpenseCPB}
           />
           <CostCard
             title="Cost Per Product"
-            total={query?.productDetail?.computedProduct?.totalCPP}
-            directMaterials={query?.productDetail?.computedProduct?.materialCPP}
-            labor={query?.productDetail?.computedProduct?.employeeCPP}
-            others={query?.productDetail?.computedProduct?.otherExpenseCPP}
+            total={computed?.totalCPP}
+            directMaterials={computed?.materialCPP}
+            labor={computed?.employeeCPP}
+            others={computed?.otherExpenseCPP}
           />
         </div>
-        <div className="space-y-2">
+
+        {/* Column 3 — Financial Metrics */}
+        <div>
           <FinancialCard
             title="Financial Metrics"
-            breakEvenUnits={
-              query?.productDetail?.computedProduct?.breakEvenUnits
-            }
-            BreakEvenRevenue={
-              query?.productDetail?.computedProduct?.breakEvenRevenue
-            }
-            NetProfitPerUnit={
-              query?.productDetail?.computedProduct?.netProfitPerUnit
-            }
-            ROI={query?.productDetail?.computedProduct?.roi}
+            breakEvenUnits={computed?.breakEvenUnits}
+            BreakEvenRevenue={computed?.breakEvenRevenue}
+            NetProfitPerUnit={computed?.netProfitPerUnit}
+            ROI={computed?.roi}
           />
-          <div className="space-y-2">
-            <PricingSummaryCard
-              title="Pricing Summary"
-              profit={query?.productDetail?.computedProduct?.profit}
-              profitMargin={
-                query?.productDetail?.computedProduct?.profit_margin
-              }
-              discount={query?.productDetail?.computedProduct?.discountCost}
-              discountPercent={query?.productDetail?.computedProduct?.discount}
-              salesTaxPercent={query?.productDetail?.computedProduct?.sales_tax}
-              salesTax={query?.productDetail?.computedProduct?.tax}
-              finalPrice={query?.productDetail?.computedProduct?.finalPrice}
-            />
-          </div>
-          <div className="space-y-2"></div>
         </div>
+
+        {/* Column 4 — Pricing Summary */}
+        <div>
+          <PricingSummaryCard
+            title="Pricing Summary"
+            profit={computed?.profit}
+            profitMargin={computed?.profit_margin}
+            discount={computed?.discountCost}
+            discountPercent={computed?.discount}
+            salesTaxPercent={computed?.sales_tax}
+            salesTax={computed?.tax}
+            finalPrice={computed?.finalPrice}
+            sellingPrice={computed?.sellingPrice}
+            discountedPrice={computed?.discountedPrice}
+            totalCPP={computed?.totalCPP}
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-3 gap-4 py-4">
+        <MarginScenarioChart
+          computed={computed}
+        />
+        <PricingGuideChart computed={computed}/>
+        <CostPerProductChart computed={computed}/>
       </div>
 
       {isModalOpen && (
         <ProductsModal
-          closeModal={closeModal}
+          closeModal={() => setIsModalOpen(false)}
           actions={actions}
           form={form}
           materialQuery={materialQuery}
