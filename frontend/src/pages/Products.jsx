@@ -13,6 +13,7 @@ import PricingSummaryCard from "../components/cards/PricingSummaryCard";
 import MarginScenarioChart from "../components/ui/MarginScenarioChart";
 import PricingGuideChart from "../components/ui/PricingGuideChart";
 import CostPerProductChart from "../components/ui/CostPerProductChart";
+import WhatIfScenarioCard from "../components/cards/WhatIfScenarioCard";
 
 const Products = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,8 +32,7 @@ const Products = () => {
         buttonLabel="Add Products"
       />
 
-      <div className="grid grid-cols-4 gap-4 py-4">
-        {/* Column 1 — Product */}
+      <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-4 gap-4 py-4">
         <div className="space-y-2">
           <SelectBox
             onChange={query.setSelectedProduct}
@@ -42,27 +42,10 @@ const Products = () => {
           />
           <ProductImageCard src={computed?.product_image} />
         </div>
-
-        {/* Column 2 — Costs */}
-        <div className="space-y-2">
-          <CostCard
-            title="Cost Per Batch"
-            total={computed?.totalCPB}
-            directMaterials={computed?.materialCPB}
-            labor={computed?.employeeCPB}
-            others={computed?.otherExpenseCPB}
-          />
-          <CostCard
-            title="Cost Per Product"
-            total={computed?.totalCPP}
-            directMaterials={computed?.materialCPP}
-            labor={computed?.employeeCPP}
-            others={computed?.otherExpenseCPP}
-          />
-        </div>
-
-        {/* Column 3 — Financial Metrics */}
         <div>
+        <WhatIfScenarioCard title="What-if Income Goal" computed={computed}/>
+        </div>
+        <div className="space-y-2">
           <FinancialCard
             title="Financial Metrics"
             breakEvenUnits={computed?.breakEvenUnits}
@@ -70,10 +53,15 @@ const Products = () => {
             NetProfitPerUnit={computed?.netProfitPerUnit}
             ROI={computed?.roi}
           />
+          <CostCard
+            title="Cost Per Batch"
+            total={computed?.totalCPB}
+            directMaterials={computed?.materialCPB}
+            labor={computed?.employeeCPB}
+            others={computed?.otherExpenseCPB}
+          />
         </div>
-
-        {/* Column 4 — Pricing Summary */}
-        <div>
+        <div className="space-y-2">
           <PricingSummaryCard
             title="Pricing Summary"
             profit={computed?.profit}
@@ -87,14 +75,19 @@ const Products = () => {
             discountedPrice={computed?.discountedPrice}
             totalCPP={computed?.totalCPP}
           />
+          <CostCard
+            title="Cost Per Product"
+            total={computed?.totalCPP}
+            directMaterials={computed?.materialCPP}
+            labor={computed?.employeeCPP}
+            others={computed?.otherExpenseCPP}
+          />
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-4 py-4">
-        <MarginScenarioChart
-          computed={computed}
-        />
-        <PricingGuideChart computed={computed}/>
-        <CostPerProductChart computed={computed}/>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-4">
+        <MarginScenarioChart computed={computed} />
+        <PricingGuideChart computed={computed} />
+        <CostPerProductChart computed={computed} />
       </div>
 
       {isModalOpen && (

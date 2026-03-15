@@ -146,7 +146,7 @@ const PricingGuideChart = ({ computed = {} }) => {
               dataKey="roi"
               name="ROI %"
               barSize={28}
-              fill="#bfdbfe"
+              fill="#3b82f6"
             />
             <Line
               yAxisId="left"

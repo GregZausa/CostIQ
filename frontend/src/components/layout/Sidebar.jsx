@@ -25,19 +25,19 @@ const Sidebar = () => {
     <div>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="md:hidden fixed top-4 left-4 z-50 bg-gray-800 p-2 rounded-md text-white focus:outline-none"
+        className="lg:hidden fixed top-4 left-4 z-50 bg-gray-800 p-2 rounded-md text-white focus:outline-none"
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-30 md:hidden"
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-30 lg:hidden"
         />
       )}
 
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-gray-800 text-white flex flex-col p-4 space-y-6 transform transition-transform duration-300 ease-in-out z-40 ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:static md:block`}
+        className={`fixed top-0 left-0 h-full w-64 bg-gray-800 text-white flex flex-col p-4 space-y-6 transform transition-transform duration-300 ease-in-out z-40 ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:static lg:block`}
       >
         <img
           src={logo}

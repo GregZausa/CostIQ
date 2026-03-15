@@ -92,12 +92,15 @@ const CostPerProductChart = ({ computed = {} }) => {
             </text>
             <Tooltip content={<CustomTooltip />} />
             <Legend
-              formatter={(value, entry) => (
-                <span className="text-xs text-slate-600">
-                  {value} — ₱{entry.payload.value.toFixed(2)} (
-                  {((entry.payload.value / total) * 100).toFixed(1)}%)
-                </span>
-              )}
+              formatter={(value, entry) => {
+                const val = entry?.payload?.value ?? 0;
+                return (
+                  <span className="text-xs text-slate-600">
+                    {value} — ₱{val.toFixed(2)} (
+                    {((val / total) * 100).toFixed(1)}%)
+                  </span>
+                );
+              }}
               wrapperStyle={{ fontSize: "12px", paddingTop: "8px" }}
             />
           </PieChart>
