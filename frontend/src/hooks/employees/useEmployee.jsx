@@ -15,7 +15,10 @@ const useEmployee = ({ onSuccess, openModal, setIsLoading } = {}) => {
     openModal,
     setIsLoading,
   });
+
+  const totalEmployees = query.totalRows;
   return {
+    totalEmployees,
     form,
     query,
     actions,

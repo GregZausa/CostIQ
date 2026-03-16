@@ -8,6 +8,7 @@ export const useOtherExpensesQuery = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
+  const [totalRows, setTotalRows] = useState();
 
   const load = useCallback(async () => {
     const urlParams = new URLSearchParams({ search, page, limit: 8 });
@@ -20,6 +21,7 @@ export const useOtherExpensesQuery = () => {
     setColumns(result.headers);
     setPage(result.page);
     setTotalPages(result.totalPages);
+    setTotalRows(result.totalRows);
   }, [search, page]);
 
   useEffect(() => {
@@ -29,6 +31,7 @@ export const useOtherExpensesQuery = () => {
   useEffect(() => {
     setPage(1);
   }, [search]);
+
 
   return {
     data,
@@ -40,5 +43,6 @@ export const useOtherExpensesQuery = () => {
     search,
     setSearch,
     load,
+    totalRows,
   };
 };

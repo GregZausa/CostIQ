@@ -7,7 +7,10 @@ const useProducts = () => {
   const query = useProductsQuery();
   const actions = useProductsAction({query, form})
 
+  const totalProducts = query.products.length;
+
   return {
+    totalProducts,
     form,
     query,
     actions,

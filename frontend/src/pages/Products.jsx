@@ -32,7 +32,7 @@ const Products = () => {
         buttonLabel="Add Products"
       />
 
-      <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-4 gap-4 py-4">
+      <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-4 gap-2 py-2">
         <div className="space-y-2">
           <SelectBox
             onChange={query.setSelectedProduct}

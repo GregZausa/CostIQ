@@ -7,6 +7,7 @@ export const useEmployeeQuery = () => {
   const [columns, setColumns] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalRows ,setTotalRows] = useState();
   const [search, setSearch] = useState("");
 
   const load = useCallback(async () => {
@@ -23,6 +24,7 @@ export const useEmployeeQuery = () => {
       if (rows.length > 0) setColumns(Object.keys(rows[0]));
       setPage(result.page);
       setTotalPages(result.totalPages);
+      setTotalRows(result.totalRows);
     } catch (err) {
       console.error(err);
     }
@@ -39,6 +41,7 @@ export const useEmployeeQuery = () => {
   return {
     data,
     setData,
+    totalRows,
     columns,
     page,
     setPage,
