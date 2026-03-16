@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import authRoutes from "./src/routes/auth.route.js";
 import unitRoutes from "./src/routes/unit.route.js";
 import rawMaterialRoutes from "./src/routes/raw-materials.route.js";
@@ -21,7 +22,7 @@ app.use(
     credentials: true,
   }),
 );
-
+app.use(cookieParser());
 //routes
 app.use("/api/auth", express.json(), authRoutes);
 app.use("/api", express.json(), unitRoutes);

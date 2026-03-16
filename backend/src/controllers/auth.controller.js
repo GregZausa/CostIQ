@@ -1,4 +1,15 @@
-import { loginUser, registerUser } from "../services/auth.service.js";
+import {
+  loginUser,
+  refreshUserToken,
+  registerUser,
+} from "../services/auth.service.js";
+
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax",
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+};
 
 export const register = async (req, res) => {
   try {
@@ -8,17 +19,19 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: "All fields are required!" });
     }
 
-    const { newUser, token } = await registerUser({
+    const { newUser, accessToken, refreshToken } = await registerUser({
       email,
       password,
       firstName,
       lastName,
     });
 
+    res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS);
+
     res.status(201).json({
       message: "User Registered Successfully!",
       user: newUser,
-      token,
+      token: accessToken,
     });
   } catch (err) {
     console.error(err);
@@ -38,11 +51,16 @@ export const login = async (req, res) => {
         .json({ message: "Email and Passowrd are required!" });
     }
 
-    const { user, token } = await loginUser({ email, password });
+    const { user, accessToken, refreshToken } = await loginUser({
+      email,
+      password,
+    });
+
+    res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS);
     res.json({
       message: "Logged In Successfully!",
       user,
-      token,
+      token: accessToken,
     });
   } catch (err) {
     console.error(err);
@@ -50,4 +68,23 @@ export const login = async (req, res) => {
       .status(err.message.includes("Invalid") ? 401 : 500)
       .json({ message: err.message });
   }
+};
+
+export const refresh = (req, res) => {
+  try {
+    const token = req.cookies.refreshToken;
+    if (!token) {
+      return res.status(401).json({ message: "No refresh token provided" });
+    }
+    const { accessToken } = refreshUserToken(token);
+    res.json({ token: accessToken });
+  } catch (err) {
+    res.clearCookie("refreshToken", COOKIE_OPTIONS);
+    res.status(401).json({ message: err.message });
+  }
+};
+
+export const logout = (req, res) => {
+  res.clearCookie("refreshToken", COOKIE_OPTIONS);
+  res.json({ message: "Logged out successfully!" });
 };

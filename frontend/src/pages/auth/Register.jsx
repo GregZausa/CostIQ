@@ -29,6 +29,7 @@ const Register = () => {
 
       const res = await fetch(`${apiUrl}/auth/register`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
