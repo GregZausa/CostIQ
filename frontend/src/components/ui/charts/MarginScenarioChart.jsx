@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
   Area,
 } from "recharts";
-import ProductCardLayout from "../layout/ProductCardLayout";
+import ProductCardLayout from "../../layout/ProductCardLayout";
 import { BarChart2 } from "lucide-react";
 
 const CustomBar = (props) => {

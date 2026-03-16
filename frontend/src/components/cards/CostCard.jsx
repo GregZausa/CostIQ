@@ -3,11 +3,26 @@ import ProductCardLayout from "../layout/ProductCardLayout";
 
 const CostCard = ({
   title,
-  directMaterials = 0,
-  labor = 0,
-  others = 0,
-  total = 0,
+  variant,
+  computed,
 }) => {
+  const isBatch = variant === "batch";
+  const directMaterials =
+    isBatch
+      ? computed?.materialCPB || 0
+      : computed?.materialCPP || 0;
+  const labor =
+    isBatch
+      ? computed?.employeeCPB || 0
+      : computed?.employeeCPP || 0;
+  const others =
+    isBatch
+      ? computed?.otherExpenseCPB || 0
+      : computed?.otherExpenseCPP || 0;
+  const total =
+    isBatch
+      ? computed?.totalCPB || 0
+      : computed?.totalCPP || 0;
   const formatPeso = (val) =>
     `₱${Number(val).toLocaleString("en-PH", { minimumFractionDigits: 2 })}`;
 
@@ -53,14 +68,20 @@ const CostCard = ({
               ${isTotal ? "bg-slate-800 hover:bg-slate-700" : "hover:bg-slate-50"}`}
           >
             <div className="flex items-center gap-3">
-              <div className={`w-5 h-5 rounded-xl ${bg} flex items-center justify-center shrink-0`}>
+              <div
+                className={`w-5 h-5 rounded-xl ${bg} flex items-center justify-center shrink-0`}
+              >
                 <Icon size={15} className={color} />
               </div>
-              <span className={`text-sm font-medium ${isTotal ? "text-white tracking-widest uppercase" : "text-slate-600"}`}>
+              <span
+                className={`text-sm font-medium ${isTotal ? "text-white tracking-widest uppercase" : "text-slate-600"}`}
+              >
                 {label}
               </span>
             </div>
-            <span className={`tabular-nums text-sm font-medium text-right ${isTotal ? "text-white" : "text-slate-800 text-sm"}`}>
+            <span
+              className={`tabular-nums text-sm font-medium text-right ${isTotal ? "text-white" : "text-slate-800 text-sm"}`}
+            >
               {formatPeso(value)}
             </span>
           </div>

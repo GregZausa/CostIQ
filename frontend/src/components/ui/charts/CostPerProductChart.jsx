@@ -7,7 +7,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import ProductCardLayout from "../layout/ProductCardLayout";
+import ProductCardLayout from "../../layout/ProductCardLayout";
 import { PieChart as PieIcon } from "lucide-react";
 
 const COLORS = {

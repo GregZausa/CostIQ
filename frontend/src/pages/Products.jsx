@@ -10,9 +10,9 @@ import SelectBox from "../components/ui/SelectBox";
 import ProductImageCard from "../components/cards/ProductImageCard";
 import FinancialCard from "../components/cards/FinancialCard";
 import PricingSummaryCard from "../components/cards/PricingSummaryCard";
-import MarginScenarioChart from "../components/ui/MarginScenarioChart";
-import PricingGuideChart from "../components/ui/PricingGuideChart";
-import CostPerProductChart from "../components/ui/CostPerProductChart";
+import MarginScenarioChart from "../components/ui/charts/MarginScenarioChart";
+import PricingGuideChart from "../components/ui/charts/PricingGuideChart";
+import CostPerProductChart from "../components/ui/charts/CostPerProductChart";
 import WhatIfScenarioCard from "../components/cards/WhatIfScenarioCard";
 
 const Products = () => {
@@ -48,39 +48,23 @@ const Products = () => {
         <div className="space-y-2">
           <FinancialCard
             title="Financial Metrics"
-            breakEvenUnits={computed?.breakEvenUnits}
-            BreakEvenRevenue={computed?.breakEvenRevenue}
-            NetProfitPerUnit={computed?.netProfitPerUnit}
-            ROI={computed?.roi}
+            computed={computed}
           />
           <CostCard
             title="Cost Per Batch"
-            total={computed?.totalCPB}
-            directMaterials={computed?.materialCPB}
-            labor={computed?.employeeCPB}
-            others={computed?.otherExpenseCPB}
+            computed={computed}
+            variant="batch"
           />
         </div>
         <div className="space-y-2">
           <PricingSummaryCard
             title="Pricing Summary"
-            profit={computed?.profit}
-            profitMargin={computed?.profit_margin}
-            discount={computed?.discountCost}
-            discountPercent={computed?.discount}
-            salesTaxPercent={computed?.sales_tax}
-            salesTax={computed?.tax}
-            finalPrice={computed?.finalPrice}
-            sellingPrice={computed?.sellingPrice}
-            discountedPrice={computed?.discountedPrice}
-            totalCPP={computed?.totalCPP}
+            computed={computed}
           />
           <CostCard
             title="Cost Per Product"
-            total={computed?.totalCPP}
-            directMaterials={computed?.materialCPP}
-            labor={computed?.employeeCPP}
-            others={computed?.otherExpenseCPP}
+            computed={computed}
+            variant="unit"
           />
         </div>
       </div>

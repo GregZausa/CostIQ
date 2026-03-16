@@ -4,14 +4,15 @@ import ProductCardLayout from "../layout/ProductCardLayout";
 
 const PricingSummaryCard = ({
   title,
-  profitMargin = 0,
-  profit = 0,
-  discountPercent = 0,
-  discount = 0,
-  salesTaxPercent = 0,
-  salesTax = 0,
-  finalPrice = 0,
+  computed,
 }) => {
+  const profitMargin = computed?.profit_margin || 0;
+  const profit = computed?.profit || 0;
+  const discountPercent = computed?.discount;
+  const salesTaxPercent = computed?.sales_tax || 0;
+  const discount = computed?.discountCost || 0;
+  const salesTax = computed?.tax || 0;
+  const finalPrice = computed?.finalPrice || 0;
   const rows = [
     {
       label: "Profit margin",

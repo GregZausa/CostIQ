@@ -12,7 +12,7 @@ import {
   Area,
   ReferenceLine,
 } from "recharts";
-import ProductCardLayout from "../layout/ProductCardLayout";
+import ProductCardLayout from "../../layout/ProductCardLayout";
 import { TrendingDown } from "lucide-react";
 
 const PricingGuideChart = ({ computed = {} }) => {

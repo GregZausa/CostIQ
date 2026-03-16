@@ -18,15 +18,15 @@ const WhatIfScenarioCard = ({ title, computed }) => {
   const [goalInput, setGoalInput] = useState("");
   const [batchesPerDayInput, setBatchesPerDayInput] = useState("");
 
-  const goal          = parseFloat(goalInput) || 0;
+  const goal = parseFloat(goalInput) || 0;
   const batchesPerDay = parseFloat(batchesPerDayInput) || 0;
 
-  const price = computed?.finalPrice          ?? 0;
-  const costPerUnit = computed?.totalCPP            ?? 0;
-  const profitPerUnit = computed?.netProfitPerUnit    ?? 0;
-  const breakEvenUnits = computed?.breakEvenUnits      ?? 0;
+  const price = computed?.finalPrice ?? 0;
+  const costPerUnit = computed?.totalCPP ?? 0;
+  const profitPerUnit = computed?.netProfitPerUnit ?? 0;
+  const breakEvenUnits = computed?.breakEvenUnits ?? 0;
   const batchSize = Number(computed?.total_sellable_units ?? 1);
-  const profitPerBatch = computed?.netProfit           ?? 0;
+  const profitPerBatch = computed?.netProfit ?? 0;
 
   const metrics = useMemo(() => {
     if (!goal || !profitPerUnit) return null;

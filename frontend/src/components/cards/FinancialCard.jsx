@@ -2,13 +2,12 @@ import { DollarSign, Package, Percent, TrendingUp } from "lucide-react";
 import React from "react";
 import ProductCardLayout from "../layout/ProductCardLayout";
 
-const FinancialCard = ({
-  title,
-  breakEvenUnits = 0,
-  BreakEvenRevenue = 0,
-  NetProfitPerUnit = 0,
-  ROI = 0,
-}) => {
+const FinancialCard = ({ title, computed }) => {
+  const breakEvenUnits = computed?.breakEvenUnits || 0;
+  const BreakEvenRevenue = computed?.breakEvenUnits || 0;
+  const NetProfitPerUnit = computed?.netProfitPerUnit || 0;
+  const ROI = computed?.roi || 0;
+  
   const formatPeso = (val) =>
     `₱${Number(val).toLocaleString("en-PH", { minimumFractionDigits: 2 })}`;
 
