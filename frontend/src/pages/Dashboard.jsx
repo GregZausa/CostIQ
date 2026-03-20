@@ -2,21 +2,20 @@ import React from "react";
 import Headers from "../components/layout/Headers";
 import ProductsOverviewCard from "../components/cards/ProductsOverviewCard";
 import useProducts from "../hooks/products/useProducts";
-import { Box } from "lucide-react";
+import { Box, CircleDollarSign, Percent, TrendingDown, TrendingUp } from "lucide-react";
 import useRawMaterials from "../hooks/raw-materials/useRawMaterials";
 import useEmployee from "../hooks/employees/useEmployee";
 import useOtherExpenses from "../hooks/other-expenses/useOtherExpenses";
 
 const Dashboard = () => {
-  const { totalProducts } = useProducts();
+  const { totalProducts, mostExpensive, lowestProfitable, mostProfitable, highestROI } = useProducts();
   const { totalRawMaterials } = useRawMaterials();
-  const {totalEmployees} = useEmployee();
-  const {totalOtherExpenses} = useOtherExpenses();
+  const { totalEmployees } = useEmployee();
+  const { totalOtherExpenses } = useOtherExpenses();
 
   return (
     <div>
-      <Headers title="Dashboard" 
-      buttonLabel="Add Product"/>
+      <Headers title="Dashboard" buttonLabel="Add Product" />
       <div className="grid md:grid-cols-2 lg:grid-cols-4 shrink-0 py-2 gap-2">
         <ProductsOverviewCard
           value={totalProducts}
@@ -42,6 +41,29 @@ const Dashboard = () => {
           title="Total Other Expenses"
           icon={<Box size={18} />}
         />
+      </div>
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 shrink-0 py-2 gap-2">
+        <ProductsOverviewCard
+          value={`₱ ${Number(mostExpensive?.total_cost).toLocaleString()}`}
+          description={mostExpensive?.product_name}
+          title="Highest Cost Product"
+          icon={<CircleDollarSign size={18}/>}
+        />
+        <ProductsOverviewCard
+        value={`₱ ${Number(lowestProfitable?.profit).toFixed(2)}`}
+        description={lowestProfitable?.product_name}
+        title="Lowest Profit Product"
+        icon={<TrendingDown size={18}/>}/>  
+        <ProductsOverviewCard
+        value={`₱ ${Number(mostProfitable?.profit).toFixed(2)}`}
+        description={mostProfitable?.product_name}
+        title="Most Profit Product"
+        icon={<TrendingUp size={18}/>}/>  
+        <ProductsOverviewCard
+        value={`${Number(highestROI?.roi).toFixed(2)}%`}
+        description={highestROI?.product_name}
+        title="Most Profit Product"
+        icon={<Percent size={18}/>}/>  
       </div>
     </div>
   );

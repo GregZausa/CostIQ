@@ -1,7 +1,11 @@
 import pool from "../config/db.js";
 import {
+  getHighestROIProduct,
   getLaborCostPerBatch,
+  getLowestProfitableProduct,
   getMaterialsCostPerBatch,
+  getMostExpensiveProduct,
+  getMostProfitableProduct,
   getOtherExpenseCostPerBatch,
   getProduct,
   insertProduct,
@@ -58,7 +62,14 @@ export const createProductService = async ({ file, userId, body }) => {
 };
 
 export const fetchProductsService = async ({ userId }) => {
-  return await getProduct(userId);
+  const [products, mostExpensiveProduct, lowestProfitableProduct, mostProfitableProduct, highestROIProduct] = await Promise.all([
+    getProduct(userId),
+    getMostExpensiveProduct(userId),
+    getLowestProfitableProduct(userId),
+    getMostProfitableProduct(userId),
+    getHighestROIProduct(userId),
+  ]);
+  return { products, mostExpensiveProduct, lowestProfitableProduct, mostProfitableProduct, highestROIProduct };
 };
 
 export const fetchProductCPBService = async ({ id, userId }) => {
@@ -99,11 +110,13 @@ export const productCompute = (product, cost) => {
   const breakEvenUnits =
     contributionMargin > 0 ? Math.ceil(totalCPB / contributionMargin) : null;
 
-  const breakEvenRevenue = breakEvenUnits ? breakEvenUnits * discountedPrice : null;
+  const breakEvenRevenue = breakEvenUnits
+    ? breakEvenUnits * discountedPrice
+    : null;
   const netProfitPerUnit = profit;
   const netProfit = netProfitPerUnit * totalSellableUnits;
 
-  const roi = totalCPB > 0 ?(netProfit / totalCPB) * 100 : 0;
+  const roi = totalCPB > 0 ? (netProfit / totalCPB) * 100 : 0;
 
   return {
     ...product,
@@ -129,7 +142,7 @@ export const productCompute = (product, cost) => {
 };
 
 export const fetchProductService = async ({ id, userId }) => {
-  const products = await fetchProductsService({ userId });
+  const { products } = await fetchProductsService({ userId });
   const product = products.find((p) => p.product_id === id);
 
   const cost = await fetchProductCPBService({ id, userId });

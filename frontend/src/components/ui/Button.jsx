@@ -23,6 +23,8 @@ const Button = ({
       "bg-transparent hover:bg-slate-100 active:bg-slate-200 text-slate-600 border-transparent",
     danger:
       "bg-rose-600 hover:bg-rose-500 active:bg-rose-700 text-white border-transparent shadow-sm hover:shadow-rose-200 hover:shadow-md",
+    ghostDanger:
+      "bg-transparent hover:bg-rose-600 active:bg-rose-100 text-rose-500 border-transparent shadow-sm hover:text-white hover:shadow-rose-600 hover:shadow-md",
   };
 
   const sizes = {
@@ -42,9 +44,10 @@ const Button = ({
         transition-all duration-200
         focus-visible:ring-4 focus-visible:ring-indigo-100
         ${sizes[size]}
-        ${isDisabled
-          ? "bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed shadow-none"
-          : variants[variant]
+        ${
+          isDisabled
+            ? "bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed shadow-none"
+            : variants[variant]
         }
         ${className}
       `}

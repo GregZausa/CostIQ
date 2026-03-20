@@ -1,4 +1,5 @@
 import pool from "../config/db.js";
+import { productCompute } from "../services/product.services.js";
 
 export const insertProduct = async (
   client,
@@ -109,7 +110,7 @@ export const getLaborCostPerBatch = async (id, createdBy) => {
 
   const result = await pool.query(query, [id, createdBy]);
   return parseFloat(result.rows[0]?.total_labor_cpp) || 0;
-}
+};
 
 export const getOtherExpenseCostPerBatch = async (id, createdBy) => {
   const query = `SELECT SUM (oe.expense_cost * poe.quantity) AS total_other_expense_cpp
@@ -123,4 +124,89 @@ export const getOtherExpenseCostPerBatch = async (id, createdBy) => {
 
   const result = await pool.query(query, [id, createdBy]);
   return parseFloat(result.rows[0]?.total_other_expense_cpp) || 0;
-}
+};
+
+export const getMostExpensiveProduct = async (createdBy) => {
+  const query = `SELECT p.product_id, p.product_name, 
+                  COALESCE(ing.ingredients_cost, 0) +
+                  COALESCE(emp.labor_cost, 0) +
+                  COALESCE(exp.expense_cost, 0) AS total_cost
+                  FROM products p
+                  LEFT JOIN (SELECT pi.product_id, SUM(rm.cost_per_unit * pi.units_needed) 
+                  AS ingredients_cost
+                  FROM product_ingredients pi
+                  JOIN raw_materials rm ON rm.raw_material_id = pi.material_id
+                  GROUP BY pi.product_id) ing ON ing.product_id = p.product_id
+                  LEFT JOIN(SELECT pe.product_id, SUM(e.rate_per_hr * pe.prep_time_hrs) 
+                  AS labor_cost
+                  FROM product_employees pe
+                  JOIN employees e ON e.employee_id = pe.employee_id
+                  GROUP BY pe.product_id) emp ON emp.product_id = p.product_id
+                  LEFT JOIN (SELECT poe.product_id, SUM(oe.expense_cost * poe.quantity) 
+                  AS expense_cost
+                  FROM product_other_expenses poe
+                  JOIN other_expenses oe ON oe.other_expense_id = poe.other_expense_id
+                  GROUP BY poe.product_id) exp ON exp.product_id = p.product_id
+                  WHERE p.created_by = $1
+                  AND is_active = true
+                  ORDER BY total_cost DESC
+                  LIMIT 1`;
+
+  const { rows } = await pool.query(query, [createdBy]);
+
+  return rows[0] || null;
+};
+
+export const getProductsWithProfit = async (createdBy) => {
+  const query = `SELECT p.product_id, p.product_name, p.profit_margin, p.total_sellable_units, p.discount, p.sales_tax,
+                  COALESCE(ing.ingredients_cost, 0) AS ingredients_cost,
+                  COALESCE(emp.labor_cost, 0) AS labor_cost,
+                  COALESCE(exp.expense_cost, 0) AS expense_cost
+                  FROM products p
+                  LEFT JOIN (SELECT pi.product_id, SUM(rm.cost_per_unit * pi.units_needed) AS ingredients_cost
+                  FROM product_ingredients pi
+                  JOIN raw_materials rm ON rm.raw_material_id = pi.material_id
+                  GROUP BY pi.product_id) ing ON ing.product_id = p.product_id
+                  LEFT JOIN (SELECT pe.product_id, SUM(e.rate_per_hr * pe.prep_time_hrs) AS labor_cost
+                  FROM product_employees pe
+                  JOIN employees e ON e.employee_id = pe.employee_id
+                  GROUP BY pe.product_id) emp ON emp.product_id = p.product_id
+                  LEFT JOIN (SELECT poe.product_id, SUM(oe.expense_cost * poe.quantity) AS expense_cost
+                  FROM product_other_expenses poe
+                  JOIN other_expenses oe ON oe.other_expense_id = poe.other_expense_id
+                  GROUP BY poe.product_id) exp ON exp.product_id = p.product_id
+                  WHERE p.created_by = $1 AND p.is_active = true`;
+  const { rows } = await pool.query(query, [createdBy]);
+  return rows.map((p) => ({
+    ...p,
+    ...productCompute(p, {
+      materialCPB: Number(p.ingredients_cost),
+      employeeCPB: Number(p.labor_cost),
+      otherExpenseCPB: Number(p.expense_cost),
+    }),
+  }));
+};
+
+export const getLowestProfitableProduct = async (createdBy) => {
+  return (
+    (await getProductsWithProfit(createdBy)).sort(
+      (a, b) => a.profit - b.profit,
+    )[0] || null
+  );
+};
+
+export const getMostProfitableProduct = async (createdBy) => {
+  return (
+    (await getProductsWithProfit(createdBy)).sort(
+      (a, b) => b.profit - a.profit,
+    )[0] || null
+  );
+};
+
+export const getHighestROIProduct = async (createdBy) => {
+  return (
+    (await getProductsWithProfit(createdBy)).sort(
+      (a, b) => b.roi - a.roi,
+    )[0] || null
+  );
+};

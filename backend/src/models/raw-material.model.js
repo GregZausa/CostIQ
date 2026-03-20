@@ -122,7 +122,7 @@ export const deleteRawMaterials = async (id) => {
   return rows[0];
 };
 
-export const getMostExpenseiveMaterial = async (createdBy) => {
+export const getMostExpensiveMaterial = async (createdBy) => {
   const query = `SELECT * 
                   FROM raw_materials 
                   WHERE created_by = $1 

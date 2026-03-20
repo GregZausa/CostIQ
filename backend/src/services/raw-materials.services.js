@@ -1,7 +1,7 @@
 import {
   deleteRawMaterials,
   getLeastExpensiveMaterial,
-  getMostExpenseiveMaterial,
+  getMostExpensiveMaterial,
   getMostUsedMaterial,
   getRawMaterials,
   getRawMaterialsById,
@@ -61,7 +61,7 @@ export const fetchRawMaterialsService = async (req) => {
       getRawMaterials(createdBy, searchTerm, selectedUnit, limit, offset),
       getRawMaterialsCount(createdBy, searchTerm, selectedUnit),
       getRawMaterialsTotalCount(createdBy),
-      getMostExpenseiveMaterial(createdBy),
+      getMostExpensiveMaterial(createdBy),
       getLeastExpensiveMaterial(createdBy),
       getMostUsedMaterial(createdBy),
     ]);

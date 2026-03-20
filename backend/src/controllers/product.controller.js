@@ -28,7 +28,13 @@ export const fetchProducts = async (req, res) => {
     const product = await fetchProductsService({
       userId: req.user.id,
     });
-    res.json(product);
+    res.json({
+      products: product.products,
+      mostExpensiveProduct: product.mostExpensiveProduct,
+      lowestProfitableProduct: product.lowestProfitableProduct,
+      mostProfitableProduct: product.mostProfitableProduct,
+      highestROIProduct: product.highestROIProduct,
+    });
   } catch (err) {
     res.status(500).json({ message: "Product not found", error: err.message });
   }

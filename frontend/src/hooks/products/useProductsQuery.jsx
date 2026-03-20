@@ -6,9 +6,13 @@ import { useState } from "react";
 
 export const useProductsQuery = () => {
   const [products, setProducts] = useState([]);
+  const [mostExpensive, setMostExpensive] = useState(null);
+  const [lowestProfitable, setLowestProfitable] = useState(null);
+  const [mostProfitable, setMostProfitable] = useState(null);
+  const [highestROI, setHighestROI] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productDetail, setProductDetail] = useState(null);
-  const productOptions = products.map((p) => ({
+  const productOptions = (products ?? []).map((p) => ({
     label: p.product_name.toUpperCase(),
     value: p.product_id,
   }));
@@ -17,7 +21,11 @@ export const useProductsQuery = () => {
     try {
       const res = await authFetch(`${apiUrl}/products`);
       const result = await res.json();
-      setProducts(result);
+      setProducts(result.products);
+      setLowestProfitable(result.lowestProfitableProduct);
+      setMostExpensive(result.mostExpensiveProduct);
+      setMostProfitable(result.mostProfitableProduct);
+      setHighestROI(result.highestROIProduct);
     } catch (err) {
       console.error("Failed to fetch products", err);
     }
@@ -49,6 +57,10 @@ export const useProductsQuery = () => {
 
   return {
     products,
+    mostExpensive,
+    mostProfitable,
+    highestROI,
+    lowestProfitable,
     productOptions,
     selectedProduct,
     setSelectedProduct,

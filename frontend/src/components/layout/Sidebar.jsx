@@ -90,7 +90,7 @@ const Sidebar = () => {
         <Button
           onClick={logout}
           size="lg"
-          variant="danger"
+          variant="ghostDanger"
           label="Logout"
           className="w-full mt-auto"
         />
