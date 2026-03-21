@@ -1,13 +1,12 @@
 import {
   createProductService,
+  fetchAllComputedProductsService,
   fetchProductService,
   fetchProductsService,
 } from "../services/product.services.js";
 
 export const createProduct = async (req, res) => {
   try {
-    console.log("body: ", req.body);
-    console.log("file: ", req.file);
     const product = await createProductService({
       userId: req.user.id,
       body: req.body,
@@ -40,14 +39,27 @@ export const fetchProducts = async (req, res) => {
   }
 };
 
+export const fetchAllComputedProducts = async (req, res) => {
+  try {
+    const products = await fetchAllComputedProductsService({
+      userId: req.user.id,
+    });
+    res.json({products});
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Failed to fetch products", error: err.message });
+  }
+};
+
 export const fetchProduct = async (req, res) => {
   try {
-    const { computedProduct, products } = await fetchProductService({
+    const { computedProduct } = await fetchProductService({
       id: req.params.id,
       userId: req.user.id,
     });
 
-    res.json({ computedProduct, products });
+    res.json({ computedProduct });
   } catch (err) {
     res
       .status(500)

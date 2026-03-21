@@ -8,6 +8,7 @@ import {
   getMostProfitableProduct,
   getOtherExpenseCostPerBatch,
   getProduct,
+  getProductsWithProfit,
   insertProduct,
   insertProductEmployees,
   insertProductIngredients,
@@ -15,11 +16,78 @@ import {
 } from "../models/product.model.js";
 import { uploadImage } from "../utils/uploadImage.js";
 
+const computeCPP = (cost, totalSellableUnits) => {
+  const safeDivide = (value) =>
+    totalSellableUnits > 0 ? value / totalSellableUnits : 0;
+
+  const totalCPB =
+    cost.materialCPB + cost.employeeCPB + cost.otherExpenseCPB;
+
+  return {
+    materialCPP: safeDivide(cost.materialCPB),
+    employeeCPP: safeDivide(cost.employeeCPB),
+    otherExpenseCPP: safeDivide(cost.otherExpenseCPB),
+    totalCPB,
+    totalCPP: safeDivide(totalCPB),
+  };
+};
+
+const computePricing = (totalCPP, profitMargin, discount, salesTax) => {
+  const sellingPrice = totalCPP / (1 - profitMargin / 100);
+  const discountCost = sellingPrice * (discount / 100);
+  const discountedPrice = sellingPrice - discountCost;
+  const tax = discountedPrice * (salesTax / 100);
+  const finalPrice = discountedPrice + tax;
+
+  return { sellingPrice, discountCost, discountedPrice, tax, finalPrice };
+};
+
+const computeProfitability = (
+  totalCPB,
+  totalCPP,
+  discountedPrice,
+  totalSellableUnits
+) => {
+  const profit = discountedPrice - totalCPP;
+  const netProfit = profit * totalSellableUnits;
+  const roi = totalCPB > 0 ? (netProfit / totalCPB) * 100 : 0;
+  const breakEvenUnits =
+    profit > 0 ? Math.ceil(totalCPB / profit) : null;
+  const breakEvenRevenue = breakEvenUnits
+    ? breakEvenUnits * discountedPrice
+    : null;
+
+  return { profit, netProfit, netProfitPerUnit: profit, roi, breakEvenUnits, breakEvenRevenue };
+};
+
+export const productCompute = (product, cost) => {
+  const totalSellableUnits = Number(product?.total_sellable_units || 0);
+  const profitMargin = Number(product?.profit_margin || 0);
+  const discount = Number(product?.discount || 0);
+  const salesTax = Number(product?.sales_tax || 0);
+
+  const cpp = computeCPP(cost, totalSellableUnits);
+  const pricing = computePricing(cpp.totalCPP, profitMargin, discount, salesTax);
+  const profitability = computeProfitability(
+    cpp.totalCPB,
+    cpp.totalCPP,
+    pricing.discountedPrice,
+    totalSellableUnits
+  );
+
+  return {
+    ...product,
+    ...cost,
+    ...cpp,
+    ...pricing,
+    ...profitability,
+  };
+};
+
 export const createProductService = async ({ file, userId, body }) => {
   const client = await pool.connect();
   try {
     const imageUrl = file ? await uploadImage(file) : null;
-
     const {
       product_name,
       total_input,
@@ -33,8 +101,8 @@ export const createProductService = async ({ file, userId, body }) => {
     const direct_materials = JSON.parse(body.direct_materials);
     const employees = JSON.parse(body.employees);
     const other_expenses = JSON.parse(body.other_expenses);
-    await client.query("BEGIN");
 
+    await client.query("BEGIN");
     const product = await insertProduct(client, {
       product_name,
       product_image: imageUrl,
@@ -62,14 +130,32 @@ export const createProductService = async ({ file, userId, body }) => {
 };
 
 export const fetchProductsService = async ({ userId }) => {
-  const [products, mostExpensiveProduct, lowestProfitableProduct, mostProfitableProduct, highestROIProduct] = await Promise.all([
+  const [
+    products,
+    mostExpensiveProduct,
+    lowestProfitableProduct,
+    mostProfitableProduct,
+    highestROIProduct,
+  ] = await Promise.all([
     getProduct(userId),
     getMostExpensiveProduct(userId),
     getLowestProfitableProduct(userId),
     getMostProfitableProduct(userId),
     getHighestROIProduct(userId),
   ]);
-  return { products, mostExpensiveProduct, lowestProfitableProduct, mostProfitableProduct, highestROIProduct };
+
+  return {
+    products,
+    mostExpensiveProduct,
+    lowestProfitableProduct,
+    mostProfitableProduct,
+    highestROIProduct,
+  };
+};
+
+export const fetchAllComputedProductsService = async ({ userId }) => {
+  const products = await getProductsWithProfit(userId);
+  return products;
 };
 
 export const fetchProductCPBService = async ({ id, userId }) => {
@@ -81,72 +167,10 @@ export const fetchProductCPBService = async ({ id, userId }) => {
   return { materialCPB, employeeCPB, otherExpenseCPB };
 };
 
-export const productCompute = (product, cost) => {
-  const { materialCPB, employeeCPB, otherExpenseCPB } = cost;
-
-  const totalSellableUnits = Number(product?.total_sellable_units || 0);
-  const profitMargin = Number(product?.profit_margin || 0);
-  const discountPercent = Number(product?.discount || 0);
-  const taxPercent = Number(product?.sales_tax || 0);
-  const safeDivide = (value) =>
-    totalSellableUnits > 0 ? value / totalSellableUnits : 0;
-
-  const materialCPP = safeDivide(materialCPB);
-  const employeeCPP = safeDivide(employeeCPB);
-  const otherExpenseCPP = safeDivide(otherExpenseCPB);
-
-  const totalCPB = materialCPB + employeeCPB + otherExpenseCPB;
-  const totalCPP = materialCPP + employeeCPP + otherExpenseCPP;
-
-  const sellingPrice = totalCPP / (1 - Number(profitMargin) / 100);
-  const discountCost = sellingPrice * (discountPercent / 100);
-  const discountedPrice = sellingPrice - discountCost;
-  const tax = discountedPrice * (taxPercent / 100);
-  const profit = discountedPrice - totalCPP;
-  const finalPrice = discountedPrice + tax;
-
-  const contributionMargin = profit;
-
-  const breakEvenUnits =
-    contributionMargin > 0 ? Math.ceil(totalCPB / contributionMargin) : null;
-
-  const breakEvenRevenue = breakEvenUnits
-    ? breakEvenUnits * discountedPrice
-    : null;
-  const netProfitPerUnit = profit;
-  const netProfit = netProfitPerUnit * totalSellableUnits;
-
-  const roi = totalCPB > 0 ? (netProfit / totalCPB) * 100 : 0;
-
-  return {
-    ...product,
-    sellingPrice,
-    finalPrice,
-    profit,
-    discountCost,
-    tax,
-    materialCPB,
-    employeeCPB,
-    otherExpenseCPB,
-    totalCPB,
-    materialCPP,
-    employeeCPP,
-    otherExpenseCPP,
-    totalCPP,
-    breakEvenUnits,
-    breakEvenRevenue,
-    netProfitPerUnit,
-    netProfit,
-    roi,
-  };
-};
-
 export const fetchProductService = async ({ id, userId }) => {
   const { products } = await fetchProductsService({ userId });
   const product = products.find((p) => p.product_id === id);
-
   const cost = await fetchProductCPBService({ id, userId });
-  const computedProduct = await productCompute(product, cost);
-
+  const computedProduct = productCompute(product, cost);
   return { computedProduct };
 };

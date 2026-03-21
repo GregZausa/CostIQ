@@ -90,13 +90,13 @@ const PricingGuideChart = ({ computed = {} }) => {
             <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
             <XAxis
               dataKey="discount"
-              tick={{ fontSize: 12, fill: "#475569" }}
+              tick={{ fontSize: 12, fill: "#94a3b8" }}
               axisLine={false}
               tickLine={false}
             />
             <YAxis
               yAxisId="left"
-              tick={{ fontSize: 12, fill: "#475569" }}
+              tick={{ fontSize: 12, fill: "#94a3b8" }}
               axisLine={false}
               tickLine={false}
               width={50}
@@ -104,7 +104,7 @@ const PricingGuideChart = ({ computed = {} }) => {
             <YAxis
               yAxisId="right"
               orientation="right"
-              tick={{ fontSize: 12, fill: "#475569" }}
+              tick={{ fontSize: 12, fill: "#94a3b8" }}
               axisLine={false}
               tickLine={false}
               width={50}

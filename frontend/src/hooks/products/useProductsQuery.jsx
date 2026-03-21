@@ -6,6 +6,7 @@ import { useState } from "react";
 
 export const useProductsQuery = () => {
   const [products, setProducts] = useState([]);
+  const [computedProducts, setComputedProducts] = useState([]);
   const [mostExpensive, setMostExpensive] = useState(null);
   const [lowestProfitable, setLowestProfitable] = useState(null);
   const [mostProfitable, setMostProfitable] = useState(null);
@@ -19,13 +20,18 @@ export const useProductsQuery = () => {
 
   const loadProducts = useCallback(async () => {
     try {
-      const res = await authFetch(`${apiUrl}/products`);
-      const result = await res.json();
+      const [productRes, computedRes] = await Promise.all([
+        authFetch(`${apiUrl}/products`),
+        authFetch(`${apiUrl}/products/computed`),
+      ]);
+      const result = await productRes.json();
+      const computedResult = await computedRes.json();
       setProducts(result.products);
       setLowestProfitable(result.lowestProfitableProduct);
       setMostExpensive(result.mostExpensiveProduct);
       setMostProfitable(result.mostProfitableProduct);
       setHighestROI(result.highestROIProduct);
+      setComputedProducts(computedResult.products);
     } catch (err) {
       console.error("Failed to fetch products", err);
     }
@@ -57,6 +63,7 @@ export const useProductsQuery = () => {
 
   return {
     products,
+    computedProducts,
     mostExpensive,
     mostProfitable,
     highestROI,
