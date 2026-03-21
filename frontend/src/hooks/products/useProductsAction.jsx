@@ -1,9 +1,9 @@
 import toast from "react-hot-toast";
 import { apiUrl } from "../../config/apiUrl";
 import { authFetch } from "../../utils/authFetch";
-import { useState } from "react";
+import {} from "react";
 
-export const useProductsAction = ({ query, form }) => {
+export const useProductsAction = ({ form }) => {
   const validate = (state) => {
     const errors = {};
     if (!state.productName) errors.prductName = "Product name is requried!";

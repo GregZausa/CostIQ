@@ -13,7 +13,7 @@ import useRawMaterials from "../hooks/raw-materials/useRawMaterials";
 import useEmployee from "../hooks/employees/useEmployee";
 import useOtherExpenses from "../hooks/other-expenses/useOtherExpenses";
 import ProfitVsCOGChart from "../components/ui/charts/ProfitVsCOGChart";
-import ProfitMarginChart from "../components/ui/charts/ProfitMarginChart";
+import ProfitChart from "../components/ui/charts/ProfitChart";
 
 const Dashboard = () => {
   const {
@@ -23,7 +23,7 @@ const Dashboard = () => {
     mostProfitable,
     highestROI,
     cogsVsSellingPriceChartData,
-    profitMarginChartData,
+    profitChartData,
   } = useProducts();
   const { totalRawMaterials } = useRawMaterials();
   const { totalEmployees } = useEmployee();
@@ -89,7 +89,7 @@ const Dashboard = () => {
       </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-2 pt-2 shrink-0 gap-2">
           <ProfitVsCOGChart data={cogsVsSellingPriceChartData ?? []} />
-          <ProfitMarginChart data={profitMarginChartData ?? []}/>
+          <ProfitChart data={profitChartData ?? []}/>
       </div>
     </div>
   );

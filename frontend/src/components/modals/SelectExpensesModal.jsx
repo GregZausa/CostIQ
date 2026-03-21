@@ -113,7 +113,7 @@ const SelectExpensesModal = ({
       (item) => !item.quantity || Number(item.quantity) <= 0,
     );
     if (hasValid) {
-      toast.error("Prep time needed to be greated than 0");
+      toast.error("Quantity needed to be greated than 0");
       return;
     }
     onConfirm(selectedItems);

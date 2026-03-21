@@ -19,17 +19,17 @@ const useProducts = () => {
     sellingPrice: p.finalPrice.toFixed(2),
   }));
 
-  const profitMarginChartData = query.computedProducts
+  const profitChartData = query.computedProducts
     .map((p) => ({
       name: p.product_name,
-      profitMargin: Number(p.profit_margin),
+      profit: Number(p.profit).toFixed(2),
     }))
     .sort((a, b) => b.profitMargin - a.profitMargin);
 
   return {
     mostExpensive,
     cogsVsSellingPriceChartData,
-    profitMarginChartData,
+    profitChartData,
     highestROI,
     mostProfitable,
     totalProducts,
