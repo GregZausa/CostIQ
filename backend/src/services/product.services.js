@@ -1,11 +1,7 @@
 import pool from "../config/db.js";
 import {
-  getHighestROIProduct,
   getLaborCostPerBatch,
-  getLowestProfitableProduct,
   getMaterialsCostPerBatch,
-  getMostExpensiveProduct,
-  getMostProfitableProduct,
   getOtherExpenseCostPerBatch,
   getProduct,
   getProductsWithProfit,
@@ -133,23 +129,13 @@ export const fetchProductsService = async ({ userId }) => {
   const [
     products,
     mostExpensiveProduct,
-    lowestProfitableProduct,
-    mostProfitableProduct,
-    highestROIProduct,
   ] = await Promise.all([
     getProduct(userId),
-    getMostExpensiveProduct(userId),
-    getLowestProfitableProduct(userId),
-    getMostProfitableProduct(userId),
-    getHighestROIProduct(userId),
   ]);
 
   return {
     products,
     mostExpensiveProduct,
-    lowestProfitableProduct,
-    mostProfitableProduct,
-    highestROIProduct,
   };
 };
 
