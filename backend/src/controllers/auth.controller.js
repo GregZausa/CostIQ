@@ -37,7 +37,7 @@ export const register = async (req, res) => {
     console.error(err);
     res
       .status(err.message.includes("exists") ? 409 : 500)
-      .json({ message: err.message });
+      .json({ message: "Something went wrong" });
   }
 };
 
@@ -48,7 +48,7 @@ export const login = async (req, res) => {
     if (!email || !password) {
       return res
         .status(400)
-        .json({ message: "Email and Passowrd are required!" });
+        .json({ message: "Email and Password are required!" });
     }
 
     const { user, accessToken, refreshToken } = await loginUser({
@@ -66,7 +66,7 @@ export const login = async (req, res) => {
     console.error(err);
     res
       .status(err.message.includes("Invalid") ? 401 : 500)
-      .json({ message: err.message });
+      .json({ message: "Something went wrong" });
   }
 };
 
@@ -80,7 +80,7 @@ export const refresh = (req, res) => {
     res.json({ token: accessToken });
   } catch (err) {
     res.clearCookie("refreshToken", COOKIE_OPTIONS);
-    res.status(401).json({ message: err.message });
+    res.status(401).json({ message: "Something went wrong" });
   }
 };
 
