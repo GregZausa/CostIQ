@@ -1,9 +1,11 @@
+import bcrypt from "bcryptjs";
 import {
-  comparePassword,
   createUser,
   findUserByEmail,
 } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
+
+const comparePassword = (password, hashedPassword) => bcrypt.compare(password, hashedPassword);
 
 const generateAccessToken = (userId) =>
   jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "15m" });
@@ -19,7 +21,9 @@ export const registerUser = async ({
   const existingUser = await findUserByEmail(email);
   if (existingUser) throw new Error("Email already exists!");
 
-  const newUser = await createUser({ firstName, lastName, email, password });
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const newUser = await createUser({ firstName, lastName, email, hashedPassword });
 
   const accessToken = generateAccessToken(newUser.id);
   const refreshToken = generateRefreshToken(newUser.id);
