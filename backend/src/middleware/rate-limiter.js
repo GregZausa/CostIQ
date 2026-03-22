@@ -22,7 +22,7 @@ export const registerLimiter = rateLimit({
 
 export const globalLimiter = rateLimit({
   windowMs: 1 * 60 * 1000,
-  max: 5,
+  max: 100,
   message: {
     message: "Something went wrong, please try again after 1 minutes.",
   },
