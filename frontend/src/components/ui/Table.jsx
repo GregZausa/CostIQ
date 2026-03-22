@@ -1,6 +1,6 @@
 import React from "react";
 import Pagination from "../layout/Pagination";
-import { Inbox } from "lucide-react";
+import NoDataLayout from "../layout/NoDataLayout";
 
 const Table = ({
   columns,
@@ -26,7 +26,7 @@ const Table = ({
       <div className="w-full rounded-2xl border border-slate-200 shadow-xs">
         <table className="min-w-full">
           <thead>
-            <tr className="bg-gray-800 border-b border-slate-200">
+            <tr className="bg-slate-800 border-b border-slate-200">
               {columns.map((col) => (
                 <th
                   key={col.key}
@@ -57,10 +57,7 @@ const Table = ({
             ) : (
               <tr>
                 <td colSpan={columns.length} className="py-16 text-center">
-                  <div className="flex flex-col items-center gap-2 text-slate-400">
-                    <Inbox size={32} strokeWidth={1.5} />
-                    <span className="text-sm font-medium">{text}</span>
-                  </div>
+                  <NoDataLayout message={text}/>
                 </td>
               </tr>
             )}

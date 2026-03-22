@@ -68,7 +68,7 @@ const SelectBox = ({
           ${disabled
             ? 'bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed'
             : isOpen
-              ? 'bg-white border-gray-800/50 ring-4 ring-indigo-100 text-slate-800 shadow-sm'
+              ? 'bg-white border-slate-800/50 ring-4 ring-indigo-100 text-slate-800 shadow-sm'
               : 'bg-white border-slate-200 text-slate-700 hover:border-indigo-300 hover:shadow-sm shadow-xs'
           }
         `}
@@ -79,7 +79,7 @@ const SelectBox = ({
         <ChevronsUpDown
           size={15}
           className={`shrink-0 transition-all duration-200 ${
-            isOpen ? 'text-gray-800 rotate-180' : 'text-slate-400 group-hover:text-gray-800'
+            isOpen ? 'text-slate-800 rotate-180' : 'text-slate-400 group-hover:text-slate-800'
           }`}
         />
       </button>
@@ -123,14 +123,14 @@ const SelectBox = ({
                       px-4 py-2.5 text-sm cursor-pointer
                       transition-colors duration-100
                       ${isSelected
-                        ? 'bg-indigo-50 text-gray-500 font-semibold'
+                        ? 'bg-indigo-50 text-slate-500 font-semibold'
                         : 'text-slate-700 hover:bg-slate-50'
                       }
                     `}
                   >
                     <span>{option.label}</span>
                     {isSelected && (
-                      <Check size={14} className="text-gray-500 shrink-0" />
+                      <Check size={14} className="text-slate-500 shrink-0" />
                     )}
                   </div>
                 );

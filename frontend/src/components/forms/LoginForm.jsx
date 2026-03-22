@@ -20,7 +20,7 @@ const LoginForm = ({
         <h1 className="font-bold text-2xl">Log In</h1>
       </div>
       <div className="flex items-center space-x-2.5">
-        <Mail className="text-gray-500 shrink-0" />
+        <Mail className="text-slate-500 shrink-0" />
         <FloatingLabelInput
           type="text"
           label="Email"
@@ -31,7 +31,7 @@ const LoginForm = ({
         />
       </div>
       <div className="flex items-center space-x-2.5">
-        <Lock className="text-gray-500 shrink-0" />
+        <Lock className="text-slate-500 shrink-0" />
         <FloatingLabelInput
           type="password"
           label="Password"

@@ -38,15 +38,11 @@ const AddOtherExpensesForm = ({
             handleSubmit;
             setIsLoading(!isLoading);
           }}
-          backgroundAndText={"bg-gray-800 hover:bg-blue-500 text-white"}
         />
         <Button
           onClick={closeModal}
           label="Cancel"
           variant="ghost"
-          backgroundAndText={
-            "bg-white hover:bg-gray-400 text-black border-none"
-          }
           disabled={isLoading}
         />
       </div>

@@ -30,7 +30,7 @@ const ImageInput = ({
 
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm font-medium text-gray-700">{label}</label>
+      <label className="text-sm font-medium text-slate-700">{label}</label>
       <input
         type="file"
         ref={fileRef}
@@ -39,8 +39,8 @@ const ImageInput = ({
         onChange={handleChange}
       />
       <div
-        className="relative group h-64 w-full cursor-pointer rounded-xl border-2 border-dashed border-gray-300
-       bg-gray-50 hover:border-indigo-500 hover:bg-indigo-50 transition flex items-center justify-center overflow-hidden"
+        className="relative group h-64 w-full cursor-pointer rounded-xl border-2 border-dashed border-slate-300
+       bg-slate-50 hover:border-indigo-500 hover:bg-indigo-50 transition flex items-center justify-center overflow-hidden"
         onClick={() => fileRef.current.click()}
       >
         {preview ? (
@@ -67,10 +67,10 @@ const ImageInput = ({
             </button>
           </>
         ) : (
-          <div className="flex flex-col items-center gap-2 text-gray-500">
+          <div className="flex flex-col items-center gap-2 text-slate-500">
             <ImagePlus size={32} />
             <span className="text-sm">Click to Upload</span>
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-slate-400">
               PNG, JPG up to {maxSizeMB}MB
             </span>
           </div>

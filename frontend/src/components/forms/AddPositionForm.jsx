@@ -33,15 +33,11 @@ const AddPositionForm = ({
           type="submit"
           label={"Save"}
           onClick={(e) => handleSubmit(e)}
-          backgroundAndText={"bg-gray-800 hover:bg-blue-500 text-white"}
         />
         <Button
           onClick={closePositionModal}
           label="Cancel"
           variant="ghost"
-          backgroundAndText={
-            "bg-white hover:bg-gray-400 text-black border-none"
-          }
         />
       </div>
     </form>

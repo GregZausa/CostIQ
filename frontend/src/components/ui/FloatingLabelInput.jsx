@@ -53,7 +53,7 @@ const FloatingLabelInput = ({
           transition-all duration-200
           ${readOnly ? "cursor-default bg-slate-50 text-slate-500" : ""}
           ${isFocused
-            ? "border-gray-800/50 ring-4 ring-indigo-100 shadow-sm"
+            ? "border-slate-800/50 ring-4 ring-indigo-100 shadow-sm"
             : "border-slate-200 hover:border-slate-300 shadow-xs"
           }
           ${suffix || type === "password" ? "pr-10" : ""}
@@ -64,7 +64,7 @@ const FloatingLabelInput = ({
           absolute left-4 pointer-events-none font-medium
           transition-all duration-200 select-none
           ${isFloated
-            ? "top-2 text-[10px] tracking-widest uppercase text-gray-800"
+            ? "top-2 text-[10px] tracking-widest uppercase text-slate-800"
             : "top-1/2 -translate-y-1/2 text-sm text-slate-400"
           }
         `}

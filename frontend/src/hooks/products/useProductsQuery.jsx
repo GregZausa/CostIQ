@@ -8,8 +8,6 @@ export const useProductsQuery = () => {
   const [products, setProducts] = useState([]);
   const [computedProducts, setComputedProducts] = useState([]);
   const [mostExpensive, setMostExpensive] = useState(null);
-  const [lowestProfitable, setLowestProfitable] = useState(null);
-  const [mostProfitable, setMostProfitable] = useState(null);
   const [highestROI, setHighestROI] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productDetail, setProductDetail] = useState(null);
@@ -27,9 +25,7 @@ export const useProductsQuery = () => {
       const result = await productRes.json();
       const computedResult = await computedRes.json();
       setProducts(result.products);
-      setLowestProfitable(result.lowestProfitableProduct);
       setMostExpensive(result.mostExpensiveProduct);
-      setMostProfitable(result.mostProfitableProduct);
       setHighestROI(result.highestROIProduct);
       setComputedProducts(computedResult.products);
     } catch (err) {
@@ -65,9 +61,7 @@ export const useProductsQuery = () => {
     products,
     computedProducts,
     mostExpensive,
-    mostProfitable,
     highestROI,
-    lowestProfitable,
     productOptions,
     selectedProduct,
     setSelectedProduct,

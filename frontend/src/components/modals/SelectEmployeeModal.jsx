@@ -138,7 +138,7 @@ const SelectEmployeeModal = ({
           filtered={filtered}
           isSelected={isSelected}
           toggleSelect={toggleSelect}
-          Icon={<IdCardLanyard size={20} className="text-gray-700" />}
+          Icon={<IdCardLanyard size={20} className="text-slate-700" />}
           title="Select Employee"
           idKey="employee_id"
           columns={[
@@ -167,14 +167,10 @@ const SelectEmployeeModal = ({
           variant="ghost"
             onClick={closeModal}
             label="Cancel"
-            backgroundAndText={
-              "bg-white hover:bg-gray-400 text-black border-none"
-            }
           />
           <Button
             onClick={handleConfirm}
             label="Confirm"
-            backgroundAndText={"bg-gray-800 hover:bg-blue-500 text-white"}
           />
         </div>
       </ModalLayout>

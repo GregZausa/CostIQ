@@ -14,6 +14,7 @@ import MarginScenarioChart from "../components/ui/charts/MarginScenarioChart";
 import PricingGuideChart from "../components/ui/charts/PricingGuideChart";
 import CostPerProductChart from "../components/ui/charts/CostPerProductChart";
 import WhatIfScenarioCard from "../components/cards/WhatIfScenarioCard";
+import NoDataLayout from "../components/layout/NoDataLayout";
 
 const Products = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,7 +23,7 @@ const Products = () => {
   const { query: employeeQuery } = useEmployee();
   const { query: expensesQuery } = useOtherExpenses();
 
-  const computed = query?.productDetail?.computedProduct;
+  const computed = query?.productDetail?.computedProduct || [];
 
   return (
     <div className="relative">
@@ -31,48 +32,50 @@ const Products = () => {
         title="Products"
         buttonLabel="Add Products"
       />
-
-      <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-4 gap-2 py-2">
-        <div className="space-y-2">
-          <SelectBox
-            onChange={query.setSelectedProduct}
-            options={query.productOptions}
-            value={query.selectedProduct}
-            placeholder="Select product"
-          />
-          <ProductImageCard src={computed?.product_image} />
-        </div>
-        <div>
-        <WhatIfScenarioCard title="What-if Income Goal" computed={computed}/>
-        </div>
-        <div className="space-y-2">
-          <FinancialCard
-            title="Financial Metrics"
-            computed={computed}
-          />
-          <CostCard
-            title="Cost Per Batch"
-            computed={computed}
-            variant="batch"
-          />
-        </div>
-        <div className="space-y-2">
-          <PricingSummaryCard
-            title="Pricing Summary"
-            computed={computed}
-          />
-          <CostCard
-            title="Cost Per Product"
-            computed={computed}
-            variant="unit"
-          />
-        </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-4">
-        <MarginScenarioChart computed={computed} />
-        <PricingGuideChart computed={computed} />
-        <CostPerProductChart computed={computed} />
-      </div>
+      {query?.productOptions?.length > 0 ? (
+        <>
+          <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-4 gap-2 py-2">
+            <div className="space-y-2">
+              <SelectBox
+                onChange={query.setSelectedProduct}
+                options={query.productOptions}
+                value={query.selectedProduct}
+                placeholder="Select product"
+              />
+              <ProductImageCard src={computed?.product_image} />
+            </div>
+            <div>
+              <WhatIfScenarioCard
+                title="What-if Income Goal"
+                computed={computed}
+              />
+            </div>
+            <div className="space-y-2">
+              <FinancialCard title="Financial Metrics" computed={computed} />
+              <CostCard
+                title="Cost Per Batch"
+                computed={computed}
+                variant="batch"
+              />
+            </div>
+            <div className="space-y-2">
+              <PricingSummaryCard title="Pricing Summary" computed={computed} />
+              <CostCard
+                title="Cost Per Product"
+                computed={computed}
+                variant="unit"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-4">
+            <MarginScenarioChart computed={computed} />
+            <PricingGuideChart computed={computed} />
+            <CostPerProductChart computed={computed} />
+          </div>
+        </>
+      ) : (
+        <NoDataLayout message="No products yet. Add one to get started!" />
+      )}
 
       {isModalOpen && (
         <ProductsModal

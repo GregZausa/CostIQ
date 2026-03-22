@@ -16,15 +16,15 @@ import { BarChart2 } from "lucide-react";
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white border border-gray-100 rounded-lg shadow-lg px-3 py-2 space-y-1">
-        <p className="text-xs font-semibold text-gray-700 mb-1">{label}</p>
+      <div className="bg-white border border-slate-100 rounded-lg shadow-lg px-3 py-2 space-y-1">
+        <p className="text-xs font-semibold text-slate-700 mb-1">{label}</p>
         {payload.map((entry, index) => (
           <div key={index} className="flex items-center gap-2">
             <div
               className="w-2 h-2 rounded-full"
               style={{ backgroundColor: entry.fill }}
             />
-            <span className="text-xs text-gray-500">{entry.name}:</span>
+            <span className="text-xs text-slate-500">{entry.name}:</span>
             <span className="text-xs font-bold" style={{ color: entry.fill }}>
               ₱{Number(entry.value).toFixed(2)}
             </span>

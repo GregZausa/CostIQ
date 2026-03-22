@@ -21,25 +21,25 @@ const SelectorLayout = ({
       <div className="relative mb-4">
         <TextInput type="search" value={search} onChange={setSearch} />
       </div>
-      <div className="border border-gray-200 rounded-lg overflow-hidden mb-5">
-        <div className="bg-gray-50 px-4 border-b border-gray-200">
+      <div className="border border-slate-200 rounded-lg overflow-hidden mb-5">
+        <div className="bg-slate-50 px-4 border-b border-slate-200">
           <div className="flex justify-between">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
               Select
             </span>
             {columns.map((col) => (
               <span
                 key={col.key}
-                className="text-xs font-semibold text-gray-500 uppercase tracking-wide"
+                className="text-xs font-semibold text-slate-500 uppercase tracking-wide"
               >
                 {col.label}
               </span>
             ))}
           </div>
         </div>
-        <div className="max-h-48 overflow-y-auto divide-y divide-gray-100">
+        <div className="max-h-48 overflow-y-auto divide-y divide-slate-100">
           {filtered.length === 0 ? (
-            <span className="text-center py-10 text-gray-500 italic font-semibold text-sm">
+            <span className="text-center py-10 text-slate-500 italic font-semibold text-sm">
               No employee found
             </span>
           ) : (
@@ -49,8 +49,8 @@ const SelectorLayout = ({
                 onClick={() => toggleSelect(item)}
                 className={`flex items-center text-center justify-between px-4 py-2.5 cursor-pointer transition-colors ${
                   isSelected(item[idKey])
-                    ? "bg-gray-800 text-white"
-                    : "hover:bg-gray-50 text-gray-700"
+                    ? "bg-slate-800 text-white"
+                    : "hover:bg-slate-50 text-slate-700"
                 }`}
               >
                 <div
@@ -58,12 +58,12 @@ const SelectorLayout = ({
                         ${
                           isSelected(item[idKey])
                             ? "bg-white border-white"
-                            : "border-gray-300"
+                            : "border-slate-300"
                         }`}
                 >
                   {isSelected(item[idKey]) && (
                     <svg
-                      className="w-2.5 h-2.5 text-gray-800"
+                      className="w-2.5 h-2.5 text-slate-800"
                       fill="currentColor"
                       viewBox="0 0 12 12"
                     >

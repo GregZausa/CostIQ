@@ -20,12 +20,12 @@ const Sidebar = () => {
   };
 
   const navBar = ({ isActive }) =>
-    `flex items-center space-x-2 py-4 px-3 rounded-xl transition font-bold ${isActive ? "bg-blue-600" : "hover:bg-gray-700"}`;
+    `flex items-center space-x-2 py-4 px-3 rounded-xl transition font-bold ${isActive ? "bg-blue-600" : "hover:bg-slate-700"}`;
   return (
     <div>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 bg-gray-800 p-2 rounded-md text-white focus:outline-none"
+        className="lg:hidden fixed top-4 left-4 z-50 bg-slate-800 p-2 rounded-md text-white focus:outline-none"
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
@@ -37,12 +37,12 @@ const Sidebar = () => {
       )}
 
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-gray-800 text-white flex flex-col p-4 space-y-6 transform transition-transform duration-300 ease-in-out z-40 ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:static lg:block`}
+        className={`fixed top-0 left-0 h-full w-64 bg-slate-800 text-white flex flex-col p-4 space-y-6 transform transition-transform duration-300 ease-in-out z-40 ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:static lg:block`}
       >
         <img
           src={logo}
           alt=""
-          className="rounded-full border border-gray-400/20"
+          className="rounded-full border border-slate-400/20"
         />
         {routes
           .filter((route) => route.sidebar)

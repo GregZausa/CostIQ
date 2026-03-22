@@ -7,14 +7,14 @@ const HeadlessUIDropdown = ({ id, onDelete, onEdit }) => {
     "flex w-full items-center gap-2 px-3 py-2 text-white text-sm rounded-md";
   return (
     <Menu as="div" className="relative inline-block text-left">
-      <MenuButton className="inline-flex items-center justify-center rounded-md bg-gray-800 p-1 text-white hover:bg-gray-800">
+      <MenuButton className="inline-flex items-center justify-center rounded-md bg-slate-800 p-1 text-white hover:bg-slate-800">
         <EllipsisIcon size={20} />
       </MenuButton>
-      <MenuItems className="absolute right-0 w-40 rounded-md bg-gray-800 border-gray-700 shadow-lg focus:outline-none z-100">
+      <MenuItems className="absolute right-0 w-40 rounded-md bg-slate-800 border-slate-700 shadow-lg focus:outline-none z-100">
         <MenuItem>
           {({ active }) => (
             <button
-              className={`${active ? "bg-gray-800" : ""}
+              className={`${active ? "bg-slate-800" : ""}
             ${buttonClassName}`}
               onClick={() => onEdit(id)}
             >
@@ -26,7 +26,7 @@ const HeadlessUIDropdown = ({ id, onDelete, onEdit }) => {
         <MenuItem>
           {({ active }) => (
             <button
-              className={`${active ? "bg-gray-800" : ""}
+              className={`${active ? "bg-slate-800" : ""}
             ${buttonClassName}`}
               onClick={() => onDelete(id)}
             >

@@ -138,7 +138,7 @@ const SelectRawMaterialsModal = ({
         filtered={filtered}
         toggleSelect={toggleSelect}
         isSelected={isSelected}
-        Icon={<Box size={20} className="text-gray-700" />}
+        Icon={<Box size={20} className="text-slate-700" />}
         title="Select Raw Materials"
         idKey="raw_material_id"
         columns={[
@@ -167,14 +167,10 @@ const SelectRawMaterialsModal = ({
           onClick={closeModal}
           variant="ghost"
           label="Cancel"
-          backgroundAndText={
-            "bg-white hover:bg-gray-400 text-black border-none"
-          }
         />
         <Button
           onClick={handleConfirm}
           label="Confirm"
-          backgroundAndText={"bg-gray-800 hover:bg-blue-500 text-white"}
         />
       </div>
     </ModalLayout>

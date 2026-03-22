@@ -9,7 +9,6 @@ const Headers = ({title, openModal, buttonLabel}) => {
         <Button
           label={buttonLabel}
           onClick={openModal}
-          backgroundAndText={"bg-gray-800 text-white"}
         />
       </div>
     </div>

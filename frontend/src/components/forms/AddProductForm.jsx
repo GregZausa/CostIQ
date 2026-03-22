@@ -134,7 +134,6 @@ const AddProductForm = ({
               }
               onClick={() => handleOpenModal("materials")}
               className={"w-full"}
-              backgroundAndText={"bg-gray-800 text-white hover:text-gray-400"}
               icon={<Box size={12} />}
             />
 
@@ -153,7 +152,6 @@ const AddProductForm = ({
               }
               onClick={() => handleOpenModal("employees")}
               className={"w-full"}
-              backgroundAndText={"bg-gray-800 text-white hover:text-gray-400"}
               icon={<IdCardLanyard size={12} />}
             />
             {state?.employees?.length && (
@@ -171,7 +169,6 @@ const AddProductForm = ({
               }
               onClick={() => handleOpenModal("expenses")}
               className={"w-full"}
-              backgroundAndText={"bg-gray-800 text-white hover:text-gray-400"}
               icon={<Toolbox size={12} />}
             />
             {state?.otherExpenses?.length && (
@@ -186,15 +183,11 @@ const AddProductForm = ({
             type="submit"
             label={"Save"}
             onClick={(e) => handleSubmit(e)}
-            backgroundAndText={"bg-gray-800 hover:bg-blue-500 text-white"}
           />
           <Button
             onClick={closeModal}
             label="Cancel"
             variant="ghost"
-            backgroundAndText={
-              "bg-white hover:bg-gray-400 text-black border-none"
-            }
           />
         </div>
       </form>

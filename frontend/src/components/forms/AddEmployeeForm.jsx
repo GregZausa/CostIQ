@@ -51,14 +51,12 @@ const AddEmployeeForm = ({
             type="button"
             label={"Add Position"}
             className={"w-full"}
-            backgroundAndText={"bg-gray-800 text-white hover:text-gray-400"}
             onClick={() => openPositionModal("add")}
           />
           <Button
             type="button"
             label={"View Positions"}
             className={"w-full"}
-            backgroundAndText={"bg-gray-800 text-white hover:text-gray-400"}
             onClick={() => openPositionModal("table")}
           />
         </div>
@@ -82,13 +80,11 @@ const AddEmployeeForm = ({
             handleSubmit;
             setIsLoading(!isLoading);
           }}
-          backgroundAndText={"bg-gray-800 hover:bg-blue-500 text-white"}
         />
         <Button
           onClick={closeModal}
           label="Cancel"
           variant="ghost"
-          backgroundAndText={"bg-white hover:bg-gray-100 text-black border border-gray-300"}
           disabled={isLoading}
         />
       </div>

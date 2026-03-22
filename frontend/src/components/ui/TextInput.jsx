@@ -87,7 +87,7 @@ const TextInput = ({
               : error
                 ? "bg-white border-rose-300 ring-4 ring-rose-100"
                 : isFocused
-                  ? "bg-white border-gray-800/50 ring-4 ring-indigo-100 shadow-sm"
+                  ? "bg-white border-slate-800/50 ring-4 ring-indigo-100 shadow-sm"
                   : "bg-white border-slate-200 hover:border-slate-300 shadow-xs"
             }
           `}

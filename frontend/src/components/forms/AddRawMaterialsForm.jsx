@@ -65,7 +65,6 @@ const AddRawMaterialsForm = ({ state, handleChange, unitsPerPackEditable, unitOp
         <Button
           onClick={(e) => handleSubmit(e)}
           label={isLoading ? "Saving" : "Save"}
-          backgroundAndText={"bg-gray-800 hover:bg-blue-500 text-white"}
           disabled={isLoading}
         />
         <Button
@@ -73,9 +72,6 @@ const AddRawMaterialsForm = ({ state, handleChange, unitsPerPackEditable, unitOp
           onClick={closeModal}
           label="Cancel"
           variant="ghost"
-          backgroundAndText={
-            "bg-white hover:bg-gray-400 text-black border-none"
-          }
           disabled={isLoading}
         />
       </div>
