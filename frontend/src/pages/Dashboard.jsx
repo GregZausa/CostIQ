@@ -2,15 +2,14 @@ import React from "react";
 import Headers from "../components/layout/Headers";
 import ProductsOverviewCard from "../components/cards/ProductsOverviewCard";
 import useProducts from "../hooks/products/useProducts";
-import {
-  Box,
-} from "lucide-react";
+import { Box } from "lucide-react";
 import useRawMaterials from "../hooks/raw-materials/useRawMaterials";
 import useEmployee from "../hooks/employees/useEmployee";
 import useOtherExpenses from "../hooks/other-expenses/useOtherExpenses";
 import ProfitVsCOGChart from "../components/ui/charts/ProfitVsCOGChart";
 import HorizontalChart from "../components/ui/charts/HorizontalChart";
 import NoDataLayout from "../components/layout/NoDataLayout";
+import ProductPerformanceChart from "../components/ui/charts/ProductPerformanceChart";
 
 const Dashboard = () => {
   const {
@@ -20,6 +19,9 @@ const Dashboard = () => {
     top5ProfitableProduct,
     bottom5LeastProfitableProduct,
     top5ROIProduct,
+    avgProfit,
+    avgCOGS,
+    performanceMatrixData,
   } = useProducts();
   const { totalRawMaterials } = useRawMaterials();
   const { totalEmployees } = useEmployee();
@@ -70,7 +72,7 @@ const Dashboard = () => {
           />
         </div>
       ) : (
-        <NoDataLayout message="No data available"/>
+        <NoDataLayout message="No data available" />
       )}
       {hasCharts ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-4 shrink-0 pt-2 gap-2">
@@ -108,14 +110,16 @@ const Dashboard = () => {
           )}
         </div>
       ) : (
-        <NoDataLayout message="No chart data available"/>
+        <NoDataLayout message="No chart data available" />
       )}
       {cogsVsSellingPriceChartData?.length > 0 && (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 pt-2 shrink-0 gap-2">
-          <div className="col-span-2">
+        <div className="grid md:grid-cols-2 lg:grid-cols-2 pt-2 shrink-0 gap-2">
             <ProfitVsCOGChart data={cogsVsSellingPriceChartData ?? []} />
-          </div>
-          <div className="col-span-1"></div>
+            <ProductPerformanceChart
+              data={performanceMatrixData ?? []}
+              avgX={avgCOGS}
+              avgY={avgProfit}
+            />
         </div>
       )}
     </div>
