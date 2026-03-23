@@ -37,7 +37,7 @@ export const register = async (req, res) => {
     console.error(err);
     res
       .status(err.message.includes("exists") ? 409 : 500)
-      .json({ message: "Something went wrong" });
+      .json({ message: err.message });
   }
 };
 
@@ -63,10 +63,9 @@ export const login = async (req, res) => {
       token: accessToken,
     });
   } catch (err) {
-    console.error(err);
     res
       .status(err.message.includes("Invalid") ? 401 : 500)
-      .json({ message: "Something went wrong" });
+      .json({ message: err.message });
   }
 };
 
@@ -80,7 +79,7 @@ export const refresh = (req, res) => {
     res.json({ token: accessToken });
   } catch (err) {
     res.clearCookie("refreshToken", COOKIE_OPTIONS);
-    res.status(401).json({ message: "Something went wrong" });
+    res.status(401).json({ message: err.message });
   }
 };
 
