@@ -10,7 +10,7 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [openMenus, setOpenMenus] = useState({});
 
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 
   const toggleMenu = (path) => {
     setOpenMenus((prev) => ({
@@ -20,7 +20,7 @@ const Sidebar = () => {
   };
 
   const navBar = ({ isActive }) =>
-    `flex items-center space-x-2 py-4 px-3 rounded-xl transition font-bold ${isActive ? "bg-blue-600" : "hover:bg-slate-700"}`;
+    `flex items-center space-x-2 py-4 px-3 text-xs md:text-sm lg:text-md rounded-xl transition font-bold ${isActive ? "bg-blue-600" : "hover:bg-slate-700"}`;
   return (
     <div>
       <button
@@ -37,13 +37,16 @@ const Sidebar = () => {
       )}
 
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-slate-800 text-white flex flex-col p-4 space-y-6 transform transition-transform duration-300 ease-in-out z-40 ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:static lg:block`}
+        className={`fixed top-0 left-0 h-full w-40 md:w-48 lg:w-64 bg-slate-800 text-white flex flex-col p-4 space-y-6 transform transition-transform duration-300 ease-in-out z-40 ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:static lg:block`}
       >
         <img
           src={logo}
           alt=""
           className="rounded-full border border-slate-400/20"
         />
+        <h1 className="text-white text-md md:text-lg font-bold tracking-wide drop-shadow-sm">
+  Good to see you, <span className="text-blue-500">{user?.first_name ? user.first_name.charAt(0).toUpperCase() + user.first_name.slice(1) : "Guest"}</span>
+</h1>
         {routes
           .filter((route) => route.sidebar)
           .map(({ label, path, icon: Icon, children }) => (
@@ -55,7 +58,7 @@ const Sidebar = () => {
                 >
                   <div className="flex items-center space-x-2">
                     <Icon size={18} />
-                    <span>{label}</span>
+                    <span >{label}</span>
                   </div>
                   <div
                     className={`transform-transition duration-300 ${openMenus[path] ? "rotate-180" : "rotate-0"}`}
@@ -79,7 +82,7 @@ const Sidebar = () => {
                         className={navBar}
                       >
                         <Icon size={14} />
-                        <span className="text-sm">{childrenLabel}</span>
+                        <span className="text-xs md:text-sm ">{childrenLabel}</span>
                       </NavLink>
                     ),
                   )}
@@ -92,7 +95,7 @@ const Sidebar = () => {
           size="lg"
           variant="ghostDanger"
           label="Logout"
-          className="w-full mt-auto"
+          className="w-full mt-auto text-xs md:text-sm lg:text-md"
         />
       </div>
     </div>

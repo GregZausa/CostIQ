@@ -1,4 +1,5 @@
 import {
+  fetchUserByIdService,
   loginUser,
   refreshUserToken,
   registerUser,
@@ -66,6 +67,19 @@ export const login = async (req, res) => {
     res
       .status(err.message.includes("Invalid") ? 401 : 500)
       .json({ message: err.message });
+  }
+};
+
+export const getMe = async (req, res) => {
+  try {
+    const user = await fetchUserByIdService({
+      userId: req.user.id,
+    });
+    if (!user) return res.status(404).json({ message: "User not found!" });
+
+    res.json({ user });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 

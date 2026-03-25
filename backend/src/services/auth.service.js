@@ -1,11 +1,9 @@
 import bcrypt from "bcryptjs";
-import {
-  createUser,
-  findUserByEmail,
-} from "../models/user.model.js";
+import { createUser, findUserByEmail, getUserById } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 
-const comparePassword = (password, hashedPassword) => bcrypt.compare(password, hashedPassword);
+const comparePassword = (password, hashedPassword) =>
+  bcrypt.compare(password, hashedPassword);
 
 const generateAccessToken = (userId) =>
   jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "15m" });
@@ -23,7 +21,12 @@ export const registerUser = async ({
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const newUser = await createUser({ firstName, lastName, email, hashedPassword });
+  const newUser = await createUser({
+    firstName,
+    lastName,
+    email,
+    hashedPassword,
+  });
 
   const accessToken = generateAccessToken(newUser.id);
   const refreshToken = generateRefreshToken(newUser.id);
@@ -46,6 +49,12 @@ export const loginUser = async ({ email, password }) => {
   const refreshToken = generateRefreshToken(user.id);
 
   return { user, accessToken, refreshToken };
+};
+
+export const fetchUserByIdService = async ({ userId }) => {
+  const user = await getUserById(userId);
+  if(!user) throw new Error("User not found!");
+  return user;
 };
 
 export const refreshUserToken = (token) => {
