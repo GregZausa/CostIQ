@@ -7,7 +7,7 @@ const ProductsOverviewCard = ({
   icon,
 }) => {
   return (
-    <div className="group relative bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:shadow-md hover:border-indigo-200 transition-all duration-300 overflow-hidden">
+    <div className="group relative bg-white rounded-2xl border border-slate-200 p-2 shadow-xs hover:shadow-md hover:border-indigo-200 transition-all duration-300 overflow-hidden">
       <div className="absolute inset-0 bg-linear-to-br from-indigo-50/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl" />
       <div className="relative flex items-start justify-between gap-3 mb-4">
         <div>

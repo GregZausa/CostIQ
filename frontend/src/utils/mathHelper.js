@@ -1,6 +1,6 @@
 export const sortHelper = (arr, key, limit, desc = true) => {
   if (!arr || arr.length === 0) return [];
-  [...arr]
+  return [...arr]
     .sort((a, b) => (desc ? b[key] - a[key] : a[key] - b[key]))
     .slice(0, limit)
     .map((p) => ({ name: p.product_name, data: p[key] }));

@@ -39,10 +39,10 @@ const CustomTooltip = ({ active, payload, label }) => {
 const ProfitVsCOGChart = ({ data = [] }) => {
   return (
     <ProductCardLayout title="Price Vs. COGS" icon={BarChart2}>
-      <ResponsiveContainer width="100%" height={230}>
+      <ResponsiveContainer width="100%" height={220}>
         <BarChart
           data={data}
-          margin={{ top: 10, right: 20, bottom: 0, left: 0 }}
+          margin={{ top: 0, right: 20, bottom: 0, left: 0 }}
           barGap={4}
           barCategoryGap="30%"
         >

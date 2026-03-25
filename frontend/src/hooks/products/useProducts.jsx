@@ -10,7 +10,6 @@ const useProducts = () => {
   const actions = useProductsAction({ query, form });
 
   const totalProducts = query.products.length;
-  const mostExpensive = query.mostExpensive;
 
   const half = Math.floor(query.computedProducts.length / 2);
   const limit = Math.min(5, half);
@@ -44,10 +43,27 @@ const useProducts = () => {
     [products],
   );
 
-  const mostExpensiveProduct = useMemo(
-    () => sortHelper(products, "totalCPP", limit),
-    [products, limit],
-  );
+const revenueGapChartData = useMemo(() => {
+  return products.map((p) => {
+    const finalPrice = Number(p.finalPrice) || 0;
+    const units = Number(p.total_sellable_units) || 0;
+    const breakEven = Number(p.breakEvenRevenue) || 0;
+
+    const revenueCapacity = finalPrice * units;
+    const gap = revenueCapacity - breakEven;
+
+    return {
+      name: p.product_name,
+      breakEvenRevenue: +breakEven.toFixed(2),
+      gap: +gap.toFixed(2),
+      revenueAtCapacity: +revenueCapacity.toFixed(2),
+    };
+  });
+}, [products]);
+
+  const mostExpensiveProduct = useMemo(() => {
+    return sortHelper(products, "totalCPP", limit);
+  }, [products, limit]);
 
   const top5ProfitableProduct = useMemo(
     () => sortHelper(products, "profit", limit),
@@ -65,11 +81,11 @@ const useProducts = () => {
   );
 
   return {
-    mostExpensive,
     avgCOGS,
     avgProfit,
     performanceMatrixData,
     cogsVsSellingPriceChartData,
+    revenueGapChartData,
     mostExpensiveProduct,
     top5ProfitableProduct,
     top5ROIProduct,

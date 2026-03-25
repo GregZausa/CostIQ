@@ -52,9 +52,10 @@ const CustomTooltip = ({ active, payload }) => {
 
 const CustomDot = (props) => {
   const { cx, cy, payload, avgX, avgY } = props;
-  const isGoldmine = payload.x <= avgX && payload.y >= avgY;
-  const isStar = payload.x > avgX && payload.y >= avgY;
-  const isOptimize = payload.x <= avgX && payload.y < avgY;
+  const isGoldmine = payload.y > 0 && payload.z >= 50; // profitable + high ROI
+  const isStar = payload.y > 0 && payload.z < 50; // profitable but lower ROI
+  const isOptimize = payload.y <= 0 && payload.x <= avgX; // losing money but cheap
+  const isDanger = payload.y <= 0 && payload.x > avgX; // losing money and expensive
 
   const color = isGoldmine
     ? "#4ade80"
@@ -114,8 +115,8 @@ const ProductPerformanceChart = ({ data = [], avgX, avgY }) => {
       </div>
 
       <div className="relative">
-        <ResponsiveContainer width="100%" height={210}>
-          <ScatterChart margin={{ top: 10, right: 30, bottom: 0, left: 10 }}>
+        <ResponsiveContainer width="100%" height={200}>
+          <ScatterChart margin={{ top: 0, right: 30, bottom: 0, left: 10 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
             <XAxis
               type="number"

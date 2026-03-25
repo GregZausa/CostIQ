@@ -4,7 +4,7 @@ import ProductCardLayout from "../layout/ProductCardLayout";
 
 const FinancialCard = ({ title, computed }) => {
   const breakEvenUnits = computed?.breakEvenUnits || 0;
-  const BreakEvenRevenue = computed?.breakEvenUnits || 0;
+  const BreakEvenRevenue = computed?.breakEvenRevenue || 0;
   const NetProfitPerUnit = computed?.netProfitPerUnit || 0;
   const ROI = computed?.roi || 0;
   
