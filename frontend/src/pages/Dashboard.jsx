@@ -2,7 +2,7 @@ import React from "react";
 import Headers from "../components/layout/Headers";
 import ProductsOverviewCard from "../components/cards/ProductsOverviewCard";
 import useProducts from "../hooks/products/useProducts";
-import { Box } from "lucide-react";
+import { Box, DollarSign, TrendingDown, TrendingUp } from "lucide-react";
 import useRawMaterials from "../hooks/raw-materials/useRawMaterials";
 import useEmployee from "../hooks/employees/useEmployee";
 import useOtherExpenses from "../hooks/other-expenses/useOtherExpenses";
@@ -10,6 +10,7 @@ import ProfitVsCOGChart from "../components/ui/charts/ProfitVsCOGChart";
 import HorizontalChart from "../components/ui/charts/HorizontalChart";
 import ProductPerformanceChart from "../components/ui/charts/ProductPerformanceChart";
 import RevenueGapChart from "../components/ui/charts/RevenueGapChart";
+import CostEfficiencyRadarChart from "../components/ui/charts/CostEfficiencyRadarChart";
 
 const Dashboard = () => {
   const {
@@ -22,6 +23,8 @@ const Dashboard = () => {
     avgCOGS,
     performanceMatrixData,
     revenueGapChartData,
+    radarChartData,
+    products,
     mostExpensiveProduct,
   } = useProducts();
   const { totalRawMaterials } = useRawMaterials();
@@ -61,24 +64,28 @@ const Dashboard = () => {
       <div className="grid md:grid-cols-2 lg:grid-cols-4 shrink-0 pt-2 gap-2">
         <HorizontalChart
           data={mostExpensiveProduct ?? []}
+          icon={DollarSign}
           fillType="neutral"
           formatter={(value) => `₱${value.toFixed(2)}`}
           title={`Top ${mostExpensiveProduct?.length} Most Expensive`}
         />
         <HorizontalChart
           data={bottom5LeastProfitableProduct ?? []}
+          icon={TrendingDown}
           fillType="negative"
           formatter={(value) => `₱${value.toFixed(2)}`}
           title={`Bottom ${bottom5LeastProfitableProduct?.length} Least Profitable`}
         />
         <HorizontalChart
           data={top5ProfitableProduct ?? []}
+          icon={TrendingUp}
           formatter={(value) => `₱${value.toFixed(2)}`}
           fillType="positive"
           title={`Top ${top5ProfitableProduct?.length} Most Profitable`}
         />
         <HorizontalChart
           data={top5ROIProduct ?? []}
+          icon={TrendingUp}
           formatter={(value) => `${value.toFixed(2)}%`}
           fillType="positive"
           title={`Top ${top5ROIProduct?.length} MOST ROI Product`}
@@ -94,6 +101,10 @@ const Dashboard = () => {
       </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-2 pt-2 shrink-0 gap-2">
         <RevenueGapChart data={revenueGapChartData ?? []} />
+        <CostEfficiencyRadarChart
+          data={radarChartData ?? []}
+          products={products ?? []}
+        />
       </div>
     </div>
   );

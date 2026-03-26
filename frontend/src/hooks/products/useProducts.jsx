@@ -22,6 +22,8 @@ const useProducts = () => {
   const avgCOGS = useMemo(() => medianHelper(products, "totalCPP"), [products]);
   const avgProfit = useMemo(() => medianHelper(products, "profit"), [products]);
 
+  const maxCOGS = Number(Math.max(...products.map((p) => p.totalCPP), 1));
+
   const cogsVsSellingPriceChartData = useMemo(() => {
     return [...products]
       .sort((a, b) => b.finalPrice - a.finalPrice)
@@ -43,23 +45,51 @@ const useProducts = () => {
     [products],
   );
 
-const revenueGapChartData = useMemo(() => {
-  return products.map((p) => {
-    const finalPrice = Number(p.finalPrice) || 0;
-    const units = Number(p.total_sellable_units) || 0;
-    const breakEven = Number(p.breakEvenRevenue) || 0;
+  const revenueGapChartData = useMemo(() => {
+    return products.map((p) => {
+      const finalPrice = Number(p.finalPrice) || 0;
+      const units = Number(p.total_sellable_units) || 0;
+      const breakEven = Number(p.breakEvenRevenue) || 0;
 
-    const revenueCapacity = finalPrice * units;
-    const gap = revenueCapacity - breakEven;
+      const revenueCapacity = finalPrice * units;
+      const gap = revenueCapacity - breakEven;
 
-    return {
-      name: p.product_name,
-      breakEvenRevenue: +breakEven.toFixed(2),
-      gap: +gap.toFixed(2),
-      revenueAtCapacity: +revenueCapacity.toFixed(2),
-    };
+      return {
+        name: p.product_name,
+        breakEvenRevenue: +breakEven.toFixed(2),
+        gap: +gap.toFixed(2),
+        revenueAtCapacity: +revenueCapacity.toFixed(2),
+      };
+    });
+  }, [products]);
+
+  const radarChartData = [
+    { metric: "Profit Margin" },
+    { metric: "ROI" },
+    { metric: "COGS Efficiency" },
+    { metric: "Break-even Score" },
+    { metric: "Profitability" },
+  ].map((row, i) => {
+    const result = { metric: row.metric };
+    products.forEach((p) => {
+      if (i === 0) result[p.product_name] = Number(p.profit_margin);
+      if (i === 1) result[p.product_name] = Math.min(Number(p.roi), 100);
+      if (i === 2)
+        result[p.product_name] = Math.max(
+          100 - (p.totalCPP / maxCOGS) * 100,
+          0,
+        );
+      if (i === 3)
+        result[p.product_name] = Math.max(
+          100 -
+            ((p.breakEvenUnits ?? 0) / Number(p.total_sellable_units)) * 100,
+          0,
+        );
+      if (i === 4)
+        result[p.product_name] = Math.max((p.profit / p.finalPrice) * 100, 0);
+    });
+    return result;
   });
-}, [products]);
 
   const mostExpensiveProduct = useMemo(() => {
     return sortHelper(products, "totalCPP", limit);
@@ -81,9 +111,11 @@ const revenueGapChartData = useMemo(() => {
   );
 
   return {
+    products,
     avgCOGS,
     avgProfit,
     performanceMatrixData,
+    radarChartData,
     cogsVsSellingPriceChartData,
     revenueGapChartData,
     mostExpensiveProduct,

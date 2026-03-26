@@ -29,7 +29,7 @@ const CustomTooltip = ({ active, payload, label, formatter }) => {
   return null;
 };
 
-const HorizontalChart = ({ data = [], formatter, fillType, title }) => {
+const HorizontalChart = ({ data = [], formatter, fillType, title, icon }) => {
   const maxValue = Math.max(...data.map((d) => d.data), 0);
 
   const truncated = data.map((d) => ({
@@ -38,7 +38,7 @@ const HorizontalChart = ({ data = [], formatter, fillType, title }) => {
   }));
 
   return (
-    <ProductCardLayout title={title} icon={TrendingUp}>
+    <ProductCardLayout title={title} icon={icon}>
       <ResponsiveContainer width="100%" height={Math.max(data.length * 22, 30)}>
         <BarChart
           layout="vertical"
