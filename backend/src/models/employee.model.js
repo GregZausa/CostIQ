@@ -66,9 +66,17 @@ export const getEmployeesCount = async (createdBy, searchTerm = "") => {
                   FROM employees e
                   JOIN positions p ON e.position_id = p.position_id
                   WHERE e.created_by = $1
-                  AND(e.first_name ILIKE $2 OR e.last_name ILIKE $2)`;
+                  AND(e.first_name ILIKE $2 OR e.last_name ILIKE $2)
+                  AND e.is_active = true`;
 
   const { rows } = await pool.query(query, [createdBy, searchValue]);
+  return Number(rows[0].total);
+};
+export const getEmployeesTotalCount = async (createdBy) => {
+  const { rows } = await pool.query(
+    `SELECT COUNT(*) AS total FROM employees WHERE created_by = $1 AND is_active = true`,
+    [createdBy],
+  );
   return Number(rows[0].total);
 };
 
@@ -76,7 +84,8 @@ export const getEmployeesById = async (createdBy, id) => {
   const query = `SELECT e.last_name, e.first_name, e.rate_per_hr, e.position_id, p.position_name 
                 FROM employees e
                 JOIN positions p ON e.position_id = p.position_id
-                WHERE e.created_by = $1 AND e.employee_id = $2`;
+                WHERE e.created_by = $1 AND e.employee_id = $2
+                AND e.is_active = true`;
   const result = await pool.query(query, [createdBy, id]);
   return result.rows[0];
 };

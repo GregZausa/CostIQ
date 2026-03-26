@@ -3,6 +3,7 @@ import {
   getEmployees,
   getEmployeesById,
   getEmployeesCount,
+  getEmployeesTotalCount,
   insertEmployee,
   updateEmployee,
 } from "../models/employee.model.js";
@@ -38,13 +39,14 @@ export const fetchEmployeesService = async (req) => {
   const { page, limit, offset, searchTerm, createdBy } =
     getPaginationParams(req);
 
-  const [rows, totalRows] = await Promise.all([
+  const [rows, totalRows, totalAllRows] = await Promise.all([
     getEmployees(createdBy, searchTerm, limit, offset),
     getEmployeesCount(createdBy, searchTerm),
+    getEmployeesTotalCount(createdBy)
   ]);
   const totalPages = Math.ceil(totalRows / limit);
 
-  return { rows, page, totalPages, totalRows };
+  return { rows, page, totalPages, totalRows, totalAllRows };
 };
 
 export const fetchEmployeesByIdService = async ({ userId, id }) => {

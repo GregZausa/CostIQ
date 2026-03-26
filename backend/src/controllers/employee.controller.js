@@ -5,6 +5,7 @@ import {
   fetchEmployeesService,
   removeEmployeesService,
 } from "../services/employee.services.js";
+let counter = 0;
 
 export const createEmployee = async (req, res) => {
   try {
@@ -27,9 +28,7 @@ export const editedEmployee = async (req, res) => {
       id: req.params.id,
       body: req.body,
     });
-    res
-      .status(200)
-      .json({ message: "Employee updated successfully!", data });
+    res.status(200).json({ message: "Employee updated successfully!", data });
   } catch (err) {
     const status = err.message === "Employee not found" ? 404 : 500;
     res.status(status).json({ message: err.message });
@@ -37,12 +36,14 @@ export const editedEmployee = async (req, res) => {
 };
 
 export const fetchEmployees = async (req, res) => {
+  counter++;
+  console.log("Conter count: ", counter);
   try {
     const result = await fetchEmployeesService(req);
-    res.json(result);
+    return res.json(result);
   } catch (err) {
     res
-      .json(500)
+      .status(500)
       .json({ message: "Failed to fetch employees", error: err.message });
   }
 };
