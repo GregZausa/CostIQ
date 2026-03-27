@@ -31,7 +31,6 @@ const RawMaterialsTable = ({ query, actions }) => {
         render: (row) => (
           <HeadlessUIDropdown
             id={row.raw_material_id}
-            row={row}
             onDelete={actions.handleDelete}
             onEdit={actions.handleEdit}
           />

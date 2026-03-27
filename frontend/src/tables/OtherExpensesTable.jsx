@@ -19,7 +19,6 @@ const OtherExpensesTable = ({ query, actions }) => {
         render: (row) => (
           <HeadlessUIDropdown
             id={row.other_expense_id}
-            row={row}
             onDelete={actions.handleDelete}
             onEdit={actions.handleEdit}
           />
