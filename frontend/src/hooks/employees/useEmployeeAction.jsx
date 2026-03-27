@@ -1,7 +1,6 @@
 import toast from "react-hot-toast";
-import { authFetch } from "../../utils/authFetch";
-import { apiUrl } from "../../config/apiUrl";
 import { useState } from "react";
+import { addEmployees, deleteEmployee } from "../../services/employees.api";
 
 export const useEmployeeAction = ({
   form,
@@ -43,17 +42,7 @@ export const useEmployeeAction = ({
 
     try {
       setIsLoading(true);
-      if (editingId !== null) {
-        await authFetch(`${apiUrl}/employees/${editingId}`, {
-          method: "PUT",
-          body: JSON.stringify(payload),
-        });
-      } else {
-        await authFetch(`${apiUrl}/employees`, {
-          method: "POST",
-          body: JSON.stringify(payload),
-        });
-      }
+      await addEmployees({ editingId, payload });
       toast.success(
         editingId
           ? `Employee ${form.state.employeeFirstName} ${form.state.employeeLastName} added succesfully`
@@ -69,14 +58,10 @@ export const useEmployeeAction = ({
   };
   const handleDelete = async (id) => {
     try {
-      const res = await authFetch(`${apiUrl}/employees/${id}`, {
-        method: "DELETE",
-      });
-      const result = await res.json();
-      console.log("Employee deleted", result);
-      toast.success(
-        `${result.first_name} ${result.last_name}'s credential deleted successfully!`,
-      );
+      const result = await deleteEmployee({ id });
+      const employeeName =
+        `${result.first_name} ${result.last_name}` || "Employee";
+      toast.success(`${employeeName}'s credential deleted successfully!`);
       query.setPage(1);
       query.load();
       return;

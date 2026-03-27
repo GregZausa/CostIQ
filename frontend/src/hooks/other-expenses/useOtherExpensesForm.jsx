@@ -1,7 +1,6 @@
 import { useReducer } from "react";
 import { createInitialState, reducer } from "../../utils/reducer";
-import { authFetch } from "../../utils/authFetch";
-import { apiUrl } from "../../config/apiUrl";
+import { fetchOtherExpensesById } from "../../services/other-expenses.api";
 
 const initialState = createInitialState({
   categoryName: "",
@@ -18,9 +17,7 @@ export const useOtherExpensesForm = () => {
 
   const loadForEdit = async (id) => {
     try {
-      const res = await authFetch(`${apiUrl}/other-expenses/${id}`);
-      const result = await res.json();
-
+      const result = await fetchOtherExpensesById({ id });
       dispatch({
         type: "SET_FORM",
         payload: {

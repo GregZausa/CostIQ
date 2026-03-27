@@ -1,7 +1,6 @@
 import { useReducer } from "react";
 import { createInitialState, reducer } from "../../utils/reducer";
-import { authFetch } from "../../utils/authFetch";
-import { apiUrl } from "../../config/apiUrl";
+import { fetchPositionsById } from "../../services/positions.api";
 
 const initialState = createInitialState({
   positionName: "",
@@ -19,8 +18,7 @@ export const usePositionForm = () => {
 
   const loadForEdit = async (id) => {
     try {
-      const res = await authFetch(`${apiUrl}/positions/${id}`);
-      const result = await res.json();
+      const result = await fetchPositionsById({ id });
       dispatch({
         type: "SET_FORM",
         payload: {

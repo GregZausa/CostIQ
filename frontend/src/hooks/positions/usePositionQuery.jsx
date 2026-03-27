@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { authFetch } from "../../utils/authFetch";
-import { apiUrl } from "../../config/apiUrl";
+import { fetchPositions } from "../../services/positions.api";
 
 export const usePositionQuery = () => {
   const [positions, setPositions] = useState([]);
@@ -12,9 +11,7 @@ export const usePositionQuery = () => {
 
   const loadPosition = useCallback(async () => {
     try {
-      const urlParams = new URLSearchParams({ search, page, limit: 3 });
-      const res = await authFetch(`${apiUrl}/positions?${urlParams.toString()}`);
-      const result = await res.json();
+      const result = await fetchPositions({ search, page });
       setPositions(result.positionOptions);
       setColumns(result.headers);
       setData(result.rows);

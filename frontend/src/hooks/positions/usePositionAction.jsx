@@ -1,7 +1,6 @@
 import toast from "react-hot-toast";
-import { apiUrl } from "../../config/apiUrl";
-import { authFetch } from "../../utils/authFetch";
 import { useState } from "react";
+import { addPositions, deletePosition } from "../../services/positions.api";
 
 export const usePositionAction = ({
   positionForm,
@@ -18,17 +17,7 @@ export const usePositionAction = ({
     };
 
     try {
-      if (editingId !== null) {
-        await authFetch(`${apiUrl}/positions/${editingId}`, {
-          method: "PUT",
-          body: JSON.stringify(payload),
-        });
-      } else {
-        await authFetch(`${apiUrl}/positions`, {
-          method: "POST",
-          body: JSON.stringify(payload),
-        });
-      }
+      await addPositions({ editingId, payload });
       toast.success(
         editingId !== null
           ? "Position updated successfully!"
@@ -42,12 +31,9 @@ export const usePositionAction = ({
   };
   const handleDelete = async (id) => {
     try {
-      const res = await authFetch(`${apiUrl}/positions/${id}`, {
-        method: "DELETE",
-      });
-      const result = await res.json();
-      console.log("DELETED", result);
-      toast.success(`${result.position_name} deleted successfully!`);
+      const result = await deletePosition({ id });
+      const positionName = result.position_name || "Position";
+      toast.success(`${positionName} deleted successfully!`);
       onSuccess?.();
     } catch (err) {}
   };

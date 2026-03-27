@@ -1,7 +1,9 @@
 import toast from "react-hot-toast";
-import { authFetch } from "../../utils/authFetch";
-import { apiUrl } from "../../config/apiUrl";
 import { useState } from "react";
+import {
+  addOtherExpenses,
+  deleteOtherExpenses,
+} from "../../services/other-expenses.api";
 
 export const useOtherExpensesAction = ({
   form,
@@ -20,6 +22,7 @@ export const useOtherExpensesAction = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     const errors = validate(form.state);
 
     if (Object.keys(errors).length > 0) {
@@ -33,18 +36,7 @@ export const useOtherExpensesAction = ({
       cost: form.state.cost,
     };
     try {
-      setIsLoading(true);
-      if (editingId !== null) {
-        await authFetch(`${apiUrl}/other-expenses/${editingId}`, {
-          method: "PUT",
-          body: JSON.stringify(payload),
-        });
-      } else {
-        await authFetch(`${apiUrl}/other-expenses`, {
-          method: "POST",
-          body: JSON.stringify(payload),
-        });
-      }
+      await addOtherExpenses({ editingId, payload });
       toast.success(
         editingId
           ? `${form.state.categoryName} updated successfully!`
@@ -67,17 +59,13 @@ export const useOtherExpensesAction = ({
 
   const handleDelete = async (id) => {
     try {
-      const res = await authFetch(`${apiUrl}/other-expenses/${id}`, {
-        method: "DELETE",
-      });
-      const result = await res.json();
-      console.log("DELETED", result);
-      toast.success(`${result.category_name} deleted sucessfully!`);
+      const result = await deleteOtherExpenses({ id });
+      const expensesName = result.category_name || "Expense"
+      toast.success(`${expensesName} deleted sucessfully!`);
       query.load();
       return;
     } catch (err) {
-      console.error(`Failed to delete ${result.category_name}`, err);
-      toast.error(`Failed to delete ${result.category_name}`);
+      toast.error(`Failed to delete ${expensesName}`);
     }
   };
   return {

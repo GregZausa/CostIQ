@@ -1,25 +1,21 @@
 import { useCallback, useEffect, useState } from "react";
-import { apiUrl } from "../../config/apiUrl";
-import { authFetch } from "../../utils/authFetch";
+import { fetchEmployees } from "../../services/employees.api";
 
 export const useEmployeeQuery = () => {
   const [data, setData] = useState([]);
   const [columns, setColumns] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [totalRows ,setTotalRows] = useState();
+  const [totalRows, setTotalRows] = useState();
   const [totalAllRows, setTotalAllRows] = useState();
   const [search, setSearch] = useState("");
 
   const load = useCallback(async () => {
-    const urlParams = new URLSearchParams({ search, page, limit: 8 });
     try {
-      const res = await authFetch(
-        `${apiUrl}/employees?${urlParams.toString()}`,
-      );
-
-      const result = await res.json();
-
+      const result = await fetchEmployees({
+        search,
+        page,
+      });
       const rows = result.rows ?? [];
       setData(rows);
       if (rows.length > 0) setColumns(Object.keys(rows[0]));

@@ -1,7 +1,6 @@
 import { useState, useReducer, useEffect } from "react";
 import { createInitialState, reducer } from "../../utils/reducer";
-import { authFetch } from "../../utils/authFetch";
-import { apiUrl } from "../../config/apiUrl";
+import { fetchRawMaterialById } from "../../services/raw-materials.api";
 
 const initialState = createInitialState({
   materialName: "",
@@ -60,8 +59,7 @@ export const useRawMaterialsForm = ({ units = [] } = {}) => {
   };
   const loadForEdit = async (id) => {
     try {
-      const res = await authFetch(`${apiUrl}/raw-materials/${id}`);
-      const result = await res.json();
+      const result = await fetchRawMaterialById({ id });
       dispatch({
         type: "SET_FORM",
         payload: {

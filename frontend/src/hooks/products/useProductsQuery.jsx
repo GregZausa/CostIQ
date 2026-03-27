@@ -1,8 +1,11 @@
 import { useCallback } from "react";
-import { authFetch } from "../../utils/authFetch";
-import { apiUrl } from "../../config/apiUrl";
 import { useEffect } from "react";
 import { useState } from "react";
+import {
+  fetchAllProducts,
+  fetchComputedProducts,
+  fetchSelectedProduct,
+} from "../../services/products.api";
 
 export const useProductsQuery = () => {
   const [products, setProducts] = useState([]);
@@ -18,16 +21,14 @@ export const useProductsQuery = () => {
 
   const loadProducts = useCallback(async () => {
     try {
-      const [productRes, computedRes] = await Promise.all([
-        authFetch(`${apiUrl}/products`),
-        authFetch(`${apiUrl}/products/computed`),
+      const [allProducts, computedProducts] = await Promise.all([
+        fetchAllProducts(),
+        fetchComputedProducts(),
       ]);
-      const result = await productRes.json();
-      const computedResult = await computedRes.json();
-      setProducts(result.products);
-      setMostExpensive(result.mostExpensiveProduct);
-      setHighestROI(result.highestROIProduct);
-      setComputedProducts(computedResult.products);
+      setProducts(allProducts.products);
+      setMostExpensive(allProducts.mostExpensiveProduct);
+      setHighestROI(allProducts.highestROIProduct);
+      setComputedProducts(computedProducts.products);
     } catch (err) {
       console.error("Failed to fetch products", err);
     }
@@ -45,8 +46,7 @@ export const useProductsQuery = () => {
   const loadSelectedProduct = useCallback(async () => {
     if (!selectedProduct) return;
     try {
-      const res = await authFetch(`${apiUrl}/products/${selectedProduct}`);
-      const result = await res.json();
+      const result = await fetchSelectedProduct({ selectedProduct });
       setProductDetail(result);
       console.log(productDetail);
     } catch (err) {

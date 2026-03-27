@@ -1,7 +1,6 @@
 import { useEffect, useReducer } from "react";
 import { createInitialState, reducer } from "../../utils/reducer";
-import { authFetch } from "../../utils/authFetch";
-import { apiUrl } from "../../config/apiUrl";
+import { fetchEmployeesById } from "../../services/employees.api";
 
 const initialState = createInitialState({
   employeeFirstName: "",
@@ -14,9 +13,7 @@ export const useEmployeeForm = ({ positions = [] } = {}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    const selected = positions.find(
-      (p) => p.position_id === state?.position,
-    );
+    const selected = positions.find((p) => p.position_id === state?.position);
     if (selected) {
       dispatch({
         type: "UPDATE_FIELD",
@@ -33,8 +30,7 @@ export const useEmployeeForm = ({ positions = [] } = {}) => {
 
   const loadForEdit = async (id) => {
     try {
-      const res = await authFetch(`${apiUrl}/employees/${id}`);
-      const result = await res.json();
+      const result = await fetchEmployeesById({ id });
       dispatch({
         type: "SET_FORM",
         payload: {

@@ -1,32 +1,30 @@
 import { useCallback, useEffect, useState } from "react";
-import { authFetch } from "../../utils/authFetch";
-import { apiUrl } from "../../config/apiUrl";
+import { fetchRawMaterials } from "../../services/raw-materials.api";
 
 export const useRawMaterialsQuery = () => {
   const [data, setData] = useState([]);
-  const [mostExpensive, setMostExpensive] = useState(0);
-  const [leastExpensive, setLeastExpensive] = useState(0);
-  const [mostUsed, setMostUsed] = useState(0);
   const [totalAllRows, setTotalAllRows] = useState(0);
   const [columns, setColumns] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRows, setTotalRows] = useState(1);
 
+  const [mostExpensive, setMostExpensive] = useState(0);
+  const [leastExpensive, setLeastExpensive] = useState(0);
+  const [mostUsed, setMostUsed] = useState(0);
+
   const [search, setSearch] = useState("");
   const [selectedUnit, setSelectedUnit] = useState();
 
   const load = useCallback(async () => {
-    const urlParams = new URLSearchParams({ search, page, limit: 8 });
-    if (selectedUnit) urlParams.append("packUnit", selectedUnit);
     try {
-      const res = await authFetch(
-        `${apiUrl}/raw-materials?${urlParams.toString()}`,
-      );
-      const result = await res.json();
+      const result = await fetchRawMaterials({
+        search,
+        page,
+        selectedUnit,
+      });
 
       const rows = result.rows ?? [];
-
       setData(rows);
       if (rows.length > 0) setColumns(Object.keys(rows[0]));
       setTotalAllRows(result.totalAllRows);

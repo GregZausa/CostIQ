@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { authFetch } from "../../utils/authFetch";
-import { apiUrl } from "../../config/apiUrl";
+import { fetchOtherExpenses } from "../../services/other-expenses.api";
 
 export const useOtherExpensesQuery = () => {
   const [data, setData] = useState([]);
@@ -11,17 +10,17 @@ export const useOtherExpensesQuery = () => {
   const [totalRows, setTotalRows] = useState();
 
   const load = useCallback(async () => {
-    const urlParams = new URLSearchParams({ search, page, limit: 8 });
-    const res = await authFetch(
-      `${apiUrl}/other-expenses?${urlParams.toString()}`,
-    );
-    const result = await res.json();
+    try {
+      const result = await fetchOtherExpenses({ search, page });
 
-    setData(result.rows);
-    setColumns(result.headers);
-    setPage(result.page);
-    setTotalPages(result.totalPages);
-    setTotalRows(result.totalRows);
+      setData(result.rows);
+      setColumns(result.headers);
+      setPage(result.page);
+      setTotalPages(result.totalPages);
+      setTotalRows(result.totalRows);
+    } catch (err) {
+      console.error(err);
+    }
   }, [search, page]);
 
   useEffect(() => {
@@ -31,7 +30,6 @@ export const useOtherExpensesQuery = () => {
   useEffect(() => {
     setPage(1);
   }, [search]);
-
 
   return {
     data,

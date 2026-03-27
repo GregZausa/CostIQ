@@ -1,7 +1,9 @@
 import toast from "react-hot-toast";
-import { authFetch } from "../../utils/authFetch";
-import { apiUrl } from "../../config/apiUrl";
 import { useState } from "react";
+import {
+  addRawMaterials,
+  deleteRawMaterial,
+} from "../../services/raw-materials.api";
 
 export const useRawMaterialsAction = ({
   form,
@@ -21,6 +23,7 @@ export const useRawMaterialsAction = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     const errors = validate(form.state);
     if (Object.keys(errors).length) {
@@ -38,18 +41,7 @@ export const useRawMaterialsAction = ({
     };
 
     try {
-      setIsLoading(true);
-      if (editingId != null) {
-        await authFetch(`${apiUrl}/raw-materials/${editingId}`, {
-          method: "PUT",
-          body: JSON.stringify(payload),
-        });
-      } else {
-        await authFetch(`${apiUrl}/raw-materials`, {
-          method: "POST",
-          body: JSON.stringify(payload),
-        });
-      }
+      await addRawMaterials({ editingId, payload });
       toast.success(
         editingId
           ? `${form.state.materialName} updated successfully!`
@@ -71,18 +63,15 @@ export const useRawMaterialsAction = ({
   };
   const handleDelete = async (id) => {
     try {
-      const res = await authFetch(`${apiUrl}/raw-materials/${id}`, {
-        method: "DELETE",
-      });
-      const result = await res.json();
+      const result = await deleteRawMaterial({ id });
+      const materialName = result.material_name || 'Raw Material';
       console.log("Deleted", result);
-      toast.success(`${result.material_name} is deleted successfully!`);
+      toast.success(`${materialName} is deleted successfully!`);
       query.load();
       query.setPage(1);
       return;
     } catch (err) {
       toast.error("Failed to deleted raw material");
-      console.log("Failed to delete raw material", err);
     }
   };
   return {
