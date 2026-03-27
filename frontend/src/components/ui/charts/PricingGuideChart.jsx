@@ -87,7 +87,6 @@ const PricingGuideChart = ({ computed = {} }) => {
 
   return (
     <ProductCardLayout title="Pricing Guide" icon={TrendingDown}>
-      {/* Controls */}
       <div className="flex items-center gap-3 px-3 pt-2 pb-1">
         <div className="flex items-center gap-1.5">
           <span className="text-xs text-slate-400 font-medium">Max Discount</span>
@@ -126,7 +125,6 @@ const PricingGuideChart = ({ computed = {} }) => {
         </div>
       </div>
 
-      {/* Chart */}
       <ResponsiveContainer width="100%" height={230}>
         <ComposedChart
           data={data}

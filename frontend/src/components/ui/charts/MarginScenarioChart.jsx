@@ -128,7 +128,6 @@ const MarginScenarioChart = ({ computed = {} }) => {
         </div>
       </div>
 
-      {/* Chart */}
       <ResponsiveContainer width="100%" height={230}>
         <ComposedChart
           data={data}

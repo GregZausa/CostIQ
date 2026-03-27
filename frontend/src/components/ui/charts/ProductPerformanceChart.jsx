@@ -52,10 +52,10 @@ const CustomTooltip = ({ active, payload }) => {
 
 const CustomDot = (props) => {
   const { cx, cy, payload, avgX, avgY } = props;
-  const isGoldmine = payload.y > 0 && payload.z >= 50; // profitable + high ROI
-  const isStar = payload.y > 0 && payload.z < 50; // profitable but lower ROI
-  const isOptimize = payload.y <= 0 && payload.x <= avgX; // losing money but cheap
-  const isDanger = payload.y <= 0 && payload.x > avgX; // losing money and expensive
+  const isGoldmine = payload.y > 0 && payload.z >= 50; 
+  const isStar = payload.y > 0 && payload.z < 50;
+  const isOptimize = payload.y <= 0 && payload.x <= avgX;
+  const isDanger = payload.y <= 0 && payload.x > avgX;
 
   const color = isGoldmine
     ? "#4ade80"

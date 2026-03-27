@@ -9,12 +9,9 @@ import {
 } from "recharts";
 import ProductCardLayout from "../../layout/ProductCardLayout";
 import { PieChart as PieIcon } from "lucide-react";
+import { costPerProductColor } from "../../../utils/palette";
 
-const COLORS = {
-  Materials: { fill: "#818cf8", light: "#e0e7ff" },
-  Labor: { fill: "#a78bfa", light: "#ede9fe" },
-  Others: { fill: "#38bdf8", light: "#e0f2fe" },
-};
+const COLORS = costPerProductColor;
 
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {

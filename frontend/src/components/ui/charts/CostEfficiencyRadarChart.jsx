@@ -11,17 +11,9 @@ import {
 } from "recharts";
 import ProductCardLayout from "../../layout/ProductCardLayout";
 import { Activity } from "lucide-react";
+import { getRandomColor } from "../../../utils/palette";
 
-const COLORS = [
-  "#4ade80",
-  "#60a5fa",
-  "#f59e0b",
-  "#f87171",
-  "#a78bfa",
-  "#34d399",
-  "#fb923c",
-];
-
+const COLORS = Array.from({ length: 7 }, () => getRandomColor());
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
