@@ -14,6 +14,7 @@ import RawMaterials from "../pages/RawMaterials";
 import Employee from "../pages/Employee";
 import OtherExpenses from "../pages/OtherExpenses";
 import Products from "../pages/Products";
+import ProductList from "../pages/ProductList";
 
 export const routes = [
   {
@@ -38,17 +39,26 @@ export const routes = [
     label: "Dashboard",
   },
   {
-    path: "/products",
+    path: "product-management",
     icon: ShoppingBagIcon,
-    element: (
-      <MainLayout>
-        <Products />
-      </MainLayout>
-    ),
     sidebar: true,
-    label: "Products",
+    label: "Product Management",
+    children: [
+      {
+        path: "/product-management/products",
+        label: "Products",
+        icon: ShoppingBagIcon,
+      },
+      {
+        path: "/product-management/product-list",
+        label: "Product List",
+        icon: ShoppingBagIcon,
+      },
+    ],
   },
+
   {
+    path: "cost-management",
     icon: Calculator,
     sidebar: true,
     label: "Cost Management",
@@ -71,8 +81,23 @@ export const routes = [
     ],
   },
   {
+    path: "/product-management/products",
+    element: (
+      <MainLayout>
+        <Products />
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/product-management/product-list",
+    element: (
+      <MainLayout>
+        <ProductList />
+      </MainLayout>
+    ),
+  },
+  {
     path: "/cost-management/raw-materials",
-    icon: Box,
     element: (
       <MainLayout>
         <RawMaterials />
@@ -81,7 +106,6 @@ export const routes = [
   },
   {
     path: "/cost-management/employees",
-    icon: IdCardLanyard,
     element: (
       <MainLayout>
         <Employee />
@@ -90,7 +114,6 @@ export const routes = [
   },
   {
     path: "/cost-management/other-expenses",
-    icon: Toolbox,
     element: (
       <MainLayout>
         <OtherExpenses />
