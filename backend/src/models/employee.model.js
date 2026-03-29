@@ -79,6 +79,47 @@ export const getEmployeesTotalCount = async (createdBy) => {
   );
   return Number(rows[0].total);
 };
+export const getMostUsedPosition = async (createdBy) => {
+  const query = `SELECT p.position_id, p.position_name, 
+                  COUNT(e.employee_id) 
+                  AS usage_count
+                  FROM positions p
+                  JOIN employees e ON p.position_id = e.position_id
+                  WHERE e.created_by = $1
+                  AND e.is_active = true
+                  GROUP BY p.position_id, p.position_name
+                  ORDER BY usage_count DESC
+                  LIMIT 1`;
+
+  const result = await pool.query(query, [createdBy]);
+  return result.rows[0] || null;
+};
+export const getMostPaidEmployee = async (createdBy) => {
+  const query = `SELECT CONCAT(first_name, ' ', last_name) AS employee_name, rate_per_hr 
+                  FROM employees 
+                  WHERE created_by = $1
+                  AND is_active = true 
+                  ORDER BY rate_per_hr DESC 
+                  LIMIT 1`;
+  const result = await pool.query(query, [createdBy]);
+  return result.rows[0] || null;
+};
+export const getMostUsedEmployee = async (createdBy) => {
+  const query = `SELECT e.employee_id, CONCAT(first_name, ' ', last_name) AS employee_name, 
+                  COUNT(pe.product_id) 
+                  AS usage_count
+                  FROM employees e
+                  JOIN product_employees pe ON e.employee_id = pe.employee_id
+                  WHERE e.created_by = $1
+                  AND e.is_active = true
+                  GROUP BY e.employee_id, e.first_name, e.last_name
+                  ORDER BY usage_count DESC
+                  LIMIT 1`;
+
+  const result = await pool.query(query, [createdBy]);
+  return result.rows[0] || null;
+};
+
 
 export const getEmployeesById = async (createdBy, id) => {
   const query = `SELECT e.last_name, e.first_name, e.rate_per_hr, e.position_id, p.position_name 

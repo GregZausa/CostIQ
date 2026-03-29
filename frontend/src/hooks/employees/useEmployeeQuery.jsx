@@ -8,6 +8,9 @@ export const useEmployeeQuery = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalRows, setTotalRows] = useState();
   const [totalAllRows, setTotalAllRows] = useState();
+  const [mostUsedPosition, setMostUsedPosition] = useState([]);
+  const [mostUsedEmployee, setMostUsedEmployee] = useState([]);
+  const [mostPaid, setMostPaid] = useState([]);
   const [search, setSearch] = useState("");
 
   const load = useCallback(async () => {
@@ -23,6 +26,9 @@ export const useEmployeeQuery = () => {
       setTotalPages(result.totalPages);
       setTotalRows(result.totalRows);
       setTotalAllRows(result.totalAllRows);
+      setMostUsedPosition(result.mostUsedPosition);
+      setMostUsedEmployee(result.mostUsedEmployee);
+      setMostPaid(result.mostPaidEmployee);
     } catch (err) {
       console.error(err);
     }
@@ -41,6 +47,9 @@ export const useEmployeeQuery = () => {
     setData,
     totalRows,
     totalAllRows,
+    mostUsedPosition,
+    mostUsedEmployee,
+    mostPaid,
     columns,
     page,
     setPage,

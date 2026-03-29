@@ -1,6 +1,6 @@
 import React from "react";
 
-const RawMaterialsCard = ({ title, value, description, icon }) => {
+const HeaderCard = ({ title, value, description, icon }) => {
   return (
     <div className="group relative bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:shadow-md hover:border-indigo-200 transition-all duration-300 overflow-hidden">
       <div className="absolute inset-0 bg-linear-to-br from-indigo-50/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl" />
@@ -22,4 +22,4 @@ const RawMaterialsCard = ({ title, value, description, icon }) => {
   );
 };
 
-export default RawMaterialsCard;
+export default HeaderCard;

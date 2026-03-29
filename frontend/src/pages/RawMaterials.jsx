@@ -1,9 +1,9 @@
 import React, { useRef, useState } from "react";
 import RawMaterialsModal from "../components/modals/RawMaterialsModal";
 import RawMaterialsTable from "../tables/RawMaterialsTable";
-import RawMaterialsCard from "../components/cards/RawMaterialsCard";
+import HeaderCard from "../components/cards/HeaderCard";
 import useRawMaterials from "../hooks/raw-materials/useRawMaterials";
-import { Box, Tag, TrendingDown, TrendingUp } from "lucide-react";
+import { Box, Tag, TrendingUp } from "lucide-react";
 import Headers from "../components/layout/Headers";
 
 const RawMaterials = () => {
@@ -56,14 +56,14 @@ const RawMaterials = () => {
         />
       )}
       <div className="grid md:grid-cols-2 lg:grid-cols-4 shrink-0 py-2 gap-2">
-        <RawMaterialsCard
-          title={"Total Raw Materials"}
+        <HeaderCard
+          title="Total Raw Materials"
           value={totalRawMaterials}
-          description={"All Materials currently registered"}
+          description="All Materials currently registered"
           icon={<Box size={18} />}
         />
-        <RawMaterialsCard
-          title={"Highest Cost / Unit"}
+        <HeaderCard
+          title="Highest Cost / Unit"
           value={
             mostExpensiveMaterial
               ? `₱ ${Number(mostExpensiveMaterial.cost_per_unit).toLocaleString()}`
@@ -72,8 +72,8 @@ const RawMaterials = () => {
           description={mostExpensiveMaterial?.material_name}
           icon={<TrendingUp size={18} />}
         />
-        <RawMaterialsCard
-          title={"Lowest Cost / Unit"}
+        <HeaderCard
+          title="Lowest Cost / Unit"
           value={
             leastExpensiveMaterial
               ? `₱ ${Number(leastExpensiveMaterial.cost_per_unit).toLocaleString()}`
@@ -82,8 +82,8 @@ const RawMaterials = () => {
           description={leastExpensiveMaterial?.material_name}
           icon={<Tag size={18} />}
         />
-        <RawMaterialsCard
-          title={"Most Used Material"}
+        <HeaderCard
+          title="Most Used Material"
           value={
             mostUsedMaterial
               ? `${Number(mostUsedMaterial.usage_count).toLocaleString()}`

@@ -17,8 +17,14 @@ const useEmployee = ({ onSuccess, openModal, setIsLoading } = {}) => {
   });
 
   const totalEmployees = query.totalAllRows;
+  const mostUsedPosition = query.mostUsedPosition;
+  const mostUsedEmployee = query.mostUsedEmployee;
+  const mostPaidEmployee = query.mostPaid;
   return {
     totalEmployees,
+    mostUsedPosition,
+    mostUsedEmployee,
+    mostPaidEmployee,
     form,
     query,
     actions,

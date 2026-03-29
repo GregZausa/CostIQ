@@ -4,12 +4,15 @@ import {
   getEmployeesById,
   getEmployeesCount,
   getEmployeesTotalCount,
+  getMostPaidEmployee,
+  getMostUsedEmployee,
+  getMostUsedPosition,
   insertEmployee,
   updateEmployee,
 } from "../models/employee.model.js";
 import { getPaginationParams } from "../utils/pagination.js";
 
-export const createEmployeeService = async ({userId, body}) => {
+export const createEmployeeService = async ({ userId, body }) => {
   const { last_name, first_name, position, rate_per_hr } = body;
   return await insertEmployee({
     last_name,
@@ -20,7 +23,7 @@ export const createEmployeeService = async ({userId, body}) => {
   });
 };
 
-export const editedEmployeeService = async ({userId, id, body}) => {
+export const editedEmployeeService = async ({ userId, id, body }) => {
   const { last_name, first_name, position, rate_per_hr } = body;
 
   const updated = await updateEmployee(
@@ -39,14 +42,17 @@ export const fetchEmployeesService = async (req) => {
   const { page, limit, offset, searchTerm, createdBy } =
     getPaginationParams(req);
 
-  const [rows, totalRows, totalAllRows] = await Promise.all([
+  const [rows, totalRows, totalAllRows, mostUsedPosition, mostUsedEmployee, mostPaidEmployee] = await Promise.all([
     getEmployees(createdBy, searchTerm, limit, offset),
     getEmployeesCount(createdBy, searchTerm),
-    getEmployeesTotalCount(createdBy)
+    getEmployeesTotalCount(createdBy),
+    getMostUsedPosition(createdBy),
+    getMostUsedEmployee(createdBy),
+    getMostPaidEmployee(createdBy),
   ]);
   const totalPages = Math.ceil(totalRows / limit);
 
-  return { rows, page, totalPages, totalRows, totalAllRows };
+  return { rows, page, totalPages, totalRows, totalAllRows, mostUsedPosition, mostUsedEmployee, mostPaidEmployee };
 };
 
 export const fetchEmployeesByIdService = async ({ userId, id }) => {

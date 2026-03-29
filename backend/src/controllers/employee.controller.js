@@ -5,7 +5,6 @@ import {
   fetchEmployeesService,
   removeEmployeesService,
 } from "../services/employee.services.js";
-let counter = 0;
 
 export const createEmployee = async (req, res) => {
   try {
@@ -36,8 +35,6 @@ export const editedEmployee = async (req, res) => {
 };
 
 export const fetchEmployees = async (req, res) => {
-  counter++;
-  console.log("Conter count: ", counter);
   try {
     const result = await fetchEmployeesService(req);
     return res.json(result);

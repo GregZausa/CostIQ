@@ -111,7 +111,7 @@ export const getRawMaterialsTotalCount = async (createdBy) => {
 export const getRawMaterialsById = async (createdBy, id) => {
   const query = `SELECT material_name, pack_unit, base_unit, units_per_pack, price_per_pack, cost_per_unit 
                   FROM raw_materials 
-                  WHERE created_by = $1 AND raw_material_id = $2`;
+                  WHERE created_by = $1 AND raw_material_id = $2 AND is_active = true`;
   const result = await pool.query(query, [createdBy, id]);
   return result.rows[0];
 };
@@ -125,7 +125,8 @@ export const deleteRawMaterials = async (id) => {
 export const getMostExpensiveMaterial = async (createdBy) => {
   const query = `SELECT * 
                   FROM raw_materials 
-                  WHERE created_by = $1 
+                  WHERE created_by = $1
+                  AND is_active = true 
                   ORDER BY cost_per_unit DESC 
                   LIMIT 1`;
   const result = await pool.query(query, [createdBy]);
@@ -136,6 +137,7 @@ export const getLeastExpensiveMaterial = async (createdBy) => {
   const query = `SELECT * 
                   FROM raw_materials 
                   WHERE created_by = $1 
+                  AND is_active = true
                   ORDER BY cost_per_unit ASC 
                   LIMIT 1`;
   const result = await pool.query(query, [createdBy]);
@@ -148,7 +150,8 @@ export const getMostUsedMaterial = async (createdBy) => {
                   AS usage_count
                   FROM raw_materials rm
                   JOIN product_ingredients pi ON rm.raw_material_id = pi.material_id
-                  WHERE created_by = $1
+                  WHERE rm.created_by = $1
+                  AND rm.is_active = true
                   GROUP BY rm.raw_material_id, rm.material_name
                   ORDER BY usage_count DESC
                   LIMIT 1`;
