@@ -14,9 +14,11 @@ const useOtherExpenses = ({ setIsLoading, onSuccess, openModal } = {}) => {
     openModal,
   });
 
-  const totalOtherExpenses = query.totalRows;
+  const totalOtherExpenses = query.totalAllRows;
+  const mostUsedExpense = query.mostUsedExpense;
   return {
     totalOtherExpenses,
+    mostUsedExpense,
     form,
     query,
     actions,

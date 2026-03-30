@@ -9,6 +9,7 @@ export const useOtherExpensesQuery = () => {
   const [search, setSearch] = useState("");
   const [totalRows, setTotalRows] = useState(0);
   const [totalAllRows, setTotalAllRows] = useState(0);
+  const [mostUsedExpense, setMostUsedExpense] = useState(null);
 
   const load = useCallback(async () => {
     try {
@@ -22,6 +23,7 @@ export const useOtherExpensesQuery = () => {
       setTotalPages(result.totalPages);
       setTotalRows(result.totalRows);
       setTotalAllRows(result.totalAllRows);
+      setMostUsedExpense(result.mostUsedExpense);
     } catch (err) {
       console.error(err);
     }
@@ -46,5 +48,7 @@ export const useOtherExpensesQuery = () => {
     setSearch,
     load,
     totalRows,
+    totalAllRows,
+    mostUsedExpense,
   };
 };

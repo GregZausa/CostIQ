@@ -1,5 +1,6 @@
 import {
   deleteOtherExpense,
+  getmostUsedExepnse,
   getOtherExpenses,
   getOtherExpensesById,
   getOtherExpensesCount,
@@ -27,10 +28,11 @@ export const fetchOtherExpensesService = async (req) => {
   const { page, limit, offset, searchTerm, createdBy } =
     getPaginationParams(req);
 
-  const [rows, totalRows, totalAllRows] = await Promise.all([
+  const [rows, totalRows, totalAllRows, mostUsedExpense] = await Promise.all([
     getOtherExpenses(createdBy, searchTerm, limit, offset),
     getOtherExpensesCount(createdBy, searchTerm),
     getOtherExpensesTotalCount(createdBy),
+    getmostUsedExepnse(createdBy),
   ]);
   const totalPages = Math.ceil(totalAllRows / limit);
 
@@ -40,6 +42,7 @@ export const fetchOtherExpensesService = async (req) => {
     totalPages,
     totalRows,
     totalAllRows,
+    mostUsedExpense,
   };
 };
 

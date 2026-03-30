@@ -72,6 +72,22 @@ export const getOtherExpensesTotalCount = async (createdBy) => {
   return Number(rows[0].total);
 };
 
+export const getmostUsedExepnse = async (createdBy) => {
+  const query = `SELECT oe.other_expense_id, oe.category_name, 
+                  COUNT(poe.product_id)
+                  AS usage_count
+                  FROM other_expenses oe
+                  JOIN product_other_expenses poe ON oe.other_expense_id = poe.other_expense_id
+                  WHERE oe.created_by = $1
+                  AND oe.is_active = true
+                  GROUP BY oe.other_expense_id, oe.category_name
+                  ORDER BY usage_count DESC
+                  LIMIT 1`
+
+  const result = await pool.query(query, [createdBy])
+  return result.rows[0] || null;
+}
+
 export const getOtherExpensesById = async (createdBy, id) => {
   const query = `SELECT category_name, expense_cost 
                   FROM other_expenses 
