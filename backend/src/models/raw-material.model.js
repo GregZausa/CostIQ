@@ -61,7 +61,9 @@ export const getRawMaterials = async (
   let query = `SELECT raw_material_id, material_name, pack_unit, base_unit,
                 units_per_pack, price_per_pack, cost_per_unit
                 FROM raw_materials
-                WHERE created_by = $1 AND is_active = true AND material_name ILIKE $2`;
+                WHERE created_by = $1 
+                AND is_active = true 
+                AND material_name ILIKE $2`;
 
   let values = [createdBy, searchValue];
   if (selectedUnit) {

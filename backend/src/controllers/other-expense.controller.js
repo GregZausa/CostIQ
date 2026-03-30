@@ -5,17 +5,20 @@ import {
   insertOtherExpense,
   updateOtherExpense,
 } from "../models/other-expense.model.js";
+import {
+  createOtherExpenseSevice,
+  editOtherExpenseService,
+  fetchOtherExpensesByIdService,
+  fetchOtherExpensesService,
+  removeOtherExpenseService,
+} from "../services/other-expense.services.js";
 import { getPaginationParams } from "../utils/pagination.js";
 
 export const createOtherExpense = async (req, res) => {
   try {
-    const createdBy = req.user.id;
-    const { category_name, cost } = req.body;
-
-    const otherExpense = await insertOtherExpense({
-      category_name,
-      cost,
-      created_by: createdBy,
+    const otherExpense = await createOtherExpenseSevice({
+      userId: req.user.id,
+      body: req.body,
     });
     res
       .status(201)
@@ -23,80 +26,55 @@ export const createOtherExpense = async (req, res) => {
   } catch (err) {
     res
       .status(500)
-      .json({ message: "Something went wrong", error: err.message });
+      .json({ message: "Failed to add expense", error: err.message });
   }
 };
 
 export const editOtherExpense = async (req, res) => {
   try {
-    const createdBy = req.user.id;
-    const { id } = req.params;
-    const { category_name,  cost } = req.body;
-
-    const otherExpense = await updateOtherExpense(
-      category_name,
-      cost,
-      createdBy,
-      id,
-    );
-    res
-      .status(200)
-      .json({ message: "Expense updated successfully!", data: otherExpense });
+    const data = await editOtherExpenseService({
+      userId: req.user.id,
+      id: req.params.id,
+      body: req.body,
+    });
+    res.status(200).json({ message: "Expense updated successfully!", data });
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Failed to update expense", error: err.message });
+    res;
+    const status = err.message === "Expenses not found!" ? 404 : 500;
+    res.status(status).json({ message: err.message });
   }
 };
 
 export const fetchOtherExpenses = async (req, res) => {
   try {
-    const { page, limit, offset, searchTerm, createdBy } =
-      getPaginationParams(req);
-    const otherExpenses = await getOtherExpenses(
-      createdBy,
-      searchTerm,
-      limit,
-      offset,
-      page,
-    );
-    res.json(otherExpenses);
+    const result = await fetchOtherExpensesService(req);
+    res.json(result);
   } catch (err) {
     res
       .status(500)
-      .json({ message: "Failed to fetch other expenses", error: err.message });
+      .json({ message: "Failed to fetch expenses", error: err.message });
   }
 };
 
 export const fetchOtherExpensesById = async (req, res) => {
   try {
-    const createdBy = req.user.id;
-    const { id } = req.params;
-
-    const otherExpense = await getOtherExpensesById(createdBy, id);
-
-    if (!otherExpense) {
-      res.status(404).json({ message: "Expense not found" });
-    }
-    res.json(otherExpense);
+    const expense = await fetchOtherExpensesByIdService({
+      userId: req.user.id,
+      id: req.params.id,
+    });
+    res.json(expense);
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Failed to fetch expense", error: err.message });
+    const status = err.message === "Expense not found!" ? 404 : 500;
+    res.status(status).json({ message: err.message });
   }
 };
 
 export const removeOtherExpense = async (req, res) => {
   try {
-    const { id } = req.params;
-    const otherExpense = await deleteOtherExpense(id);
-    if (!otherExpense) {
-      res.status(404).json({ message: "Expense not found" });
-    }
-    res.json(otherExpense);
+    const deleted = await removeOtherExpenseService(req.params.id);
+    res.json(deleted);
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Failed to delete expense", error: err.message });
+    const status = err.message === "Expense not found!" ? 404 : 500;
+    res.status(status).json({ message: err.message });
   }
 };

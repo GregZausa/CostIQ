@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useState } from "react";
 import { fetchOtherExpenses } from "../../services/other-expenses.api";
 
 export const useOtherExpensesQuery = () => {
@@ -7,17 +7,21 @@ export const useOtherExpensesQuery = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
-  const [totalRows, setTotalRows] = useState();
+  const [totalRows, setTotalRows] = useState(0);
+  const [totalAllRows, setTotalAllRows] = useState(0);
 
   const load = useCallback(async () => {
     try {
       const result = await fetchOtherExpenses({ search, page });
 
-      setData(result.rows);
-      setColumns(result.headers);
+      const rows = result.rows?? [];
+
+      setData(rows);
+      if(rows.length > 0) setColumns(Object.keys(rows[0]));
       setPage(result.page);
       setTotalPages(result.totalPages);
       setTotalRows(result.totalRows);
+      setTotalAllRows(result.totalAllRows);
     } catch (err) {
       console.error(err);
     }

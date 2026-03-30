@@ -32,37 +32,44 @@ export const getOtherExpenses = async (
   searchTerm = "",
   limit = 8,
   offset = 0,
-  page = 1,
 ) => {
   const searchValue = searchTerm ? `%${searchTerm}%` : "%";
-
-  const countQuery = `SELECT COUNT(*) AS total
-                      FROM other_expenses
-                      WHERE created_by = $1
-                      AND is_active = true
-                      AND category_name ILIKE $2`;
-
-  const countResult = await pool.query(countQuery, [createdBy, searchValue]);
-  const totalRows = Number(countResult.rows[0].total);
-  const totalPages = Math.ceil(totalRows / limit);
-
-  const query = `SELECT other_expense_id, category_name, expense_cost 
+  let query = `SELECT other_expense_id, category_name, expense_cost 
                   FROM other_expenses
                   WHERE created_by = $1
                   AND is_active = true
-                  AND category_name ILIKE $2
-                  ORDER BY created_at DESC
-                  LIMIT $3 OFFSET $4`;
+                  AND category_name ILIKE $2`;
 
-  const values = [createdBy, searchValue, limit, offset];
-  const result = await pool.query(query, values);
-  return {
-    headers: result.fields.map((field) => field.name),
-    rows: result.rows,
-    page,
-    totalPages,
-    totalRows,
-  };
+  let values = [createdBy, searchValue];
+
+  query += ` ORDER BY created_at DESC LIMIT $${values.length + 1} OFFSET $${values.length + 2}`;
+  values.push(limit, offset);
+
+  const { rows } = await pool.query(query, values);
+  return rows;
+};
+
+export const getOtherExpensesCount = async (createdBy, searchTerm = "") => {
+  const searchValue = searchTerm ? `%${searchTerm}%` : "%";
+  let query = `SELECT COUNT(*) as total
+                FROM other_expenses
+                WHERE created_by = $1
+                AND is_active = true
+                AND category_name ILIKE $2`;
+
+  let values = [createdBy, searchValue];
+
+  const { rows } = await pool.query(query, values);
+
+  return Number(rows[0].total);
+};
+
+export const getOtherExpensesTotalCount = async (createdBy) => {
+  const { rows } = await pool.query(
+    `SELECT COUNT(*) AS total from other_expenses WHERE created_by = $1 AND is_active = true`,
+    [createdBy],
+  );
+  return Number(rows[0].total);
 };
 
 export const getOtherExpensesById = async (createdBy, id) => {
