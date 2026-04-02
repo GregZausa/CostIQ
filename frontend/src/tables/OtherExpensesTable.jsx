@@ -2,8 +2,11 @@ import React, { useMemo } from "react";
 import Table from "../components/ui/Table";
 import HeadlessUIDropdown from "../components/ui/HeadlessUIDropdown";
 import TextInput from "../components/ui/TextInput";
+import SelectBox from "../components/ui/SelectBox";
+import { EXPENSE_TYPES_WITH_ALL } from "../constants/expense-types";
 
 const OtherExpensesTable = ({ query, actions }) => {
+  const expenseTypeWithAll = EXPENSE_TYPES_WITH_ALL;
   const cols = useMemo(
     () => [
       ...query.columns
@@ -49,6 +52,13 @@ const OtherExpensesTable = ({ query, actions }) => {
               placeholder="Search for category name..."
               value={query.search}
               onChange={query.setSearch}
+            />
+            <SelectBox
+              placeholder="Filter Expense Type"
+              name="expenseType"
+              options={expenseTypeWithAll}
+              onChange={query.setSelectedExpenseType}
+              value={query.selectedExpenseType}
             />
           </div>
         }

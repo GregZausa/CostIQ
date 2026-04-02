@@ -18,6 +18,7 @@ export const addOtherExpenses = async ({ editingId = null, payload }) => {
 export const fetchOtherExpenses = async ({
   search = "",
   page = 1,
+  selectedExpenseType = null,
   limit = 8,
 } = {}) => {
   const urlParams = new URLSearchParams({
@@ -25,6 +26,10 @@ export const fetchOtherExpenses = async ({
     page: page.toString(),
     limit: limit.toString(),
   });
+
+  if (selectedExpenseType) {
+    urlParams.append("expenseType", selectedExpenseType);
+  }
 
   const res = await authFetch(
     `${apiUrl}/other-expenses?${urlParams.toString()}`,

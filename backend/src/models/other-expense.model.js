@@ -32,6 +32,7 @@ export const updateOtherExpense = async (
 export const getOtherExpenses = async (
   createdBy,
   searchTerm = "",
+  selectedExpenseType = "",
   limit = 8,
   offset = 0,
 ) => {
@@ -43,6 +44,10 @@ export const getOtherExpenses = async (
                   AND category_name ILIKE $2`;
 
   let values = [createdBy, searchValue];
+  if (selectedExpenseType) {
+    query += ` AND expense_type = $3`;
+    values.push(selectedExpenseType);
+  }
 
   query += ` ORDER BY created_at DESC LIMIT $${values.length + 1} OFFSET $${values.length + 2}`;
   values.push(limit, offset);
@@ -51,7 +56,11 @@ export const getOtherExpenses = async (
   return rows;
 };
 
-export const getOtherExpensesCount = async (createdBy, searchTerm = "") => {
+export const getOtherExpensesCount = async (
+  createdBy,
+  searchTerm = "",
+  selectedExpenseType = "",
+) => {
   const searchValue = searchTerm ? `%${searchTerm}%` : "%";
   let query = `SELECT COUNT(*) as total
                 FROM other_expenses
@@ -60,6 +69,10 @@ export const getOtherExpensesCount = async (createdBy, searchTerm = "") => {
                 AND category_name ILIKE $2`;
 
   let values = [createdBy, searchValue];
+  if (selectedExpenseType) {
+    query += ` AND expense_type = $3`;
+    values.push(selectedExpenseType);
+  }
 
   const { rows } = await pool.query(query, values);
 
@@ -84,14 +97,14 @@ export const getmostUsedExepnse = async (createdBy) => {
                   AND oe.is_active = true
                   GROUP BY oe.other_expense_id, oe.category_name
                   ORDER BY usage_count DESC
-                  LIMIT 1`
+                  LIMIT 1`;
 
-  const result = await pool.query(query, [createdBy])
+  const result = await pool.query(query, [createdBy]);
   return result.rows[0] || null;
-}
+};
 
 export const getOtherExpensesById = async (createdBy, id) => {
-  const query = `SELECT category_name, expense_cost 
+  const query = `SELECT category_name, expense_cost, expense_type 
                   FROM other_expenses 
                   WHERE created_by = $1 AND other_expense_id = $2`;
 

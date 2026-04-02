@@ -25,12 +25,13 @@ export const editOtherExpenseService = async ({ userId, id, body }) => {
 };
 
 export const fetchOtherExpensesService = async (req) => {
+  const selectedExpenseType = req.query.expenseType || "";
   const { page, limit, offset, searchTerm, createdBy } =
     getPaginationParams(req);
 
   const [rows, totalRows, totalAllRows, mostUsedExpense] = await Promise.all([
-    getOtherExpenses(createdBy, searchTerm, limit, offset),
-    getOtherExpensesCount(createdBy, searchTerm),
+    getOtherExpenses(createdBy, searchTerm, selectedExpenseType, limit, offset),
+    getOtherExpensesCount(createdBy, searchTerm, selectedExpenseType),
     getOtherExpensesTotalCount(createdBy),
     getmostUsedExepnse(createdBy),
   ]);

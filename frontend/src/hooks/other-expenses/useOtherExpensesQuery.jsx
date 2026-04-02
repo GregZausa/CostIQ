@@ -6,19 +6,25 @@ export const useOtherExpensesQuery = () => {
   const [columns, setColumns] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [search, setSearch] = useState("");
   const [totalRows, setTotalRows] = useState(0);
   const [totalAllRows, setTotalAllRows] = useState(0);
   const [mostUsedExpense, setMostUsedExpense] = useState(null);
 
+  const [search, setSearch] = useState("");
+  const [selectedExpenseType, setSelectedExpenseType] = useState("");
+
   const load = useCallback(async () => {
     try {
-      const result = await fetchOtherExpenses({ search, page });
+      const result = await fetchOtherExpenses({
+        search,
+        page,
+        selectedExpenseType,
+      });
 
-      const rows = result.rows?? [];
+      const rows = result.rows ?? [];
 
       setData(rows);
-      if(rows.length > 0) setColumns(Object.keys(rows[0]));
+      if (rows.length > 0) setColumns(Object.keys(rows[0]));
       setPage(result.page);
       setTotalPages(result.totalPages);
       setTotalRows(result.totalRows);
@@ -27,7 +33,7 @@ export const useOtherExpensesQuery = () => {
     } catch (err) {
       console.error(err);
     }
-  }, [search, page]);
+  }, [search, page, selectedExpenseType]);
 
   useEffect(() => {
     load();
@@ -35,7 +41,7 @@ export const useOtherExpensesQuery = () => {
 
   useEffect(() => {
     setPage(1);
-  }, [search]);
+  }, [search, selectedExpenseType]);
 
   return {
     data,
@@ -46,6 +52,8 @@ export const useOtherExpensesQuery = () => {
     totalPages,
     search,
     setSearch,
+    selectedExpenseType,
+    setSelectedExpenseType,
     load,
     totalRows,
     totalAllRows,
