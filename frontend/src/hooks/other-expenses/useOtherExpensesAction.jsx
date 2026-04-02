@@ -32,8 +32,8 @@ export const useOtherExpensesAction = ({
     }
     const payload = {
       category_name: form.state.categoryName,
-      quantity: form.state.quantity,
       cost: form.state.cost,
+      expense_type: form.state.expenseType,
     };
     try {
       await addOtherExpenses({ editingId, payload });
@@ -60,7 +60,7 @@ export const useOtherExpensesAction = ({
   const handleDelete = async (id) => {
     try {
       const result = await deleteOtherExpenses({ id });
-      const expensesName = result.category_name || "Expense"
+      const expensesName = result.category_name || "Expense";
       toast.success(`${expensesName} deleted sucessfully!`);
       query.load();
       return;

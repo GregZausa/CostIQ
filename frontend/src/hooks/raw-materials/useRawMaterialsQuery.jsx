@@ -9,9 +9,9 @@ export const useRawMaterialsQuery = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalRows, setTotalRows] = useState(1);
 
-  const [mostExpensive, setMostExpensive] = useState(0);
-  const [leastExpensive, setLeastExpensive] = useState(0);
-  const [mostUsed, setMostUsed] = useState(0);
+  const [mostExpensive, setMostExpensive] = useState(null);
+  const [leastExpensive, setLeastExpensive] = useState(null);
+  const [mostUsed, setMostUsed] = useState(null);
 
   const [search, setSearch] = useState("");
   const [selectedUnit, setSelectedUnit] = useState();

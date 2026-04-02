@@ -1,18 +1,10 @@
 import {
-  deleteOtherExpense,
-  getOtherExpenses,
-  getOtherExpensesById,
-  insertOtherExpense,
-  updateOtherExpense,
-} from "../models/other-expense.model.js";
-import {
   createOtherExpenseSevice,
   editOtherExpenseService,
   fetchOtherExpensesByIdService,
   fetchOtherExpensesService,
   removeOtherExpenseService,
 } from "../services/other-expense.services.js";
-import { getPaginationParams } from "../utils/pagination.js";
 
 export const createOtherExpense = async (req, res) => {
   try {

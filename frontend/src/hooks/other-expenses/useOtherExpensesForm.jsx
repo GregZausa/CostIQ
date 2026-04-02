@@ -5,6 +5,7 @@ import { fetchOtherExpensesById } from "../../services/other-expenses.api";
 const initialState = createInitialState({
   categoryName: "",
   cost: "",
+  expenseType: "",
 });
 
 export const useOtherExpensesForm = () => {
@@ -23,6 +24,7 @@ export const useOtherExpensesForm = () => {
         payload: {
           categoryName: result.category_name,
           cost: result.expense_cost,
+          expenseType: result.expense_type,
         },
       });
     } catch (err) {}

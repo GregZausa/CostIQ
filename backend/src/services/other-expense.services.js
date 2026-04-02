@@ -11,13 +11,13 @@ import {
 import { getPaginationParams } from "../utils/pagination.js";
 
 export const createOtherExpenseSevice = async ({ userId, body }) => {
-  const { category_name, cost } = body;
-  return await insertOtherExpense({ category_name, cost, created_by: userId });
+  const { category_name, cost, expense_type } = body;
+  return await insertOtherExpense({ category_name, cost, expense_type, created_by: userId });
 };
 
 export const editOtherExpenseService = async ({ userId, id, body }) => {
-  const { category_name, cost } = body;
-  const updated = await updateOtherExpense(category_name, cost, userId, id);
+  const { category_name, cost, expense_type, } = body;
+  const updated = await updateOtherExpense(category_name, cost, expense_type, userId, id);
 
   if (!updated) throw new Error("Expenses not found!");
 

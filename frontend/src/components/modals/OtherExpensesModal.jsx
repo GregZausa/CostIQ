@@ -1,3 +1,4 @@
+import { EXPENSE_TYPES } from "../../constants/expense-types";
 import AddOtherExpensesForm from "../forms/AddOtherExpensesForm";
 import ModalLayout from "../layout/ModalLayout";
 
@@ -9,6 +10,7 @@ const OtherExpensesModal = ({
   setIsLoading,
   editingId,
 }) => {
+  const expenseTypes = EXPENSE_TYPES;
   return (
     <ModalLayout closeModal={closeModal}>
       <h1 className="text-xl font-bold mb-4">
@@ -21,6 +23,7 @@ const OtherExpensesModal = ({
         state={form.state}
         isLoading={isLoading}
         setIsLoading={setIsLoading}
+        expenseTypes={expenseTypes}
       />
     </ModalLayout>
   );

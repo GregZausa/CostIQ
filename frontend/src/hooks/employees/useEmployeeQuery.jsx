@@ -8,9 +8,9 @@ export const useEmployeeQuery = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalRows, setTotalRows] = useState();
   const [totalAllRows, setTotalAllRows] = useState();
-  const [mostUsedPosition, setMostUsedPosition] = useState([]);
-  const [mostUsedEmployee, setMostUsedEmployee] = useState([]);
-  const [mostPaid, setMostPaid] = useState([]);
+  const [mostUsedPosition, setMostUsedPosition] = useState(null);
+  const [mostUsedEmployee, setMostUsedEmployee] = useState(null);
+  const [mostPaid, setMostPaid] = useState(null);
   const [search, setSearch] = useState("");
 
   const load = useCallback(async () => {

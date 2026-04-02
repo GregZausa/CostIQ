@@ -23,7 +23,7 @@ export const updatePositions = async (
 ) => {
   const query = `UPDATE positions SET position_name = $1, default_rate_per_hr = $2
                   WHERE created_by = $3 
-                  AND position_id = $4`;
+                  AND position_id = $4 RETURNING *`;
 
   const values = [position_name, default_rate_per_hr, created_by, id];
   const { rows } = await pool.query(query, values);

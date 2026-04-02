@@ -1,6 +1,8 @@
 import React from "react";
 import FloatingLabelInput from "../ui/FloatingLabelInput";
 import Button from "../ui/Button";
+import SelectBox from "../ui/SelectBox";
+
 
 const AddOtherExpensesForm = ({
   state,
@@ -9,6 +11,7 @@ const AddOtherExpensesForm = ({
   handleChange,
   isLoading,
   setIsLoading,
+  expenseTypes,
 }) => {
   return (
     <form className="space-y-4 " onSubmit={handleSubmit}>
@@ -29,6 +32,15 @@ const AddOtherExpensesForm = ({
         type="number"
         value={state?.cost}
         label="Cost"
+      />
+      <SelectBox
+        name="expenseType"
+        value={state?.expenseType}
+        label="Select Expense Type"
+        options={expenseTypes}
+        onChange={(val) =>
+          handleChange({ target: { name: "expenseType", value: val } })
+        }
       />
       <div className="flex justify-end space-x-4">
         <Button

@@ -3,10 +3,11 @@ import pool from "../config/db.js";
 export const insertOtherExpense = async ({
   category_name,
   cost,
+  expense_type,
   created_by,
 }) => {
-  const query = `INSERT INTO other_expenses (category_name, expense_cost, created_by) VALUES($1, $2, $3) RETURNING *`;
-  const values = [category_name, cost, created_by];
+  const query = `INSERT INTO other_expenses (category_name, expense_cost, expense_type, created_by) VALUES($1, $2, $3, $4) RETURNING *`;
+  const values = [category_name, cost, expense_type, created_by];
 
   const { rows } = await pool.query(query, values);
   return rows[0];
@@ -15,14 +16,15 @@ export const insertOtherExpense = async ({
 export const updateOtherExpense = async (
   category_name,
   cost,
+  expense_type,
   createdBy,
   id,
 ) => {
-  const query = `UPDATE other_expenses SET category_name = $1, expense_cost = $2
-                  WHERE created_by = $3
-                  AND other_expense_id = $4`;
+  const query = `UPDATE other_expenses SET category_name = $1, expense_cost = $2, expense_type = $3
+                  WHERE created_by = $4
+                  AND other_expense_id = $5 RETURNING *`;
 
-  const values = [category_name, cost, createdBy, id];
+  const values = [category_name, cost, expense_type, createdBy, id];
   const { rows } = await pool.query(query, values);
   return rows[0];
 };
@@ -34,7 +36,7 @@ export const getOtherExpenses = async (
   offset = 0,
 ) => {
   const searchValue = searchTerm ? `%${searchTerm}%` : "%";
-  let query = `SELECT other_expense_id, category_name, expense_cost 
+  let query = `SELECT other_expense_id, category_name, expense_cost, expense_type 
                   FROM other_expenses
                   WHERE created_by = $1
                   AND is_active = true
