@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ModalLayout from "../layout/ModalLayout";
 import { Toolbox } from "lucide-react";
-import Table from "../ui/Table";
 import TextInput from "../ui/TextInput";
 import Button from "../ui/Button";
 import SelectorLayout from "../layout/SelectorLayout";
@@ -80,6 +79,14 @@ const SelectExpensesModal = ({
       render: (row) => `₱${row.expense_cost?.trim() || ""}`,
     },
     {
+      key: "expense_type",
+      label: "Expense Type",
+      render: (row) =>
+        row.expense_type
+          ?.replace(/_/g, " ")
+          .replace(/\b\w/g, (c) => c.toUpperCase()),
+    },
+    {
       key: "cpb",
       label: "Cost Per Batch",
       render: (row) => `₱${(row.cpb || 0).toFixed(2)}`,
@@ -146,21 +153,22 @@ const SelectExpensesModal = ({
               label: "Expense Cost",
               render: (e) => e.expense_cost,
             },
+            {
+              key: "expense_type",
+              label: "Expense Type",
+              render: (row) =>
+                row.expense_type
+                  ?.replace(/_/g, " ")
+                  .replace(/\b\w/g, (c) => c.toUpperCase()),
+            },
           ]}
         />
         {selectedItems.length > 0 && (
           <SelectorTableLayout selectedItems={selectedItems} cols={cols} />
         )}
         <div className="flex justify-end gap-2 pt-2">
-          <Button
-            onClick={closeModal}
-            variant="ghost"
-            label="Cancel"
-          />
-          <Button
-            onClick={handleConfirm}
-            label="Confirm"
-          />
+          <Button onClick={closeModal} variant="ghost" label="Cancel" />
+          <Button onClick={handleConfirm} label="Confirm" />
         </div>
       </ModalLayout>
     </>

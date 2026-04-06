@@ -1,6 +1,5 @@
 import React from "react";
 import ProductCardLayout from "../../layout/ProductCardLayout";
-import { TrendingUp } from "lucide-react";
 import {
   Bar,
   BarChart,

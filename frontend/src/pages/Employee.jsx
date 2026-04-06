@@ -69,7 +69,7 @@ const Employee = () => {
           title="Most used employee"
           value={
             mostUsedPosition
-              ? `${Number(mostUsedEmployee.usage_count).toLocaleString()}`
+              ? `${Number(mostUsedEmployee?.usage_count).toLocaleString()}`
               : "-"
           }
           description={mostUsedEmployee?.employee_name}

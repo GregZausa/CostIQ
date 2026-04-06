@@ -3,6 +3,7 @@ import { createInitialState, reducer } from "../../utils/reducer";
 
 const initialState = createInitialState({
   productName: "",
+  batchPerDay: "",
   productImage: "",
   totalInput: "",
   unitsPerProduct: "",

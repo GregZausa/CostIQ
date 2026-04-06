@@ -7,6 +7,7 @@ export const useProductsAction = ({ form }) => {
   const validate = (state) => {
     const errors = {};
     if (!state.productName) errors.prductName = "Product name is requried!";
+    if (!state.batchPerDay) errors.batchPerDay = "Batch per day must be > 0";
     if (!state.totalInput) errors.totalInput = "Total input must be > 0";
     if (!state.unitsPerProduct)
       errors.unitsPerProduct = "Units per product must be > 0";
@@ -24,6 +25,7 @@ export const useProductsAction = ({ form }) => {
     }
     const formData = new FormData();
     formData.append("product_name", form.state.productName);
+    formData.append("batch_per_day", form.state.batchPerDay);
     formData.append("product_image", form.state.productImage);
     formData.append("total_input", form.state.totalInput);
     formData.append("units_per_product", form.state.unitsPerProduct);
@@ -54,7 +56,6 @@ export const useProductsAction = ({ form }) => {
     }
   };
 
-  
   return {
     handleSubmit,
   };

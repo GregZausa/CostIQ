@@ -2,7 +2,7 @@ import React from 'react'
 
 const ProductCardLayout = ({title, icon: Icon, children}) => {
   return (
-    <div className="w-full bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+    <div className="w-full bg-white rounded-2xl border border-slate-200 shadow-xs">
       <div className="flex items-center justify-between px-3 py-2.5 border-b border-slate-100">
         <div>
           <p className="text-xs font-semibold tracking-widest uppercase text-slate-800">

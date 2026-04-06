@@ -5,6 +5,7 @@ export const insertProduct = async (
   client,
   {
     product_name,
+    batch_per_day,
     product_image,
     total_input,
     units_per_product,
@@ -16,11 +17,12 @@ export const insertProduct = async (
   },
 ) => {
   const query = `INSERT INTO products 
-                (product_name, product_image, total_input, units_per_product, total_sellable_units, profit_margin, discount, sales_tax, created_by)
-                VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`;
+                (product_name, batch_per_day, product_image, total_input, units_per_product, total_sellable_units, profit_margin, discount, sales_tax, created_by)
+                VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`;
 
   const values = [
     product_name,
+    batch_per_day,
     product_image,
     total_input,
     units_per_product,
@@ -113,12 +115,27 @@ export const getLaborCostPerBatch = async (id, createdBy) => {
 };
 
 export const getOtherExpenseCostPerBatch = async (id, createdBy) => {
-  const query = `SELECT SUM (oe.expense_cost * poe.quantity) AS total_other_expense_cpp
+  const query = `SELECT SUM(
+                  CASE 
+                    WHEN oe.expense_type = 'per_unit' 
+                      THEN (oe.expense_cost * poe.quantity) / p.total_sellable_units
+                    WHEN oe.expense_type = 'one_time'
+                      THEN oe.expense_cost / NULLIF((
+                        SELECT COUNT(*) FROM product_other_expenses 
+                        WHERE other_expense_id = oe.other_expense_id
+                      ), 0) / NULLIF(p.batch_per_day * 365, 0)
+                    WHEN oe.expense_type = 'one_month'
+                      THEN oe.expense_cost / NULLIF((
+                        SELECT COUNT(*) FROM product_other_expenses 
+                        WHERE other_expense_id = oe.other_expense_id
+                      ), 0) / NULLIF(p.batch_per_day * 30, 0)
+                    ELSE
+                      oe.expense_cost * poe.quantity
+                  END
+                ) AS total_other_expense_cpp
                 FROM product_other_expenses poe
-                JOIN other_expenses oe
-                ON oe.other_expense_id = poe.other_expense_id
-                JOIN products p
-                ON p.product_id = poe.product_id
+                JOIN other_expenses oe ON oe.other_expense_id = poe.other_expense_id
+                JOIN products p ON p.product_id = poe.product_id
                 WHERE poe.product_id = $1
                 AND p.created_by = $2`;
 

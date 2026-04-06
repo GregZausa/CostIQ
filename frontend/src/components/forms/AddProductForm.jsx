@@ -27,6 +27,7 @@ const AddProductForm = ({
   return (
     <>
       <form className="space-y-4">
+        <div className="grid md:grid-cols-2 gap-2">
         <FloatingLabelInput
           onChange={(val) =>
             handleChange({ target: { name: "productName", value: val } })
@@ -36,6 +37,16 @@ const AddProductForm = ({
           value={state?.productName}
           label="Product Name"
         />
+        <FloatingLabelInput
+          onChange={(val) =>
+            handleChange({ target: { name: "batchPerDay", value: val } })
+          }
+          name="batchPerDay"
+          type="number"
+          value={state?.batchPerDay}
+          label="Batch Made per Day"
+        />
+        </div>
         <ImageInput
           onChange={(val) =>
             handleChange({ target: { name: "productImage", value: val } })

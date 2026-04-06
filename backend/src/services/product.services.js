@@ -86,6 +86,7 @@ export const createProductService = async ({ file, userId, body }) => {
     const imageUrl = file ? await uploadImage(file) : null;
     const {
       product_name,
+      batch_per_day,
       total_input,
       units_per_product,
       total_sellable_units,
@@ -101,6 +102,7 @@ export const createProductService = async ({ file, userId, body }) => {
     await client.query("BEGIN");
     const product = await insertProduct(client, {
       product_name,
+      batch_per_day,
       product_image: imageUrl,
       total_input,
       units_per_product,
