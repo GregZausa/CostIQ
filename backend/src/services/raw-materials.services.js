@@ -66,7 +66,7 @@ export const fetchRawMaterialsService = async (req) => {
       getMostUsedMaterial(createdBy),
     ]);
 
-  const totalPages = Math.ceil(totalAllRows / limit);
+  const totalPages = Math.ceil(totalRows / limit);
 
   return {
     rows,

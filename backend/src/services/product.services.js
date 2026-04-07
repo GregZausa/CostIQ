@@ -162,7 +162,7 @@ export const fetchPaginatedProductsService = async (req) => {
     getProductsTotalCount(createdBy),
   ]);
 
-  const totalPages = Math.ceil(totalAllRows / limit);
+  const totalPages = Math.ceil(totalRows / limit);
 
   return {
     rows,

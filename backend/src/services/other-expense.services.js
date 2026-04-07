@@ -35,7 +35,7 @@ export const fetchOtherExpensesService = async (req) => {
     getOtherExpensesTotalCount(createdBy),
     getmostUsedExepnse(createdBy),
   ]);
-  const totalPages = Math.ceil(totalAllRows / limit);
+  const totalPages = Math.ceil(totalRows / limit);
 
   return {
     rows,
