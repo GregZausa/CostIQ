@@ -4,6 +4,7 @@ import { globalLimiter } from "../middleware/rate-limiter.js";
 import {
   createProduct,
   fetchAllComputedProducts,
+  fetchPaginatedProducts,
   fetchProduct,
   fetchProducts,
 } from "../controllers/product.controller.js";
@@ -18,7 +19,8 @@ router.post(
   upload.single("product_image"),
   createProduct,
 );
-router.get("/products", fetchProducts);
+router.get("/products/all", fetchProducts);
+router.get("/products", fetchPaginatedProducts);
 router.get("/products/computed", fetchAllComputedProducts);
 router.get("/products/:id", fetchProduct);
 

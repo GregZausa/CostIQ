@@ -2,7 +2,7 @@ import { apiUrl } from "../config/apiUrl";
 import { authFetch } from "../utils/authFetch";
 
 export const fetchAllProducts = async () => {
-  const res = await authFetch(`${apiUrl}/products`);
+  const res = await authFetch(`${apiUrl}/products/all`);
   return res.json();
 };
 

@@ -1,9 +1,8 @@
-import { useCallback } from "react";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   fetchAllProducts,
   fetchComputedProducts,
+  fetchPaginatedProducts,
   fetchSelectedProduct,
 } from "../../services/products.api";
 
@@ -13,11 +12,39 @@ export const useProductsQuery = () => {
   const [mostExpensive, setMostExpensive] = useState(null);
   const [highestROI, setHighestROI] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
+
   const [productDetail, setProductDetail] = useState(null);
+
+  const [data, setData] = useState([]);
+  const [columns, setColumns] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalRows, setTotalRows] = useState();
+  const [totalAllRows, setTotalAllRows] = useState();
+  const [search, setSearch] = useState("");
+
   const productOptions = (products ?? []).map((p) => ({
     label: p.product_name.toUpperCase(),
     value: p.product_id,
   }));
+
+  const loadPaginatedProducts = useCallback(async () => {
+    try {
+      const result = await fetchPaginatedProducts({
+        search,
+        page,
+      });
+      const rows = result.rows ?? [];
+      setData(rows);
+      if (rows.length > 0) setColumns(Object.keys(rows[0]));
+      setPage(result.page);
+      setTotalPages(result.totalPages);
+      setTotalRows(result.totalRows);
+      setTotalAllRows(result.totalAllRows);
+    } catch (err) {
+      console.error(err);
+    }
+  }, [search, page]);
 
   const loadProducts = useCallback(async () => {
     try {
@@ -33,6 +60,25 @@ export const useProductsQuery = () => {
       console.error("Failed to fetch products", err);
     }
   }, []);
+
+  const loadSelectedProduct = useCallback(async () => {
+    if (!selectedProduct) return;
+    try {
+      const result = await fetchSelectedProduct({ selectedProduct });
+      setProductDetail(result);
+    } catch (err) {
+      console.error("Failed to fetch product", err);
+    }
+  }, [selectedProduct]);
+
+  useEffect(() => {
+    loadPaginatedProducts();
+  }, [loadPaginatedProducts]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [search]);
+  
   useEffect(() => {
     loadProducts();
   }, [loadProducts]);
@@ -42,17 +88,6 @@ export const useProductsQuery = () => {
       setSelectedProduct(productOptions[0].value);
     }
   }, [products]);
-
-  const loadSelectedProduct = useCallback(async () => {
-    if (!selectedProduct) return;
-    try {
-      const result = await fetchSelectedProduct({ selectedProduct });
-      setProductDetail(result);
-      console.log(productDetail);
-    } catch (err) {
-      console.error("Failed to fetch product", err);
-    }
-  }, [selectedProduct]);
   useEffect(() => {
     loadSelectedProduct();
   }, [loadSelectedProduct]);
@@ -66,5 +101,16 @@ export const useProductsQuery = () => {
     selectedProduct,
     setSelectedProduct,
     productDetail,
+    data,
+    setData,
+    totalRows,
+    totalAllRows,
+    columns,
+    page,
+    setPage,
+    totalPages,
+    search,
+    setSearch,
+    loadPaginatedProducts,
   };
 };

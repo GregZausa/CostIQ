@@ -172,3 +172,92 @@ export const getProductsWithProfit = async (createdBy) => {
     }),
   }));
 };
+
+export const getPaginatedProducts = async (
+  createdBy,
+  searchTerm = "",
+  limit = 8,
+  offset = 0,
+) => {
+  const searchValue = searchTerm ? `%${searchTerm}%` : "%";
+  let query = `SELECT 
+                p.product_id,
+                p.product_name,
+                p.total_input,
+                p.units_per_product,
+                p.total_sellable_units,
+                p.profit_margin,
+                p.discount,
+                p.sales_tax,
+                p.batch_per_day,
+                (
+                  SELECT jsonb_agg(jsonb_build_object(
+                    'material_name', rm.material_name,
+                    'pack_unit', rm.pack_unit,
+                    'base_unit', rm.base_unit,
+                    'units_per_pack', rm.units_per_pack,
+                    'price_per_pack', rm.price_per_pack,
+                    'cost_per_unit', rm.cost_per_unit,
+                    'units_needed', pi.units_needed
+                  ))
+                  FROM product_ingredients pi
+                  JOIN raw_materials rm ON pi.material_id = rm.raw_material_id
+                  WHERE pi.product_id = p.product_id
+                ) AS ingredients,
+                (
+                  SELECT jsonb_agg(jsonb_build_object(
+                    'first_name', e.first_name,
+                    'last_name', e.last_name,
+                    'rate_per_hr', e.rate_per_hr,
+                    'prep_time_hrs', pe.prep_time_hrs
+                  ))
+                  FROM product_employees pe
+                  JOIN employees e ON pe.employee_id = e.employee_id
+                  WHERE pe.product_id = p.product_id
+                ) AS employees,
+                (
+                  SELECT jsonb_agg(jsonb_build_object(
+                    'category_name', oe.category_name,
+                    'expense_cost', oe.expense_cost,
+                    'quantity', poe.quantity
+                  ))
+                  FROM product_other_expenses poe
+                  JOIN other_expenses oe ON poe.other_expense_id = oe.other_expense_id
+                  WHERE poe.product_id = p.product_id
+                ) AS other_expenses
+              FROM products p
+              WHERE p.created_by = $1 
+                AND p.is_active = true
+                AND p.product_name ILIKE $2`;
+
+  let values = [createdBy, searchValue];
+
+  query += ` ORDER BY created_at DESC LIMIT $${values.length + 1} OFFSET $${values.length + 2}`;
+
+  values.push(limit, offset);
+
+  const { rows } = await pool.query(query, values);
+
+  return rows;
+};
+
+export const getProductsCount = async (createdBy, searchTerm = "") => {
+  const searchValue = searchTerm ? `%${searchTerm}%` : "%";
+  let query = `SELECT COUNT(*) AS total
+                FROM products
+                WHERE created_by = $1
+                AND is_active = true
+                AND product_name ILIKE $2`;
+
+  let values = [createdBy, searchValue];
+  const { rows } = await pool.query(query, values);
+  return Number(rows[0].total);
+};
+
+export const getProductsTotalCount = async (createdBy) => {
+  const { rows } = await pool.query(
+    `SELECT COUNT(*) AS total FROM products WHERE created_by = $1 AND is_active = true`,
+    [createdBy],
+  );
+  return Number(rows[0].total);
+};

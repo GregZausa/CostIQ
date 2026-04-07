@@ -3,21 +3,24 @@ import {
   getLaborCostPerBatch,
   getMaterialsCostPerBatch,
   getOtherExpenseCostPerBatch,
+  getPaginatedProducts,
   getProduct,
+  getProductsCount,
+  getProductsTotalCount,
   getProductsWithProfit,
   insertProduct,
   insertProductEmployees,
   insertProductIngredients,
   insertProductOtherExpenses,
 } from "../models/product.model.js";
+import { getPaginationParams } from "../utils/pagination.js";
 import { uploadImage } from "../utils/uploadImage.js";
 
 const computeCPP = (cost, totalSellableUnits) => {
   const safeDivide = (value) =>
     totalSellableUnits > 0 ? value / totalSellableUnits : 0;
 
-  const totalCPB =
-    cost.materialCPB + cost.employeeCPB + cost.otherExpenseCPB;
+  const totalCPB = cost.materialCPB + cost.employeeCPB + cost.otherExpenseCPB;
 
   return {
     materialCPP: safeDivide(cost.materialCPB),
@@ -42,18 +45,24 @@ const computeProfitability = (
   totalCPB,
   totalCPP,
   discountedPrice,
-  totalSellableUnits
+  totalSellableUnits,
 ) => {
   const profit = discountedPrice - totalCPP;
   const netProfit = profit * totalSellableUnits;
   const roi = totalCPB > 0 ? (netProfit / totalCPB) * 100 : 0;
-  const breakEvenUnits =
-    profit > 0 ? Math.ceil(totalCPB / profit) : null;
+  const breakEvenUnits = profit > 0 ? Math.ceil(totalCPB / profit) : null;
   const breakEvenRevenue = breakEvenUnits
     ? breakEvenUnits * discountedPrice
     : null;
 
-  return { profit, netProfit, netProfitPerUnit: profit, roi, breakEvenUnits, breakEvenRevenue };
+  return {
+    profit,
+    netProfit,
+    netProfitPerUnit: profit,
+    roi,
+    breakEvenUnits,
+    breakEvenRevenue,
+  };
 };
 
 export const productCompute = (product, cost) => {
@@ -63,12 +72,17 @@ export const productCompute = (product, cost) => {
   const salesTax = Number(product?.sales_tax || 0);
 
   const cpp = computeCPP(cost, totalSellableUnits);
-  const pricing = computePricing(cpp.totalCPP, profitMargin, discount, salesTax);
+  const pricing = computePricing(
+    cpp.totalCPP,
+    profitMargin,
+    discount,
+    salesTax,
+  );
   const profitability = computeProfitability(
     cpp.totalCPB,
     cpp.totalCPP,
     pricing.discountedPrice,
-    totalSellableUnits
+    totalSellableUnits,
   );
 
   return {
@@ -128,16 +142,34 @@ export const createProductService = async ({ file, userId, body }) => {
 };
 
 export const fetchProductsService = async ({ userId }) => {
-  const [
-    products,
-    mostExpensiveProduct,
-  ] = await Promise.all([
+  const [products, mostExpensiveProduct] = await Promise.all([
     getProduct(userId),
   ]);
 
   return {
     products,
     mostExpensiveProduct,
+  };
+};
+
+export const fetchPaginatedProductsService = async (req) => {
+  const { page, limit, offset, searchTerm, createdBy } =
+    getPaginationParams(req);
+
+  const [rows, totalRows, totalAllRows] = await Promise.all([
+    getPaginatedProducts(createdBy, searchTerm, limit, offset),
+    getProductsCount(createdBy, searchTerm),
+    getProductsTotalCount(createdBy),
+  ]);
+
+  const totalPages = Math.ceil(totalAllRows / limit);
+
+  return {
+    rows,
+    page,
+    totalPages,
+    totalRows,
+    totalAllRows,
   };
 };
 

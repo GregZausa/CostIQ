@@ -1,6 +1,7 @@
 import {
   createProductService,
   fetchAllComputedProductsService,
+  fetchPaginatedProductsService,
   fetchProductService,
   fetchProductsService,
 } from "../services/product.services.js";
@@ -36,12 +37,23 @@ export const fetchProducts = async (req, res) => {
   }
 };
 
+export const fetchPaginatedProducts = async (req, res) => {
+  try {
+    const result = await fetchPaginatedProductsService(req);
+    res.json(result);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Failed to fetch products!", error: err.message });
+  }
+};
+
 export const fetchAllComputedProducts = async (req, res) => {
   try {
     const products = await fetchAllComputedProductsService({
       userId: req.user.id,
     });
-    res.json({products});
+    res.json({ products });
   } catch (err) {
     res
       .status(500)
