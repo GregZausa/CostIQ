@@ -1,4 +1,4 @@
-import {apiUrl} from "../config/apiUrl"
+import { apiUrl } from "../config/apiUrl";
 
 const refreshAccessToken = async () => {
   const res = await fetch(`${apiUrl}/auth/refresh`, {
@@ -21,7 +21,7 @@ export const authFetch = async (url, options = {}) => {
       credentials: "include",
       headers: {
         ...(!isFormData && { "Content-Type": "application/json" }),
-        Authorization: `Bearer ${accessToken}`,
+        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
         ...options.headers,
       },
     });

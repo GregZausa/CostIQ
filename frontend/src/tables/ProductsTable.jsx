@@ -54,7 +54,7 @@ const ProductsTable = ({ query, actions }) => {
 
       {
         key: "action",
-        render: (row) => <HeadlessUIDropdown id={row.product_id} />,
+        render: (row) => <HeadlessUIDropdown id={row.product_id} onDelete={actions.handleDelete}/>,
       },
     ],
     [query.columns],

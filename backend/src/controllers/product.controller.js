@@ -4,6 +4,7 @@ import {
   fetchPaginatedProductsService,
   fetchProductService,
   fetchProductsService,
+  removeProductsService,
 } from "../services/product.services.js";
 
 export const createProduct = async (req, res) => {
@@ -73,5 +74,15 @@ export const fetchProduct = async (req, res) => {
     res
       .status(500)
       .json({ message: "Failed to fetch product", error: err.message });
+  }
+};
+
+export const removeProducts = async (req, res) => {
+  try {
+    const deleted = await removeProductsService(req.params.id);
+    res.json(deleted);
+  } catch (err) {
+    const status = err.message === "Product not found" ? 404 : 500;
+    res.status(status).json({ message: err.message });
   }
 };

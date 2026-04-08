@@ -132,7 +132,7 @@ export const getEmployeesById = async (createdBy, id) => {
 };
 
 export const deleteEmployee = async (id) => {
-  const query = `UPDATE employees SET is_active = false WHERE employee_id = $1`;
+  const query = `UPDATE employees SET is_active = false WHERE employee_id = $1 RETUNING *`;
   const { rows } = await pool.query(query, [id]);
   return rows[0];
 };

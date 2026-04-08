@@ -30,3 +30,11 @@ export const fetchPaginatedProducts = async ({
   const res = await authFetch(`${apiUrl}/products?${urlParams.toString()}`);
   return res.json();
 };
+
+export const deleteProduct = async ({ id }) => {
+  const res = await authFetch(`${apiUrl}/products/${id}`, {
+    method: "DELETE",
+  });
+  return res.json();
+};
+

@@ -261,3 +261,9 @@ export const getProductsTotalCount = async (createdBy) => {
   );
   return Number(rows[0].total);
 };
+
+export const deleteProducts = async (id) => {
+  const query = `UPDATE products SET is_active = false WHERE product_id = $1 RETURNING *`;
+  const { rows } = await pool.query(query, [id]);
+  return rows[0];
+}

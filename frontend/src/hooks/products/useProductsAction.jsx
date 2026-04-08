@@ -2,8 +2,9 @@ import toast from "react-hot-toast";
 import { apiUrl } from "../../config/apiUrl";
 import { authFetch } from "../../utils/authFetch";
 import {} from "react";
+import { deleteProduct } from "../../services/products.api";
 
-export const useProductsAction = ({ form }) => {
+export const useProductsAction = ({ form, query }) => {
   const validate = (state) => {
     const errors = {};
     if (!state.productName) errors.prductName = "Product name is requried!";
@@ -55,8 +56,21 @@ export const useProductsAction = ({ form }) => {
       toast.error("Failed to add product");
     }
   };
+  const handleDelete = async (id) => {
+    try {
+      const result = await deleteProduct({ id });
+      const productName = `${result.product_name}` || "Employee";
+      toast.success(`${productName}'s Product deleted successfully!`);
+      query.setPage(1);
+      query.loadPaginatedProducts();
+      return;
+    } catch (err) {
+      console.error("Failed to delete employee", err);
+    }
+  };
 
   return {
     handleSubmit,
+    handleDelete,
   };
 };

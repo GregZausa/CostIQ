@@ -1,5 +1,6 @@
 import pool from "../config/db.js";
 import {
+  deleteProducts,
   getLaborCostPerBatch,
   getMaterialsCostPerBatch,
   getOtherExpenseCostPerBatch,
@@ -193,4 +194,10 @@ export const fetchProductService = async ({ id, userId }) => {
   const cost = await fetchProductCPBService({ id, userId });
   const computedProduct = productCompute(product, cost);
   return { computedProduct };
+};
+
+export const removeProductsService = async (id) => {
+  const deleted = await deleteProducts(id);
+  if (!deleted) throw new Error("Product not found");
+  return deleted;
 };
