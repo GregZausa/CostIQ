@@ -6,6 +6,7 @@ import Button from "../ui/Button";
 import SelectorLayout from "../layout/SelectorLayout";
 import SelectorTableLayout from "../layout/SelectorTableLayout";
 import toast from "react-hot-toast";
+import HeadlessUICheckbox from "../ui/HeadlessUICheckbox";
 
 const SelectEmployeeModal = ({
   closeModal,
@@ -59,9 +60,24 @@ const SelectEmployeeModal = ({
             : item,
         ),
       );
+      console.log(value)
     },
     [totalSellableUnits],
   );
+
+  const handleMultiProductChange = useCallback((employee_id, value) => {
+    setSelectedItems((prev) =>
+      prev.map((item) =>
+        item.employee_id === employee_id
+          ? {
+              ...item,
+              multi_product_handling: value,
+            }
+          : item,
+      ),
+    );
+    console.log(value);
+  });
 
   const cols = useMemo(
     () => [
@@ -95,14 +111,16 @@ const SelectEmployeeModal = ({
         ),
       },
       {
-        key: "cpb",
-        label: "Cost Per Batch",
-        render: (row) => `₱${(row.cpb || 0).toFixed(2)}`,
-      },
-      {
-        key: "cpp",
-        label: "Cost Per Product",
-        render: (row) => `₱${(row.cpp || 0).toFixed(2)}`,
+        key: "multi_product_handling",
+        label: "Multi-Product Handling?",
+        render: (row) => (
+          <HeadlessUICheckbox
+            checked={row.multi_product_handling ?? false}
+            onChange={(value) =>
+              handleMultiProductChange(row.employee_id, value)
+            }
+          />
+        ),
       },
     ],
     [handlePrepTimeChange],
@@ -163,15 +181,8 @@ const SelectEmployeeModal = ({
           <SelectorTableLayout cols={cols} selectedItems={selectedItems} />
         )}
         <div className="flex justify-end gap-2 pt-2">
-          <Button
-          variant="ghost"
-            onClick={closeModal}
-            label="Cancel"
-          />
-          <Button
-            onClick={handleConfirm}
-            label="Confirm"
-          />
+          <Button variant="ghost" onClick={closeModal} label="Cancel" />
+          <Button onClick={handleConfirm} label="Confirm" />
         </div>
       </ModalLayout>
     </>

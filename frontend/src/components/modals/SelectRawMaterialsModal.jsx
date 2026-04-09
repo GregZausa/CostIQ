@@ -91,16 +91,6 @@ const SelectRawMaterialsModal = ({
           />
         ),
       },
-      {
-        key: "cpb",
-        label: "Cost Per Batch",
-        render: (row) => `₱${(row.cpb || 0).toFixed(2)}`,
-      },
-      {
-        key: "cpp",
-        label: "Cost Per Product",
-        render: (row) => `₱${(row.cpp || 0).toFixed(2)}`,
-      },
     ],
     [handleUnitsNeededChange],
   );

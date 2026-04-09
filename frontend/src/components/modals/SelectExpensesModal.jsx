@@ -86,16 +86,6 @@ const SelectExpensesModal = ({
           ?.replace(/_/g, " ")
           .replace(/\b\w/g, (c) => c.toUpperCase()),
     },
-    {
-      key: "cpb",
-      label: "Cost Per Batch",
-      render: (row) => `₱${(row.cpb || 0).toFixed(2)}`,
-    },
-    {
-      key: "cpp",
-      label: "Cost Per Product",
-      render: (row) => `₱${(row.cpp || 0).toFixed(2)}`,
-    },
   ]);
 
   const isSelected = (other_expense_id) =>
