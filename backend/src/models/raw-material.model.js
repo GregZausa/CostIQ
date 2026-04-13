@@ -6,17 +6,19 @@ export const insertRawMaterial = async ({
   base_unit,
   units_per_pack,
   price_per_pack,
+  multiplier,
   created_by,
 }) => {
   const query = `INSERT INTO raw_materials
-                  (material_name, pack_unit, base_unit, units_per_pack, price_per_pack, created_by) 
-                  VALUES($1, $2, $3, $4, $5, $6) RETURNING *;`;
+                  (material_name, pack_unit, base_unit, units_per_pack, price_per_pack, multiplier, created_by) 
+                  VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *;`;
   const values = [
     material_name,
     pack_unit,
     base_unit,
     units_per_pack,
     price_per_pack,
+    multiplier,
     created_by,
   ];
   const { rows } = await pool.query(query, values);
@@ -29,13 +31,14 @@ export const updateRawMaterial = async (
   base_unit,
   units_per_pack,
   price_per_pack,
+  multiplier,
   createdBy,
   id,
 ) => {
   const query = `UPDATE raw_materials
                   SET material_name = $1, pack_unit = $2, base_unit = $3,
-                  units_per_pack = $4, price_per_pack = $5
-                  WHERE created_by = $6 AND raw_material_id = $7 RETURNING *`;
+                  units_per_pack = $4, price_per_pack = $5, multiplier = $6
+                  WHERE created_by = $7 AND raw_material_id = $8 RETURNING *`;
 
   const values = [
     material_name,
@@ -43,6 +46,7 @@ export const updateRawMaterial = async (
     base_unit,
     units_per_pack,
     price_per_pack,
+    multiplier,
     createdBy,
     id,
   ];
@@ -58,9 +62,9 @@ export const getRawMaterials = async (
   offset = 0,
 ) => {
   const searchValue = searchTerm ? `%${searchTerm}%` : "%";
-  let query = `SELECT raw_material_id, material_name, pack_unit, base_unit,
-                units_per_pack, price_per_pack, cost_per_unit
-                FROM raw_materials
+  let query = `SELECT raw_material_id, material_name, pack_unit, units_per_pack, 
+                price_per_pack, base_unit, total_units_per_pack , cost_per_unit
+                FROM raw_materials_view
                 WHERE created_by = $1 
                 AND is_active = true 
                 AND material_name ILIKE $2`;
@@ -86,7 +90,7 @@ export const getRawMaterialsCount = async (
 ) => {
   const searchValue = searchTerm ? `%${searchTerm}%` : "%";
   let query = `SELECT COUNT(*) AS total
-                FROM raw_materials
+                FROM raw_materials_view
                 WHERE created_by = $1
                 AND is_active = true
                 AND material_name ILIKE $2`;
@@ -104,7 +108,7 @@ export const getRawMaterialsCount = async (
 
 export const getRawMaterialsTotalCount = async (createdBy) => {
   const { rows } = await pool.query(
-    `SELECT COUNT(*) AS total FROM raw_materials WHERE created_by = $1 AND is_active = true`,
+    `SELECT COUNT(*) AS total FROM raw_materials_view WHERE created_by = $1 AND is_active = true`,
     [createdBy],
   );
   return Number(rows[0].total);
@@ -112,7 +116,7 @@ export const getRawMaterialsTotalCount = async (createdBy) => {
 
 export const getRawMaterialsById = async (createdBy, id) => {
   const query = `SELECT material_name, pack_unit, base_unit, units_per_pack, price_per_pack, cost_per_unit 
-                  FROM raw_materials 
+                  FROM raw_materials_view 
                   WHERE created_by = $1 AND raw_material_id = $2 AND is_active = true`;
   const result = await pool.query(query, [createdBy, id]);
   return result.rows[0];
@@ -126,7 +130,7 @@ export const deleteRawMaterials = async (id) => {
 
 export const getMostExpensiveMaterial = async (createdBy) => {
   const query = `SELECT * 
-                  FROM raw_materials 
+                  FROM raw_materials_view 
                   WHERE created_by = $1
                   AND is_active = true 
                   ORDER BY cost_per_unit DESC 
@@ -137,7 +141,7 @@ export const getMostExpensiveMaterial = async (createdBy) => {
 
 export const getLeastExpensiveMaterial = async (createdBy) => {
   const query = `SELECT * 
-                  FROM raw_materials 
+                  FROM raw_materials_view 
                   WHERE created_by = $1 
                   AND is_active = true
                   ORDER BY cost_per_unit ASC 

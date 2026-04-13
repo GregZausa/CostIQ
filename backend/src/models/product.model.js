@@ -89,12 +89,13 @@ export const getProduct = async (createdBy) => {
 export const getMaterialsCostPerBatch = async (id, createdBy) => {
   const query = `SELECT SUM(rm.cost_per_unit * pi.units_needed) AS total_material_cpp
                   FROM product_ingredients pi
-                  JOIN raw_materials rm
+                  JOIN raw_materials_view rm
                   ON rm.raw_material_id = pi.material_id
                   JOIN products p 
                   ON p.product_id =  pi.product_id
                   WHERE pi.product_id = $1
-                  AND p.created_by = $2`;
+                  AND p.created_by = $2
+                  AND rm.is_active = true`;
 
   const result = await pool.query(query, [id, createdBy]);
   return parseFloat(result.rows[0]?.total_material_cpp) || 0;
@@ -188,7 +189,7 @@ export const getProductsWithProfit = async (createdBy) => {
                   FROM products p
                   LEFT JOIN (SELECT pi.product_id, SUM(rm.cost_per_unit * pi.units_needed) AS ingredients_cost
                   FROM product_ingredients pi
-                  JOIN raw_materials rm ON rm.raw_material_id = pi.material_id
+                  JOIN raw_materials_view rm ON rm.raw_material_id = pi.material_id
                   GROUP BY pi.product_id) ing ON ing.product_id = p.product_id
                   LEFT JOIN (SELECT pe.product_id, SUM(e.rate_per_hr * pe.prep_time_hrs) AS labor_cost
                   FROM product_employees pe
@@ -238,7 +239,7 @@ export const getPaginatedProducts = async (
                     'units_needed', pi.units_needed
                   ))
                   FROM product_ingredients pi
-                  JOIN raw_materials rm ON pi.material_id = rm.raw_material_id
+                  JOIN raw_materials_view rm ON pi.material_id = rm.raw_material_id
                   WHERE pi.product_id = p.product_id
                 ) AS ingredients,
                 (

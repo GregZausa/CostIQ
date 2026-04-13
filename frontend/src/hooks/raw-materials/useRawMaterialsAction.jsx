@@ -38,6 +38,7 @@ export const useRawMaterialsAction = ({
       base_unit: form.state.baseUnit,
       units_per_pack: form.state.unitsPerPack,
       price_per_pack: form.state.pricePerPack,
+      multiplier: form.state.multiplier,
     };
 
     try {

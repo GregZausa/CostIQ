@@ -11,11 +11,11 @@ const useProducts = () => {
 
   const totalProducts = query.products.length;
 
-  const half = Math.floor(query.computedProducts.length / 2);
+  const half = Math.floor(query.computedProducts?.length / 2);
   const limit = Math.min(5, half);
 
   const products = useMemo(
-    () => [...query.computedProducts],
+    () => [...query.computedProducts ?? []],
     [query.computedProducts],
   );
 

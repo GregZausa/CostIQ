@@ -19,6 +19,7 @@ export const createRawMaterialService = async ({ userId, body }) => {
     base_unit,
     units_per_pack,
     price_per_pack,
+    multiplier,
   } = body;
   return await insertRawMaterial({
     material_name,
@@ -26,6 +27,7 @@ export const createRawMaterialService = async ({ userId, body }) => {
     base_unit,
     units_per_pack,
     price_per_pack,
+    multiplier,
     created_by: userId,
   });
 };
@@ -37,6 +39,7 @@ export const editRawMaterialService = async ({ userId, id, body }) => {
     base_unit,
     units_per_pack,
     price_per_pack,
+    multiplier,
   } = body;
   const updated = await updateRawMaterial(
     material_name,
@@ -44,6 +47,7 @@ export const editRawMaterialService = async ({ userId, id, body }) => {
     base_unit,
     units_per_pack,
     price_per_pack,
+    multiplier,
     userId,
     id,
   );
@@ -56,15 +60,21 @@ export const fetchRawMaterialsService = async (req) => {
   const { page, limit, offset, searchTerm, createdBy } =
     getPaginationParams(req);
 
-  const [rows, totalRows, totalAllRows, mostExpensive, leastExpensive, mostUsed] =
-    await Promise.all([
-      getRawMaterials(createdBy, searchTerm, selectedUnit, limit, offset),
-      getRawMaterialsCount(createdBy, searchTerm, selectedUnit),
-      getRawMaterialsTotalCount(createdBy),
-      getMostExpensiveMaterial(createdBy),
-      getLeastExpensiveMaterial(createdBy),
-      getMostUsedMaterial(createdBy),
-    ]);
+  const [
+    rows,
+    totalRows,
+    totalAllRows,
+    mostExpensive,
+    leastExpensive,
+    mostUsed,
+  ] = await Promise.all([
+    getRawMaterials(createdBy, searchTerm, selectedUnit, limit, offset),
+    getRawMaterialsCount(createdBy, searchTerm, selectedUnit),
+    getRawMaterialsTotalCount(createdBy),
+    getMostExpensiveMaterial(createdBy),
+    getLeastExpensiveMaterial(createdBy),
+    getMostUsedMaterial(createdBy),
+  ]);
 
   const totalPages = Math.ceil(totalRows / limit);
 

@@ -8,8 +8,9 @@ const initialState = createInitialState({
   baseUnit: "",
   unitsPerPack: "",
   pricePerPack: "",
+  totalUnitsPerPack: "",
   costPerUnit: "",
-  errors: {},
+  multiplier: "",
 });
 
 export const useRawMaterialsForm = ({ units = [] } = {}) => {
@@ -19,39 +20,46 @@ export const useRawMaterialsForm = ({ units = [] } = {}) => {
   useEffect(() => {
     const selected = units.find((u) => u.pack_unit === state?.packUnit);
     if (selected) {
-      dispatch({
-        type: "UPDATE_FIELD",
-        field: "baseUnit",
-        value: selected.base_unit,
-      });
-      if (selected.multiplier !== null) {
+      if (selected) {
+        const isAuto = selected.multiplier !== null;
+
         dispatch({
-          type: "UPDATE_FIELD",
-          field: "unitsPerPack",
-          value: selected.multiplier,
+          type: "SET_FORM",
+          payload: {
+            baseUnit: selected.base_unit,
+            multiplier: selected.multiplier,
+            totalUnitsPerPack: isAuto
+              ? Number(selected.multiplier) * Number(state?.unitsPerPack)
+              : 0,
+            unitsPerPack: isAuto ? state.unitsPerPack : "",
+          },
         });
-        setUnitsPerPackEditable(false);
-      } else {
-        dispatch({
-          type: "UPDATE_FIELD",
-          field: "unitsPerPack",
-          value: "",
-        });
-        setUnitsPerPackEditable(true);
+        setUnitsPerPackEditable(!isAuto);
       }
     }
-  }, [state?.packUnit, units]);
+  }, [state?.packUnit, state?.unitsPerPack, units]);
+  useEffect(() => {
+    const selected = units.find((u) => u.pack_unit === state?.packUnit);
+
+    if (selected && selected.multiplier !== null) {
+      dispatch({
+        type: "UPDATE_FIELD",
+        field: "totalUnitsPerPack",
+        value: Number(selected.multiplier) * Number(state?.unitsPerPack),
+      });
+    }
+  }, [state?.unitsPerPack, state?.packUnit, units]);
 
   useEffect(() => {
     const price = Number(state?.pricePerPack) || 0;
-    const unitsCount = Number(state?.unitsPerPack) || 0;
+    const unitsCount = Number(state?.totalUnitsPerPack) || 0;
     const cost = unitsCount ? price / unitsCount : 0;
     dispatch({
       type: "UPDATE_FIELD",
       field: "costPerUnit",
       value: cost.toFixed(2),
     });
-  }, [state?.pricePerPack, state?.unitsPerPack]);
+  }, [state?.pricePerPack, state?.totalUnitsPerPack]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -68,7 +76,9 @@ export const useRawMaterialsForm = ({ units = [] } = {}) => {
           baseUnit: result.base_unit,
           unitsPerPack: result.units_per_pack,
           pricePerPack: result.price_per_pack,
+          totalUnitsPerPack: result.total_units_per_pack,
           costPerUnit: result.cost_per_unit,
+          multiplier: result.multiplier,
         },
       });
     } catch (err) {}

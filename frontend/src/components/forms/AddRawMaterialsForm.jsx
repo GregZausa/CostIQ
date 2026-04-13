@@ -2,11 +2,17 @@ import Button from "../ui/Button";
 import FloatingLabelInput from "../ui/FloatingLabelInput";
 import SelectBox from "../ui/SelectBox";
 
-const AddRawMaterialsForm = ({ state, handleChange, unitsPerPackEditable, unitOptions, handleSubmit, closeModal, isLoading}) => {
-
+const AddRawMaterialsForm = ({
+  state,
+  handleChange,
+  unitsPerPackEditable,
+  unitOptions,
+  handleSubmit,
+  closeModal,
+  isLoading,
+}) => {
   return (
     <form className="space-y-4">
-   
       <FloatingLabelInput
         onChange={(val) =>
           handleChange({ target: { name: "materialName", value: val } })
@@ -25,13 +31,7 @@ const AddRawMaterialsForm = ({ state, handleChange, unitsPerPackEditable, unitOp
           handleChange({ target: { name: "packUnit", value: val } })
         }
       />
-      <FloatingLabelInput
-        name="baseUnit"
-        type="text"
-        value={state?.baseUnit || ""}
-        label="Base Unit"
-        readOnly={true}
-      />
+
       <FloatingLabelInput
         onChange={(val) =>
           handleChange({ target: { name: "unitsPerPack", value: val } })
@@ -40,7 +40,6 @@ const AddRawMaterialsForm = ({ state, handleChange, unitsPerPackEditable, unitOp
         type="number"
         value={state?.unitsPerPack}
         label="Units Per Pack"
-        readOnly={!unitsPerPackEditable}
       />
       <FloatingLabelInput
         onChange={(val) =>
@@ -50,6 +49,23 @@ const AddRawMaterialsForm = ({ state, handleChange, unitsPerPackEditable, unitOp
         type="number"
         value={state?.pricePerPack || ""}
         label="Price Per Pack"
+      />
+      <FloatingLabelInput
+        name="baseUnit"
+        type="text"
+        value={state?.baseUnit || ""}
+        label="Base Unit"
+        readOnly={true}
+      />
+      <FloatingLabelInput
+        onChange={(val) =>
+          handleChange({ target: { name: "totalUnitsPerPack", value: val } })
+        }
+        name="totalUnitsPerPack"
+        type="number"
+        value={state?.totalUnitsPerPack}
+        label="Total Units Per Pack"
+        readOnly={!unitsPerPackEditable}
       />
       <FloatingLabelInput
         onChange={(val) =>
@@ -68,7 +84,7 @@ const AddRawMaterialsForm = ({ state, handleChange, unitsPerPackEditable, unitOp
           disabled={isLoading}
         />
         <Button
-        type="button"
+          type="button"
           onClick={closeModal}
           label="Cancel"
           variant="ghost"
