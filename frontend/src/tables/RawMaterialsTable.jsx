@@ -37,7 +37,7 @@ const RawMaterialsTable = ({ query, actions }) => {
         ),
       },
     ],
-    [query.columns, actions.handleDelete, actions.handleSubmit],
+    [query.columns, actions.handleDelete, actions.handleEdit],
   );
 
   return (
@@ -49,7 +49,7 @@ const RawMaterialsTable = ({ query, actions }) => {
         totalPages={query.totalPages}
         onPageChange={query.setPage}
         toolbar={
-          <div className="grid md:grid-cols-2 gap-2.5 max-w-4xl mt-4">
+          <div className="grid grid-cols-2 xl:grid-cols-3 gap-2.5 mt-4">
             <TextInput
             type="search"
               placeholder="Search for material name..."

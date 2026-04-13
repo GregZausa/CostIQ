@@ -15,10 +15,10 @@ import ProductCardLayout from "../../layout/ProductCardLayout";
 import { LayoutGrid } from "lucide-react";
 
 const QUADRANTS = [
-  { label: "🚀 Goldmine", color: "#4ade80" },
-  { label: "⭐ Stars", color: "#facc15" },
-  { label: "🔄 Optimize", color: "#60a5fa" },
-  { label: "💀 Danger", color: "#f87171" },
+  { label: "Goldmine", color: "#4ade80" },
+  { label: "Stars", color: "#facc15" },
+  { label: "Optimize", color: "#60a5fa" },
+  { label: "Danger", color: "#f87171" },
 ];
 
 const CustomTooltip = ({ active, payload }) => {

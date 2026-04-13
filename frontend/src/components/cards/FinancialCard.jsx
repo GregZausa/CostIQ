@@ -9,7 +9,7 @@ const FinancialCard = ({ title, computed }) => {
   const ROI = computed?.roi || 0;
   
   const formatPeso = (val) =>
-    `₱${Number(val).toLocaleString("en-PH", { minimumFractionDigits: 2 })}`;
+    `₱${Number(val).toFixed(2)}`;
 
   const rows = [
     {
@@ -18,7 +18,7 @@ const FinancialCard = ({ title, computed }) => {
       icon: Package,
       color: "text-indigo-500",
       bg: "bg-indigo-50",
-      format: (v) => Number(v).toLocaleString("en-PH"),
+      format: (v) => Number(v).toFixed(2),
     },
     {
       label: "Break-even Revenue",

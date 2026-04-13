@@ -68,12 +68,12 @@ const SelectRawMaterialsModal = ({
         key: "number_of_units",
         label: "Number of Units",
         render: (row) =>
-          `${row.units_per_pack?.trim() || ""} ${row.base_unit || ""} `,
+          `${row.total_units_per_pack?.trim() || ""} ${row.base_unit || ""} `,
       },
       {
         key: "cost_per_unit",
         label: "Cost Per Unit",
-        render: (row) => `${row.cost_per_unit || ""}`,
+        render: (row) => `${Number(row.cost_per_unit).toFixed(2) || ""}`,
       },
       {
         key: "units_needed",
@@ -82,7 +82,6 @@ const SelectRawMaterialsModal = ({
           <TextInput
             type="number"
             min={1}
-            max={Number(row.units_per_pack)}
             value={row.units_needed ?? 0}
             onClick={(e) => e.stopPropagation()}
             onChange={(value) =>
@@ -140,12 +139,12 @@ const SelectRawMaterialsModal = ({
           {
             key: "number_of_units",
             label: "Number of Units",
-            render: (e) => `${e.units_per_pack} ${e.base_unit}`,
+            render: (e) => `${e.total_units_per_pack} ${e.base_unit}`,
           },
           {
             key: "cost_per_unit",
             label: "Cost Per Unit",
-            render: (e) => e.cost_per_unit,
+            render: (e) => Number(e.cost_per_unit).toFixed(2),
           },
         ]}
       />

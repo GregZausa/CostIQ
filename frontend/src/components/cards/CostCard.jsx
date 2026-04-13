@@ -24,7 +24,7 @@ const CostCard = ({
       ? computed?.totalCPB || 0
       : computed?.totalCPP || 0;
   const formatPeso = (val) =>
-    `₱${Number(val).toLocaleString("en-PH", { minimumFractionDigits: 2 })}`;
+    `₱${Number(val).toFixed(2)}`;
 
   const rows = [
     {

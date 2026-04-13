@@ -66,7 +66,7 @@ const RawMaterials = () => {
           title="Highest Cost / Unit"
           value={
             mostExpensiveMaterial
-              ? `₱ ${Number(mostExpensiveMaterial.cost_per_unit).toLocaleString()}`
+              ? `₱ ${Number(mostExpensiveMaterial.cost_per_unit).toFixed(2)}`
               : "-"
           }
           description={mostExpensiveMaterial?.material_name}
@@ -76,7 +76,7 @@ const RawMaterials = () => {
           title="Lowest Cost / Unit"
           value={
             leastExpensiveMaterial
-              ? `₱ ${Number(leastExpensiveMaterial.cost_per_unit).toLocaleString()}`
+              ? `₱ ${Number(leastExpensiveMaterial.cost_per_unit).toFixed(2)}`
               : "-"
           }
           description={leastExpensiveMaterial?.material_name}

@@ -14,16 +14,9 @@ const Table = ({
     <div className="w-full space-y-3">
       <div className="flex items-center justify-between gap-3">
         <div className="flex-1">{toolbar}</div>
-        {totalPages > 1 && (
-          <Pagination
-            page={page}
-            totalPages={totalPages}
-            onPageChange={onPageChange}
-          />
-        )}
       </div>
 
-      <div className="w-full rounded-2xl border border-slate-100 shadow-sm">
+      <div className="w-full rounded-2xl border border-slate-100 shadow-sm min-h-130 flex flex-col">
           <table className="min-w-full">
             <thead>
               <tr className="bg-slate-800 border-b border-slate-100">
@@ -80,7 +73,7 @@ const Table = ({
           </table>
       </div>
 
-      {totalPages > 1 && data.length > 8 && (
+      {totalPages > 1 && (
         <div className="flex justify-end">
           <Pagination
             page={page}

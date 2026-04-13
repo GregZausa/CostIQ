@@ -68,7 +68,7 @@ const Employee = () => {
         <HeaderCard
           title="Most used employee"
           value={
-            mostUsedPosition
+            mostUsedEmployee
               ? `${Number(mostUsedEmployee?.usage_count).toLocaleString()}`
               : "-"
           }
