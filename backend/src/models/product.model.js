@@ -54,10 +54,10 @@ export const insertProductIngredients = async (
 export const insertProductEmployees = async (client, productId, employees) => {
   for (const employee of employees) {
     const query = `INSERT INTO product_employees 
-                        (product_id, employee_id, prep_time_hrs)
+                        (product_id, employee_id, multi_product_handling)
                         VALUES($1, $2, $3)`;
 
-    const values = [productId, employee.employee_id, employee.prep_time];
+    const values = [productId, employee.employee_id, employee.multi_product_handling];
 
     await client.query(query, values);
   }
@@ -107,15 +107,16 @@ export const getLaborCostPerBatch = async (id, createdBy) => {
                   FROM product_employees pe
                   JOIN products p ON p.product_id = pe.product_id
                   WHERE p.is_active = true
+                  AND multi_product_handling = true
                   GROUP BY pe.employee_id
                 )
 
                 SELECT SUM(
                   CASE
                     WHEN pe.multi_product_handling = true THEN
-                      e.rate_per_hr * pe.prep_time_hrs / NULLIF(epc.product_count, 0)
+                      (e.rate_per_day / NULLIF(p.batch_per_day, 0)) / NULLIF(epc.product_count, 0)
                     ELSE
-                      e.rate_per_hr * pe.prep_time_hrs
+                      e.rate_per_day / NULLIF(p.batch_per_day, 0)
                   END
                 ) AS total_labor_cpp
 
@@ -191,9 +192,10 @@ export const getProductsWithProfit = async (createdBy) => {
                   FROM product_ingredients pi
                   JOIN raw_materials_view rm ON rm.raw_material_id = pi.material_id
                   GROUP BY pi.product_id) ing ON ing.product_id = p.product_id
-                  LEFT JOIN (SELECT pe.product_id, SUM(e.rate_per_hr * pe.prep_time_hrs) AS labor_cost
+                  LEFT JOIN (SELECT pe.product_id, SUM(e.rate_per_day / prod.batch_per_day) AS labor_cost
                   FROM product_employees pe
                   JOIN employees e ON e.employee_id = pe.employee_id
+                  JOIN products prod ON prod.product_id = pe.product_id
                   GROUP BY pe.product_id) emp ON emp.product_id = p.product_id
                   LEFT JOIN (SELECT poe.product_id, SUM(oe.expense_cost * poe.quantity) AS expense_cost
                   FROM product_other_expenses poe
@@ -246,8 +248,7 @@ export const getPaginatedProducts = async (
                   SELECT jsonb_agg(jsonb_build_object(
                     'first_name', e.first_name,
                     'last_name', e.last_name,
-                    'rate_per_hr', e.rate_per_hr,
-                    'prep_time_hrs', pe.prep_time_hrs
+                    'rate_per_day', e.rate_per_day
                   ))
                   FROM product_employees pe
                   JOIN employees e ON pe.employee_id = e.employee_id
@@ -304,4 +305,4 @@ export const deleteProducts = async (id) => {
   const query = `UPDATE products SET is_active = false WHERE product_id = $1 RETURNING *`;
   const { rows } = await pool.query(query, [id]);
   return rows[0];
-}
+};

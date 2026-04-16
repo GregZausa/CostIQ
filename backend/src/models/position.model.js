@@ -2,14 +2,14 @@ import pool from "../config/db.js";
 
 export const insertPosition = async ({
   position_name,
-  default_rate_per_hr,
+  default_rate_per_day,
   created_by,
 }) => {
   const query = `INSERT INTO positions
-                    (position_name, default_rate_per_hr, created_by)
+                    (position_name, default_rate_per_day, created_by)
                     VALUES($1, $2, $3) RETURNING *`;
 
-  const values = [position_name, default_rate_per_hr, created_by];
+  const values = [position_name, default_rate_per_day, created_by];
 
   const { rows } = await pool.query(query, values);
   return rows[0];
@@ -17,15 +17,15 @@ export const insertPosition = async ({
 
 export const updatePositions = async (
   position_name,
-  default_rate_per_hr,
+  default_rate_per_day,
   created_by,
   id,
 ) => {
-  const query = `UPDATE positions SET position_name = $1, default_rate_per_hr = $2
+  const query = `UPDATE positions SET position_name = $1, default_rate_per_day = $2
                   WHERE created_by = $3 
                   AND position_id = $4 RETURNING *`;
 
-  const values = [position_name, default_rate_per_hr, created_by, id];
+  const values = [position_name, default_rate_per_day, created_by, id];
   const { rows } = await pool.query(query, values);
   return rows[0];
 };
@@ -80,7 +80,7 @@ export const getPositions = async (
 };
 
 export const getPositionsById = async (createdBy, id) => {
-  const query = `SELECT position_name, default_rate_per_hr FROM positions WHERE created_by = $1 AND position_id = $2`;
+  const query = `SELECT position_name, default_rate_per_day FROM positions WHERE created_by = $1 AND position_id = $2`;
   const result = await pool.query(query, [createdBy, id]);
   return result.rows[0];
 };

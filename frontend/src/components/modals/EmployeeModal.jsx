@@ -30,6 +30,7 @@ const EmployeeModal = ({
   const closePositionModal = () => {
     setIsPositionModalOpen(false);
     positionForm.resetForm();
+    positionActions.setEditingId(null);
     positionQuery.loadPosition();
   };
 

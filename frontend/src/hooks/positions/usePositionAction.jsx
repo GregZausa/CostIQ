@@ -13,7 +13,7 @@ export const usePositionAction = ({
     e.preventDefault();
     const payload = {
       position_name: positionForm.state.positionName,
-      default_rate_per_hr: positionForm.state.defaultRatePerHr,
+      default_rate_per_day: positionForm.state.defaultRatePerDay,
     };
 
     try {
@@ -47,5 +47,6 @@ export const usePositionAction = ({
     handleEdit,
     handleSubmit,
     handleDelete,
+    setEditingId,
   };
 };

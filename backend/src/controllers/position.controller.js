@@ -8,13 +8,13 @@ import {
 import { getPaginationParams } from "../utils/pagination.js";
 
 export const createPosition = async (req, res) => {
-  const { position_name, default_rate_per_hr } = req.body;
+  const { position_name, default_rate_per_day } = req.body;
   try {
     const createdBy = req.user.id;
 
     await insertPosition({
       position_name,
-      default_rate_per_hr,
+      default_rate_per_day,
       created_by: createdBy,
     });
     res.status(201).json({ message: "Position added successfully!" });
@@ -35,11 +35,11 @@ export const editPosition = async (req, res) => {
   try {
     const createdBy = req.user.id;
     const { id } = req.params;
-    const { position_name, default_rate_per_hr } = req.body;
+    const { position_name, default_rate_per_day } = req.body;
 
     const position = updatePositions(
       position_name,
-      default_rate_per_hr,
+      default_rate_per_day,
       createdBy,
       id,
     );

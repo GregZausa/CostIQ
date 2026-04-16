@@ -24,7 +24,6 @@ export const useProductsForm = () => {
     const { name, value } = e.target;
     dispatch({ type: "UPDATE_FIELD", field: name, value });
 
-    console.log(state);
   };
   useEffect(() => {
     const totalInput = Number(state?.totalInput) || 0;

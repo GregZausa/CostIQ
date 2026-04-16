@@ -64,12 +64,12 @@ const AddEmployeeForm = ({
 
       <FloatingLabelInput
         onChange={(val) => {
-          handleChange({ target: { name: "ratePerHr", value: val } });
+          handleChange({ target: { name: "ratePerDay", value: val } });
         }}
-        name="ratePerHr"
+        name="ratePerDay"
         type="number"
-        label="Rate per hour"
-        value={state?.ratePerHr}
+        label="Rate per day"
+        value={state?.ratePerDay}
       />
 
       <div className="flex justify-end space-x-4">

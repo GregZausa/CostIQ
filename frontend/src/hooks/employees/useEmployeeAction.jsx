@@ -20,7 +20,7 @@ export const useEmployeeAction = ({
 
     if (!state.position) errors.position = "Position is required!";
 
-    if (!state.ratePerHr) errors.ratePerHr = "Rate per hour is required!";
+    if (!state.ratePerDay) errors.ratePerDay = "Rate per day is required!";
     return errors;
   };
 
@@ -37,7 +37,7 @@ export const useEmployeeAction = ({
       last_name: form.state.employeeLastName,
       first_name: form.state.employeeFirstName,
       position: form.state.position,
-      rate_per_hr: form.state.ratePerHr,
+      rate_per_day: form.state.ratePerDay,
     };
 
     try {

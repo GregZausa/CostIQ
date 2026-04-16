@@ -6,7 +6,7 @@ const initialState = createInitialState({
   employeeFirstName: "",
   employeeLastName: "",
   position: "",
-  ratePerHr: "",
+  ratePerDay: "",
 });
 
 export const useEmployeeForm = ({ positions = [] } = {}) => {
@@ -17,8 +17,8 @@ export const useEmployeeForm = ({ positions = [] } = {}) => {
     if (selected) {
       dispatch({
         type: "UPDATE_FIELD",
-        field: "ratePerHr",
-        value: selected.default_rate_per_hr,
+        field: "ratePerDay",
+        value: selected.default_rate_per_day,
       });
     }
   }, [state?.position, positions]);
@@ -37,7 +37,7 @@ export const useEmployeeForm = ({ positions = [] } = {}) => {
           employeeFirstName: result.first_name,
           employeeLastName: result.last_name,
           position: result.position_id,
-          ratePerHr: result.rate_per_hr,
+          ratePerDay: result.rate_per_day,
         },
       });
     } catch (err) {}

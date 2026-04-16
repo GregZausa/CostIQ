@@ -4,7 +4,7 @@ import { fetchPositionsById } from "../../services/positions.api";
 
 const initialState = createInitialState({
   positionName: "",
-  defaultRatePerHr: "",
+  defaultRatePerDay: "",
   errors: {},
 });
 
@@ -23,7 +23,7 @@ export const usePositionForm = () => {
         type: "SET_FORM",
         payload: {
           positionName: result.position_name,
-          defaultRatePerHr: result.default_rate_per_hr,
+          defaultRatePerDay: result.default_rate_per_day,
         },
       });
     } catch (err) {}

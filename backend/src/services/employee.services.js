@@ -13,24 +13,24 @@ import {
 import { getPaginationParams } from "../utils/pagination.js";
 
 export const createEmployeeService = async ({ userId, body }) => {
-  const { last_name, first_name, position, rate_per_hr } = body;
+  const { last_name, first_name, position, rate_per_day } = body;
   return await insertEmployee({
     last_name,
     first_name,
     position,
-    rate_per_hr,
+    rate_per_day,
     created_by: userId,
   });
 };
 
 export const editedEmployeeService = async ({ userId, id, body }) => {
-  const { last_name, first_name, position, rate_per_hr } = body;
+  const { last_name, first_name, position, rate_per_day } = body;
 
   const updated = await updateEmployee(
     last_name,
     first_name,
     position,
-    rate_per_hr,
+    rate_per_day,
     userId,
     id,
   );

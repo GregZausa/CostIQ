@@ -21,12 +21,12 @@ const AddPositionForm = ({
       />
       <FloatingLabelInput
         onChange={(val) =>
-          handleChange({ target: { name: "defaultRatePerHr", value: val } })
+          handleChange({ target: { name: "defaultRatePerDay", value: val } })
         }
-        name="defaultRatePerHr"
+        name="defaultRatePerDay"
         type="number"
-        value={state?.defaultRatePerHr}
-        label="Default rate per hr"
+        value={state?.defaultRatePerDay}
+        label="Default rate per day"
       />
       <div className="flex justify-end space-x-4">
         <Button

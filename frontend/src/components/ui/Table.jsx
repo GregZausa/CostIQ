@@ -16,7 +16,7 @@ const Table = ({
         <div className="flex-1">{toolbar}</div>
       </div>
 
-      <div className="w-full rounded-2xl border border-slate-100 shadow-sm min-h-130 flex flex-col">
+      <div className="w-full rounded-2xl  min-h-130 flex flex-col">
           <table className="min-w-full">
             <thead>
               <tr className="bg-slate-800 border-b border-slate-100">

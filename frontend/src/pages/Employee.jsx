@@ -79,7 +79,7 @@ const Employee = () => {
           title="Most Paid Employee"
           value={
             mostPaidEmployee
-              ? `₱ ${Number(mostPaidEmployee.rate_per_hr).toLocaleString()}`
+              ? `₱ ${Number(mostPaidEmployee.rate_per_day).toLocaleString()}`
               : "-"
           }
           description={mostPaidEmployee?.employee_name}
