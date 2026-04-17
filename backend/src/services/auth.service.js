@@ -1,6 +1,11 @@
 import bcrypt from "bcryptjs";
-import { createUser, findUserByEmail, getUserById } from "../models/user.model.js";
+import {
+  createUser,
+  findUserByEmail,
+  getUserById,
+} from "../models/user.model.js";
 import jwt from "jsonwebtoken";
+import { AppError } from "../utils/AppError.js";
 
 const comparePassword = (password, hashedPassword) =>
   bcrypt.compare(password, hashedPassword);
@@ -37,12 +42,13 @@ export const loginUser = async ({ email, password }) => {
   const user = await findUserByEmail(email);
 
   if (!user) {
-    throw new Error("Invalid Email or Password!");
+    throw new AppError("Invalid email or password", 401);
   }
 
   const isMatch = await comparePassword(password, user.password_hash);
+
   if (!isMatch) {
-    throw new Error("Invalid Email or Password!");
+    throw new AppError("Invalid email or password", 401);
   }
 
   const accessToken = generateAccessToken(user.id);
@@ -53,7 +59,7 @@ export const loginUser = async ({ email, password }) => {
 
 export const fetchUserByIdService = async ({ userId }) => {
   const user = await getUserById(userId);
-  if(!user) throw new Error("User not found!");
+  if (!user) throw new Error("User not found!");
   return user;
 };
 

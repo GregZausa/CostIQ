@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import ModalLayout from "../layout/ModalLayout";
 import AddProductForm from "../forms/AddProductForm";
 import toast from "react-hot-toast";
@@ -25,8 +25,8 @@ const ProductsModal = ({
   const handleExpensesConfirm = (items) => {
     handleChange({ target: { name: "otherExpenses", value: items } });
   };
-  const clamped = (val, min = 0, max = 100) =>
-    Math.min(max, Math.max(min, Number(val)));
+  const clamped = useCallback((val, min = 0, max = 100) =>
+    Math.min(max, Math.max(min, Number(val))),[]);
   const handleOpenModal = (params) => {
     if (form.state?.totalSellableUnits === 0) {
       toast.error("Total sellable units must not be 0");

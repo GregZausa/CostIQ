@@ -64,9 +64,9 @@ export const login = async (req, res) => {
       token: accessToken,
     });
   } catch (err) {
-    res
-      .status(err.message.includes("Invalid") ? 401 : 500)
-      .json({ message: err.message });
+    res.status(err.statusCode || 500).json({
+      message: err.message || "Server error",
+    });
   }
 };
 

@@ -10,11 +10,13 @@ import positionRoutes from "./src/routes/position.routes.js";
 import productRoutes from "./src/routes/product.route.js";
 import dotenv from "dotenv";
 dotenv.config();
+import Stripe from "stripe";
 import "./src/config/db.js";
 import "./src/jobs/cleanupPositions.js";
 
 const app = express();
 const port = process.env.PORT || "5001";
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 app.use(
   cors({

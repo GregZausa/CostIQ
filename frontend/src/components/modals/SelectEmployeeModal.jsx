@@ -59,7 +59,7 @@ const SelectEmployeeModal = ({
           : item,
       ),
     );
-  });
+  }, []);
 
   const cols = useMemo(() => [
     {
@@ -88,7 +88,7 @@ const SelectEmployeeModal = ({
         />
       ),
     },
-  ]);
+  ], [handleMultiProductChange]);
 
   const filtered = employeeQuery.data.filter(
     (e) =>

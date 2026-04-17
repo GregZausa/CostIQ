@@ -91,4 +91,4 @@ const FloatingLabelInput = ({
   );
 };
 
-export default FloatingLabelInput;
+export default React.memo(FloatingLabelInput);

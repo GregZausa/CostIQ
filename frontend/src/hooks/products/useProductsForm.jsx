@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useCallback, useEffect, useMemo, useReducer } from "react";
 import { createInitialState, reducer } from "../../utils/reducer";
 
 const initialState = createInitialState({
@@ -20,23 +20,19 @@ const initialState = createInitialState({
 export const useProductsForm = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     dispatch({ type: "UPDATE_FIELD", field: name, value });
-
-  };
-  useEffect(() => {
+  }, []);
+  const totalSellableUnits = useMemo(() => {
     const totalInput = Number(state?.totalInput) || 0;
     const unitsPerProduct = Number(state?.unitsPerProduct) || 0;
-    const totalSellable = totalInput && unitsPerProduct ? totalInput / unitsPerProduct : 0;
-    dispatch({
-      type: "UPDATE_FIELD",
-      field: "totalSellableUnits",
-      value: Math.floor(totalSellable),
-    });
+    return totalInput && unitsPerProduct
+      ? Math.floor(totalInput / unitsPerProduct)
+      : 0;
   }, [state?.totalInput, state?.unitsPerProduct]);
   return {
-    state,
+    state: { ...state, totalSellableUnits },
     handleChange,
   };
 };
