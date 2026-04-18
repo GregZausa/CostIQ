@@ -5,7 +5,7 @@ const Headers = ({ title, openModal, buttonLabel }) => {
   return (
     <div>
       <div className="flex items-center text-center justify-between">
-        <h1 className="font-bold text-2xl">{title}</h1>
+        <h1 className=" px-4 font-bold text-2xl">{title}</h1>
         {buttonLabel && <Button label={buttonLabel} onClick={openModal} />}
       </div>
     </div>
