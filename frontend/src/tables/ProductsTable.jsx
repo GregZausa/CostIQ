@@ -2,9 +2,12 @@ import React, { useMemo } from "react";
 import HeadlessUIDropdown from "../components/ui/HeadlessUIDropdown";
 import Table from "../components/ui/Table";
 import TextInput from "../components/ui/TextInput";
+import MobileCard from "../components/ui/MobileCard";
+import { useBreakpoint } from "../hooks/useBreakpoint";
 
 const ProductsTable = ({ query, actions }) => {
   const percentFields = ["profit_margin", "discount", "sales_tax"];
+  const isMobile = useBreakpoint(1400);
 
   const cols = useMemo(
     () => [
@@ -54,31 +57,52 @@ const ProductsTable = ({ query, actions }) => {
 
       {
         key: "action",
-        render: (row) => <HeadlessUIDropdown id={row.product_id} onDelete={actions.handleDelete}/>,
+        render: (row) => (
+          <HeadlessUIDropdown
+            id={row.product_id}
+            onDelete={actions.handleDelete}
+          />
+        ),
       },
     ],
     [query.columns],
   );
-  return (
-    <>
-      <Table
-        columns={cols}
-        data={query.data}
-        page={query.page}
-        totalPages={query.totalPages}
-        onPageChange={query.setPage}
-        toolbar={
-          <div className="grid md:grid-cols-2 gap-2.5 max-w-4xl mt-4">
-            <TextInput
-              type="search"
-              placeholder="Search products..."
-              value={query.search}
-              onChange={query.setSearch}
-            />
-          </div>
-        }
+  const toolbar = (
+    <div className="grid md:grid-cols-2 gap-2.5 max-w-4xl mt-4">
+      <TextInput
+        type="search"
+        placeholder="Search for product name..."
+        value={query.search}
+        onChange={query.setSearch}
       />
-    </>
+    </div>
+  );
+
+  const sharedProps = {
+    columns: cols,
+    data: query.data,
+    rowKey: "product_id",
+    page: query.page,
+    totalPages: query.totalPages,
+    onPageChange: query.setPage,
+    toolbar,
+    text: "No product found.",
+  };
+  return isMobile ? (
+    <MobileCard
+      {...sharedProps}
+      avatarKeys={{ single: "product_name" }}
+      previewKeys={[
+        "profit_margin",
+        "discount",
+        "sales_tax",
+        "ingredients",
+        "employees",
+        "other_expenses",
+      ]}
+    />
+  ) : (
+    <Table {...sharedProps} />
   );
 };
 

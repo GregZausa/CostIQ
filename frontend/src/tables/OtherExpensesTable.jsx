@@ -4,8 +4,11 @@ import HeadlessUIDropdown from "../components/ui/HeadlessUIDropdown";
 import TextInput from "../components/ui/TextInput";
 import SelectBox from "../components/ui/SelectBox";
 import { EXPENSE_TYPES_WITH_ALL } from "../constants/expense-types";
+import { useBreakpoint } from "../hooks/useBreakpoint";
+import MobileCard from "../components/ui/MobileCard";
 
 const OtherExpensesTable = ({ query, actions }) => {
+  const isMobile = useBreakpoint(768);
   const expenseTypeWithAll = EXPENSE_TYPES_WITH_ALL;
   const cols = useMemo(
     () => [
@@ -37,34 +40,31 @@ const OtherExpensesTable = ({ query, actions }) => {
     ],
     [query.columns, actions.handleDelete, actions.handleSubmit],
   );
-  return (
-    <>
-      <Table
-        columns={cols}
-        data={query.data}
-        page={query.page}
-        totalPages={query.totalPages}
-        onPageChange={query.setPage}
-        toolbar={
-          <div className="grid md:grid-cols-2 gap-2.5 max-w-4xl mt-4">
-            <TextInput
-              type="search"
-              placeholder="Search for category name..."
-              value={query.search}
-              onChange={query.setSearch}
-            />
-            <SelectBox
-              placeholder="Filter Expense Type"
-              name="expenseType"
-              options={expenseTypeWithAll}
-              onChange={query.setSelectedExpenseType}
-              value={query.selectedExpenseType}
-            />
-          </div>
-        }
-        text={"No expenses found."}
+  const toolbar = (
+    <div className="grid md:grid-cols-2 gap-2.5 max-w-4xl mt-4">
+      <TextInput
+        type="search"
+        placeholder="Search for category name..."
+        value={query.search}
+        onChange={query.setSearch}
       />
-    </>
+    </div>
+  );
+
+  const sharedProps = {
+    columns: cols,
+    data: query.data,
+    rowKey: "other_expense_id",
+    page: query.page,
+    totalPages: query.totalPages,
+    onPageChange: query.setPage,
+    toolbar,
+    text: "No employee found.",
+  };
+  return isMobile ? (
+    <MobileCard {...sharedProps} avatarKeys={{ single: "category_name" }}  />
+  ) : (
+    <Table {...sharedProps} />
   );
 };
 
