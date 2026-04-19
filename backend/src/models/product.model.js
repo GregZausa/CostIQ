@@ -57,7 +57,11 @@ export const insertProductEmployees = async (client, productId, employees) => {
                         (product_id, employee_id, multi_product_handling)
                         VALUES($1, $2, $3)`;
 
-    const values = [productId, employee.employee_id, employee.multi_product_handling];
+    const values = [
+      productId,
+      employee.employee_id,
+      employee.multi_product_handling,
+    ];
 
     await client.query(query, values);
   }
@@ -191,15 +195,37 @@ export const getProductsWithProfit = async (createdBy) => {
                   LEFT JOIN (SELECT pi.product_id, SUM(rm.cost_per_unit * pi.units_needed) AS ingredients_cost
                   FROM product_ingredients pi
                   JOIN raw_materials_view rm ON rm.raw_material_id = pi.material_id
+                  WHERE rm.is_active = true
                   GROUP BY pi.product_id) ing ON ing.product_id = p.product_id
-                  LEFT JOIN (SELECT pe.product_id, SUM(e.rate_per_day / prod.batch_per_day) AS labor_cost
+                  LEFT JOIN (SELECT pe.product_id, SUM(CASE
+                    WHEN pe.multi_product_handling = true THEN (e.rate_per_day / NULLIF(prod.batch_per_day, 0)) / NULLIF(epc.product_count, 0)
+                    ELSE e.rate_per_day / NULLIF(prod.batch_per_day, 0)
+                    END) AS labor_cost
                   FROM product_employees pe
                   JOIN employees e ON e.employee_id = pe.employee_id
                   JOIN products prod ON prod.product_id = pe.product_id
+                  LEFT JOIN (SELECT pe2.employee_id, COUNT(*) AS product_count
+                  FROM product_employees pe2
+                  JOIN products p2 ON p2.product_id = pe2.product_id
+                  WHERE p2.is_active = true AND pe2.multi_product_handling = true
+                  GROUP BY pe2.employee_id) epc ON epc.employee_id = e.employee_id
+                  WHERE prod.is_active = true
                   GROUP BY pe.product_id) emp ON emp.product_id = p.product_id
-                  LEFT JOIN (SELECT poe.product_id, SUM(oe.expense_cost * poe.quantity) AS expense_cost
+                  LEFT JOIN (SELECT poe.product_id, SUM(CASE
+                    WHEN oe.expense_type = 'per_unit' THEN (oe.expense_cost * poe.quantity) / NULLIF(p.total_sellable_units, 0)
+                    WHEN oe.expense_type = 'one_time' THEN oe.expense_cost / COALESCE(epc.product_count, 1) / NULLIF(p.batch_per_day * 365, 0)
+                    WHEN oe.expense_type = 'one_month' THEN oe.expense_cost / COALESCE(epc.product_count, 1) / NULLIF(p.batch_per_day * 30, 0)
+                    WHEN oe.expense_type = 'per_batch' THEN oe.expense_cost * poe.quantity
+                    ELSE 0 END) AS expense_cost
                   FROM product_other_expenses poe
                   JOIN other_expenses oe ON oe.other_expense_id = poe.other_expense_id
+                  JOIN products p ON p.product_id = poe.product_id
+                  LEFT JOIN (SELECT poe2.other_expense_id, COUNT(*) AS product_count
+                  FROM product_other_expenses poe2
+                  JOIN products p2 ON p2.product_id = poe2.product_id
+                  WHERE p2.is_active = true
+                  GROUP BY poe2.other_expense_id) epc ON epc.other_expense_id = oe.other_expense_id
+                  WHERE p.is_active = true AND oe.is_active = true
                   GROUP BY poe.product_id) exp ON exp.product_id = p.product_id
                   WHERE p.created_by = $1 AND p.is_active = true`;
   const { rows } = await pool.query(query, [createdBy]);

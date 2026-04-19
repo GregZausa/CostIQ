@@ -5,6 +5,8 @@ import MainLayout from "../components/layout/MainLayout";
 import {
   Box,
   Calculator,
+  FileBarChart,
+  FileBarChart2,
   IdCardLanyard,
   LayoutDashboardIcon,
   ShoppingBagIcon,
@@ -15,6 +17,10 @@ import Employee from "../pages/Employee";
 import OtherExpenses from "../pages/OtherExpenses";
 import Products from "../pages/Products";
 import ProductList from "../pages/ProductList";
+import ProductsReport from "../pages/ProductsReport";
+import EmployeesReport from "../pages/EmployeesReport";
+import RawMaterialsReport from "../pages/RawMaterialsReport";
+import OtherExpensesReport from "../pages/OtherExpensesReport";
 
 export const routes = [
   {
@@ -81,6 +87,34 @@ export const routes = [
     ],
   },
   {
+    path: "reports",
+    icon: FileBarChart2,
+    sidebar: true,
+    label: "Reports Management",
+    children: [
+      {
+        path: "/reports/products-report",
+        label: "Products Report",
+        icon: FileBarChart,
+      },
+      {
+        path: "/reports/raw-materials-report",
+        label: "Raw Materials Report",
+        icon: FileBarChart,
+      },
+      {
+        path: "/reports/employees-report",
+        label: "Employees Report",
+        icon: FileBarChart,
+      },
+      {
+        path: "/reports/other-expenses-report",
+        label: "Other Expenses Report",
+        icon: FileBarChart,
+      },
+    ],
+  },
+  {
     path: "/product-management/products",
     element: (
       <MainLayout>
@@ -117,6 +151,38 @@ export const routes = [
     element: (
       <MainLayout>
         <OtherExpenses />
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/reports/products-report",
+    element: (
+      <MainLayout>
+        <ProductsReport />
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/reports/employees-report",
+    element: (
+      <MainLayout>
+        <EmployeesReport />
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/reports/raw-materials-report",
+    element: (
+      <MainLayout>
+        <RawMaterialsReport />
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/reports/other-expenses-report",
+    element: (
+      <MainLayout>
+        <OtherExpensesReport />
       </MainLayout>
     ),
   },
