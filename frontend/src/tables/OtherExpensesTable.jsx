@@ -31,6 +31,7 @@ const OtherExpensesTable = ({ query, actions }) => {
         key: "action",
         render: (row) => (
           <HeadlessUIDropdown
+          name={row.category_name}
             id={row.other_expense_id}
             onDelete={actions.handleDelete}
             onEdit={actions.handleEdit}
@@ -59,7 +60,7 @@ const OtherExpensesTable = ({ query, actions }) => {
     totalPages: query.totalPages,
     onPageChange: query.setPage,
     toolbar,
-    text: "No employee found.",
+    text: "No expense found.",
   };
   return isMobile ? (
     <MobileCard {...sharedProps} avatarKeys={{ single: "category_name" }}  />

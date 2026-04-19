@@ -59,6 +59,7 @@ const ProductsTable = ({ query, actions }) => {
         key: "action",
         render: (row) => (
           <HeadlessUIDropdown
+          name={row.product_name}
             id={row.product_id}
             onDelete={actions.handleDelete}
           />

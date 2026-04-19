@@ -33,6 +33,7 @@ const EmployeesTable = ({ query, actions }) => {
         key: "action",
         render: (row) => (
           <HeadlessUIDropdown
+          name={`${row.first_name} ${row.last_name}`}
             id={row.employee_id}
             onDelete={actions.handleDelete}
             onEdit={actions.handleEdit}

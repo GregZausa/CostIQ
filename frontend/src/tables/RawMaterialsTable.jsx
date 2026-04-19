@@ -33,6 +33,7 @@ const RawMaterialsTable = ({ query, actions }) => {
         key: "action",
         render: (row) => (
           <HeadlessUIDropdown
+          name={row.material_name}
             id={row.raw_material_id}
             onDelete={actions.handleDelete}
             onEdit={actions.handleEdit}
@@ -61,7 +62,7 @@ const RawMaterialsTable = ({ query, actions }) => {
     totalPages: query.totalPages,
     onPageChange: query.setPage,
     toolbar,
-    text: "No employee found.",
+    text: "No material found.",
   };
 
   return isMobile ? (

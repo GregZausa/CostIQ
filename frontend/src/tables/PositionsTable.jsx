@@ -19,6 +19,7 @@ const PositionsTable = ({ query, actions }) => {
         key: "action",
         render: (row) => (
           <HeadlessUIDropdown
+            name={row.position_name}
             id={row.position_id}
             onDelete={actions.handleDelete}
             onEdit={actions.handleEdit}
@@ -47,7 +48,7 @@ const PositionsTable = ({ query, actions }) => {
     totalPages: query.totalPages,
     onPageChange: query.setPage,
     toolbar,
-    text: "No employee found.",
+    text: "No position found.",
   };
   return isMobile ? (
     <MobileCard {...sharedProps} avatarKeys={{ single: "position_name" }} />
