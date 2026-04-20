@@ -8,6 +8,7 @@ import employeeRoutes from "./src/routes/employee.route.js";
 import otherExpenseRoutes from "./src/routes/other-expense.route.js";
 import positionRoutes from "./src/routes/position.routes.js";
 import productRoutes from "./src/routes/product.route.js";
+import productCostSummary from "./src/routes/product-cost-summary.route.js";
 import dotenv from "dotenv";
 dotenv.config();
 import Stripe from "stripe";
@@ -32,6 +33,7 @@ app.use("/api", express.json(), rawMaterialRoutes);
 app.use("/api", express.json(), employeeRoutes);
 app.use("/api", express.json(), otherExpenseRoutes);
 app.use("/api", express.json(), positionRoutes);
+app.use("/api", express.json(), productCostSummary);
 app.use("/api", productRoutes);
 
 app.listen(port, () => {
