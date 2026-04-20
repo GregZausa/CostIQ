@@ -25,6 +25,8 @@ const Button = ({
       "bg-rose-600 hover:bg-rose-500 active:bg-rose-700 text-white border-transparent shadow-sm hover:shadow-rose-200 hover:shadow-md",
     ghostDanger:
       "bg-transparent hover:bg-rose-600 active:bg-rose-100 text-rose-500 border-transparent shadow-sm hover:text-white hover:shadow-rose-600 hover:shadow-md",
+    excel:
+      "bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white border-transparent shadow-sm hover:shadow-emerald-200 hover:shadow-md",
   };
 
   const sizes = {
