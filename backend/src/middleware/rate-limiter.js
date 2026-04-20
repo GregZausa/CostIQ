@@ -14,7 +14,8 @@ export const registerLimiter = rateLimit({
   windowMs: 1 * 60 * 1000,
   max: 3,
   message: {
-    message: "Too many registration attempts, please try again after 1 minutes.",
+    message:
+      "Too many registration attempts, please try again after 1 minutes.",
   },
   standardHeaders: true,
   legacyHeaders: false,
@@ -28,4 +29,15 @@ export const globalLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
+});
+
+export const submitLimiter = rateLimit({
+  windowMs: 5 * 1000,
+  max: 3,
+  message: {
+    message: "Please try again in a few seconds.",
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => req.ip,
 });
