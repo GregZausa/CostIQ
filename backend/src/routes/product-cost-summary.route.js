@@ -5,6 +5,6 @@ import { submitLimiter } from "../middleware/rate-limiter.js";
 
 const router = express.Router();
 
-router.get("/product-cost-summary/pdf", requireAuth, submitLimiter, fetchProductCostSummaryPDF);
-router.get("/product-cost-summary/excel", requireAuth, submitLimiter, fetchProductCostSummaryExcel)
+router.get("/product-cost-summary/pdf/", requireAuth, submitLimiter, fetchProductCostSummaryPDF);
+router.get("/product-cost-summary/excel/", requireAuth, submitLimiter, fetchProductCostSummaryExcel)
 export default router;

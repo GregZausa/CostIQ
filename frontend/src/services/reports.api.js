@@ -2,8 +2,8 @@ import { apiUrl } from "../config/apiUrl";
 import { authFetch } from "../utils/authFetch";
 import toast from "react-hot-toast";
 
-export const downloadProductCostSummaryPDF = async () => {
-    const res = await authFetch(`${apiUrl}/product-cost-summary/pdf`, {
+export const downloadProductCostSummaryPDF = async (reportType = "batch") => {
+    const res = await authFetch(`${apiUrl}/product-cost-summary/pdf?type=${reportType}`, {
       method: "GET",
       credentials: "include",
     });
@@ -26,8 +26,8 @@ export const downloadProductCostSummaryPDF = async () => {
     window.URL.revokeObjectURL(url);
   };
 
-  export const downloadProductCostSummaryExcel = async () => {
-    const res = await authFetch(`${apiUrl}/product-cost-summary/excel`, {
+  export const downloadProductCostSummaryExcel = async (reportType = "batch") => {
+    const res = await authFetch(`${apiUrl}/product-cost-summary/excel?type=${reportType}`, {
       method: "GET",
       credentials: "include",
     });

@@ -31,7 +31,7 @@ const OtherExpensesTable = ({ query, actions }) => {
         key: "action",
         render: (row) => (
           <HeadlessUIDropdown
-          name={row.category_name}
+            name={row.category_name}
             id={row.other_expense_id}
             onDelete={actions.handleDelete}
             onEdit={actions.handleEdit}
@@ -49,6 +49,13 @@ const OtherExpensesTable = ({ query, actions }) => {
         value={query.search}
         onChange={query.setSearch}
       />
+      <SelectBox
+        placeholder="Filter Expense Type"
+        name="expenseType"
+        options={expenseTypeWithAll}
+        onChange={query.setSelectedExpenseType}
+        value={query.selectedExpenseType}
+      />
     </div>
   );
 
@@ -63,7 +70,7 @@ const OtherExpensesTable = ({ query, actions }) => {
     text: "No expense found.",
   };
   return isMobile ? (
-    <MobileCard {...sharedProps} avatarKeys={{ single: "category_name" }}  />
+    <MobileCard {...sharedProps} avatarKeys={{ single: "category_name" }} />
   ) : (
     <Table {...sharedProps} />
   );

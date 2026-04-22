@@ -13,7 +13,7 @@ const Table = ({
   return (
     <div className="w-full space-y-3">
       <div className="flex items-center justify-between gap-3">
-        <div className="flex-1">{toolbar}</div>
+        <div className="w-full">{toolbar}</div>
       </div>
 
       <div className="w-full rounded-2xl  min-h-130 flex flex-col">

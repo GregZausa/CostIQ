@@ -7,7 +7,8 @@ const today = new Date().toISOString().split("T")[0];
 
 export const fetchProductCostSummaryPDF = async (req, res) => {
   try {
-    const pdf = await fetchProductCostSummaryPDFService(req);
+    const type = req.query.type || batch;
+    const pdf = await fetchProductCostSummaryPDFService(req.user.id, type);
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
       "Content-Disposition",
@@ -24,7 +25,8 @@ export const fetchProductCostSummaryPDF = async (req, res) => {
 
 export const fetchProductCostSummaryExcel = async (req, res) => {
   try {
-    const buffer = await fetchProductCostSummaryExcelService(req);
+    const type = req.query.type || batch;
+    const buffer = await fetchProductCostSummaryExcelService(req.user.id, type);
     const today = new Date().toISOString().split("T")[0];
 
     res.setHeader(

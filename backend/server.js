@@ -33,8 +33,9 @@ app.use("/api", express.json(), rawMaterialRoutes);
 app.use("/api", express.json(), employeeRoutes);
 app.use("/api", express.json(), otherExpenseRoutes);
 app.use("/api", express.json(), positionRoutes);
-app.use("/api", express.json(), productCostSummary);
 app.use("/api", productRoutes);
+app.use("/api", express.json(), productCostSummary);
+
 
 app.listen(port, () => {
   console.log(`Server started at ${port}`);
