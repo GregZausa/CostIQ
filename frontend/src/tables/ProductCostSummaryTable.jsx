@@ -13,19 +13,8 @@ import SelectBox from "../components/ui/SelectBox";
 import MobileCard from "../components/ui/MobileCard";
 import { useBreakpoint } from "../hooks/useBreakpoint";
 
-const ProductCostSummaryTable = ({ computedProducts }) => {
+const ProductCostSummaryTable = ({ computedProducts, reportType, setReportType, options }) => {
   const isMobile = useBreakpoint(1400);
-  const [reportType, setReportType] = useState("batch");
-  const options = [
-    {
-      label: " Per Batch",
-      value: "batch",
-    },
-    {
-      label: "Per Unit",
-      value: "unit",
-    },
-  ];
   const reportColumns = [
     { key: "product_name", label: "Product" },
     {
@@ -83,7 +72,7 @@ const ProductCostSummaryTable = ({ computedProducts }) => {
     },
   ];
   const toolbar = (
-    <div className="grid md:grid-cols-2 gap-2.5 max-w-4xl mt-4">
+    <div className="grid md:grid-cols-2 gap-2.5 mt-4">
       <SelectBox
         placeholder="Per Batch"
         name="sizeFilter"
@@ -91,7 +80,8 @@ const ProductCostSummaryTable = ({ computedProducts }) => {
         onChange={setReportType}
         value={reportType}
       />
-      <div className="flex items-center justify-center gap-2">
+
+      <div className="flex items-center justify-end  gap-2">
         <div className="flex items-center justify-between">
           <Button
             label="Export to PDF"

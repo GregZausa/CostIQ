@@ -17,63 +17,60 @@ const Table = ({
       </div>
 
       <div className="w-full rounded-2xl  min-h-130 flex flex-col">
-          <table className="min-w-full">
-            <thead>
-              <tr className="bg-slate-800 border-b border-slate-100">
-                {columns.map((col, i) => (
-                  <th
-                    key={col.key}
-                    className={`px-5 py-3 text-left text-xs font-semibold tracking-wider uppercase text-slate-200 ${
-                      i === 0 ? "rounded-tl-2xl" : ""
-                    } ${i === columns.length - 1 ? "rounded-tr-2xl" : ""}`}
-                  >
-                    {col.label}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-slate-50">
-              {data.length > 0 ? (
-                data.map((row, idx) => (
-                  <tr
-                    key={idx}
-                    className="group hover:bg-slate-50/80 transition-colors duration-150"
-                  >
-                    {columns.map((col, colIdx) => (
-                      <td
-                        key={col.key}
-                        className={`px-5 py-3.5 text-sm text-slate-600 ${
-                          colIdx === 0
-                            ? "font-medium text-slate-800"
-                            : ""
-                        } ${
-                          idx === data.length - 1 && colIdx === 0
-                            ? "rounded-bl-2xl"
-                            : ""
-                        } ${
-                          idx === data.length - 1 &&
-                          colIdx === columns.length - 1
-                            ? "rounded-br-2xl"
-                            : ""
-                        }`}
-                      >
-                        {col.render ? col.render(row) : row[col.key]}
-                      </td>
-                    ))}
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={columns.length} className="py-16 text-center">
-                    <NoDataLayout message={text} />
-                  </td>
+        <table className="min-w-full">
+          <thead>
+            <tr className="bg-slate-800 border-b border-slate-100">
+              {columns.map((col, i) => (
+                <th
+                  key={col.key}
+                  className={`px-5 py-3 text-left text-xs font-semibold tracking-wider uppercase text-slate-200 ${
+                    i === 0 ? "rounded-tl-2xl" : ""
+                  } ${i === columns.length - 1 ? "rounded-tr-2xl" : ""}`}
+                >
+                  {col.label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-slate-50">
+            {data.length > 0 ? (
+              data.map((row, idx) => (
+                <tr
+                  key={idx}
+                  className="group hover:bg-slate-50/80 transition-colors duration-150"
+                >
+                  {columns.map((col, colIdx) => (
+                    <td
+                      key={col.key}
+                      className={`px-5 py-3.5 text-sm text-slate-600 ${
+                        colIdx === 0 ? "font-medium text-slate-800" : ""
+                      } ${
+                        idx === data.length - 1 && colIdx === 0
+                          ? "rounded-bl-2xl"
+                          : ""
+                      } ${
+                        idx === data.length - 1 && colIdx === columns.length - 1
+                          ? "rounded-br-2xl"
+                          : ""
+                      }`}
+                    >
+                      {col.render ? col.render(row) : row[col.key]}
+                    </td>
+                  ))}
                 </tr>
-              )}
-            </tbody>
-          </table>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={columns.length} className="py-16 text-center">
+                  <NoDataLayout message={text} />
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
 
-      {totalPages > 1 && (
+      {totalPages > 0 && (
         <div className="flex justify-end">
           <Pagination
             page={page}
