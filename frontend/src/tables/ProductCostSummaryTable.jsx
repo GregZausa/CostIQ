@@ -55,7 +55,16 @@ const ProductCostSummaryTable = ({ computedProducts, reportType, setReportType, 
     {
       key: "roi",
       label: "ROI",
-      render: (row) => `${Number(row.roi).toFixed(2)}%`,
+      render: (row) => {
+        const roi = Number(row.roi);
+        const color =
+          roi >= 100
+            ? "text-green-600"
+            : roi >= 50
+              ? "text-yellow-600"
+              : "text-red-600";
+        return <span className={`font-bold ${color}`}>{roi.toFixed(2)}%</span>;
+      },
     },
     {
       key: "breakEvenUnits",
