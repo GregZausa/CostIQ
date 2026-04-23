@@ -19,8 +19,8 @@ import Products from "../pages/Products";
 import ProductList from "../pages/ProductList";
 import ProductCostSummary from "../pages/ProductCostSummary";
 import EmployeesReport from "../pages/EmployeesReport";
-import RawMaterialsReport from "../pages/RawMaterialsReport";
 import OtherExpensesReport from "../pages/OtherExpensesReport";
+import FinancialOverview from "../pages/FinancialOverview";
 
 export const routes = [
   {
@@ -98,8 +98,8 @@ export const routes = [
         icon: FileBarChart,
       },
       {
-        path: "/reports/raw-materials-report",
-        label: "Raw Materials Report",
+        path: "/reports/financial-overview",
+        label: "Financial Overview",
         icon: FileBarChart,
       },
       {
@@ -171,10 +171,10 @@ export const routes = [
     ),
   },
   {
-    path: "/reports/raw-materials-report",
+    path: "/reports/financial-overview",
     element: (
       <MainLayout>
-        <RawMaterialsReport />
+        <FinancialOverview />
       </MainLayout>
     ),
   },
