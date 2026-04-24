@@ -271,7 +271,6 @@ export const fetchFinancialOverviewExcelService = async (
     ],
   ];
 
-  // Header row style
   summarySheet.getRow(1).font = { bold: true, color: { argb: "FFFFFFFF" } };
   summarySheet.getRow(1).fill = {
     type: "pattern",
@@ -308,9 +307,7 @@ export const fetchFinancialOverviewExcelService = async (
       };
     });
 
-    // Format money rows
     if ([2, 3, 4].includes(index)) row.getCell("value").numFmt = '"₱"#,##0.00';
-    // Format percentage rows
     if ([1, 2].includes(index)) row.getCell("value").numFmt = "0.00%";
   });
 
@@ -395,7 +392,6 @@ export const fetchFinancialOverviewExcelService = async (
       row.getCell(key).numFmt = "0.00%";
     });
 
-    // Color ROI cell
     const roiCell = row.getCell("roi");
     const roiVal = Number(p.roi);
     roiCell.font = {
@@ -407,7 +403,6 @@ export const fetchFinancialOverviewExcelService = async (
     };
   });
 
-  // ---- PER PRODUCT SHEETS ----
   products.forEach((p) => {
     const v = getValues(p, type);
     const sheet = workbook.addWorksheet(p.product_name.substring(0, 31));

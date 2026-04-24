@@ -58,7 +58,7 @@ const Dashboard = () => {
         <NoDataLayout message="No products yet, Add one to get started!" />
       ) : (
         <>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 pt-2 shrink-0 gap-2">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 pt-2 shrink-0 gap-2">
             <ProductsOverviewCard
               value={totalProducts}
               title="Total Products"

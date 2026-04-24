@@ -25,10 +25,7 @@ const CustomTooltip = ({ active, payload, label }) => {
         {payload.map((entry, i) => (
           <div key={i} className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-1.5">
-              <div
-                className="w-2 h-2 rounded-full"
-                style={{ backgroundColor: entry.color }}
-              />
+              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
               <span className="text-slate-500">{entry.name}</span>
             </div>
             <span className="font-semibold text-slate-700">
@@ -81,11 +78,12 @@ const MarginScenarioChart = ({ computed = {} }) => {
   });
 
   const inputClass =
-    "w-14 text-xs border border-slate-200 rounded-lg px-2 py-1.5 text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-100 bg-white";
+    "w-12 text-xs border border-slate-200 rounded-lg px-1.5 py-1.5 text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-100 bg-white";
 
   return (
     <ProductCardLayout title="Margin Scenarios" icon={BarChart2}>
-      <div className="flex items-center gap-3 px-3 pt-2 pb-1">
+      {/* Controls — wraps naturally on small cards */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 px-3 pt-2 pb-1">
         <div className="flex items-center gap-1.5">
           <span className="text-xs text-slate-400 font-medium">Min</span>
           <input
@@ -97,6 +95,7 @@ const MarginScenarioChart = ({ computed = {} }) => {
             className={inputClass}
           />
         </div>
+
         <div className="flex items-center gap-1.5">
           <span className="text-xs text-slate-400 font-medium">Max</span>
           <input
@@ -108,6 +107,7 @@ const MarginScenarioChart = ({ computed = {} }) => {
             className={inputClass}
           />
         </div>
+
         <div className="flex items-center gap-1.5">
           <span className="text-xs text-slate-400 font-medium">Step</span>
           <select
@@ -120,24 +120,19 @@ const MarginScenarioChart = ({ computed = {} }) => {
             <option value={20}>20%</option>
           </select>
         </div>
-        <div className="ml-auto flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-sm bg-blue-600" />
-          <span className="text-xs text-slate-400">
+
+        {/* Current indicator — pushed to end on wide, wraps below on narrow */}
+        <div className="flex items-center gap-1.5 ml-auto">
+          <div className="w-2.5 h-2.5 rounded-sm bg-blue-600 shrink-0" />
+          <span className="text-xs text-slate-400 whitespace-nowrap">
             Current: {profit_margin}%
           </span>
         </div>
       </div>
 
       <ResponsiveContainer width="100%" height={230}>
-        <ComposedChart
-          data={data}
-          margin={{ top: 10, right: 20, bottom: 0, left: 0 }}
-        >
-          <CartesianGrid
-            strokeDasharray="3 3"
-            stroke="#f1f5f9"
-            vertical={false}
-          />
+        <ComposedChart data={data} margin={{ top: 10, right: 20, bottom: 0, left: 0 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
           <XAxis
             dataKey="margin"
             tick={{ fontSize: 11, fill: "#94a3b8" }}

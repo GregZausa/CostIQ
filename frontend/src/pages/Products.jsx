@@ -34,7 +34,7 @@ const Products = () => {
       />
       {query?.productOptions?.length > 0 ? (
         <>
-          <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-4 gap-2 py-2">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-2 py-2">
             <div className="space-y-2">
               <SelectBox
                 onChange={query.setSelectedProduct}
@@ -67,7 +67,7 @@ const Products = () => {
               />
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-4">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 py-4">
             <MarginScenarioChart computed={computed} />
             <PricingGuideChart computed={computed} />
             <CostPerProductChart computed={computed} />

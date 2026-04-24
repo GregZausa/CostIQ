@@ -2,10 +2,7 @@ import { BadgePercent, FileText, Percent, Tag, TrendingUp } from "lucide-react";
 import React from "react";
 import ProductCardLayout from "../layout/ProductCardLayout";
 
-const PricingSummaryCard = ({
-  title,
-  computed,
-}) => {
+const PricingSummaryCard = ({ title, computed }) => {
   const profitMargin = computed?.profit_margin || 0;
   const profit = computed?.profit || 0;
   const discountPercent = computed?.discount;
@@ -13,6 +10,7 @@ const PricingSummaryCard = ({
   const discount = computed?.discountCost || 0;
   const salesTax = computed?.tax || 0;
   const finalPrice = computed?.finalPrice || 0;
+
   const rows = [
     {
       label: "Profit margin",
@@ -51,52 +49,39 @@ const PricingSummaryCard = ({
       isTotal: true,
     },
   ];
+
   return (
     <ProductCardLayout title={title} icon={BadgePercent}>
       <div className="divide-y divide-slate-100">
-        {rows.map(
-          ({
-            label,
-            percentValue,
-            amountValue,
-            icon: Icon,
-            color,
-            bg,
-            pillColor,
-            isTotal,
-          }) => (
-            <div
-              key={label}
-              className={`flex items-center justify-between px-3 py-2 hover:bg-slate-50 transition-colors duration-150
-                 ${isTotal ? "bg-slate-800 hover:bg-slate-700" : "hover:bg-slate-50"}`}
-            >
-              <div className="flex items-center gap-3">
-                <div
-                  className={`w-5 h-5 rounded-xl ${bg} flex items-center justify-center shrink-0`}
-                >
-                  <Icon size={15} className={color} />
-                </div>
-                <span
-                  className={`text-sm font-medium w-25 flex-1 ${isTotal ? "text-white" : "text-slate-600"} `}
-                >
-                  {label}
-                </span>
-              </div>
-              {!isTotal && (
-                <span
-                  className={`text-xs font-medium px-2 py-0.5 rounded-full text-center ${pillColor}`}
-                >
-                  {parseFloat(percentValue).toFixed(2)}%
-                </span>
-              )}
-              <span
-                className={`text-sm font-medium tabular-nums ${isTotal ? "text-white" : "text-slate-800"} min-w-18 text-right`}
-              >
-                ₱{amountValue.toFixed(2)}
-              </span>
+        {rows.map(({ label, percentValue, amountValue, icon: Icon, color, bg, pillColor, isTotal }) => (
+          <div
+            key={label}
+            className={`flex items-center gap-2 px-3 py-2 transition-colors duration-150
+              ${isTotal ? "bg-slate-800 hover:bg-slate-700" : "hover:bg-slate-50"}`}
+          >
+            {/* Icon */}
+            <div className={`w-5 h-5 rounded-xl ${bg} flex items-center justify-center shrink-0`}>
+              <Icon size={14} className={color} />
             </div>
-          ),
-        )}
+
+            {/* Label — flex-1 + min-w-0 allows it to shrink and not push siblings out */}
+            <span className={`text-sm font-medium flex-1 min-w-0 truncate ${isTotal ? "text-white" : "text-slate-600"}`}>
+              {label}
+            </span>
+
+            {/* Percent pill — shrink-0 keeps it from collapsing */}
+            {!isTotal && (
+              <span className={`text-xs font-medium px-2 py-0.5 rounded-full shrink-0 ${pillColor}`}>
+                {parseFloat(percentValue).toFixed(2)}%
+              </span>
+            )}
+
+            {/* Amount — fixed width so it always aligns */}
+            <span className={`text-sm font-medium tabular-nums shrink-0 w-16 text-right ${isTotal ? "text-white" : "text-slate-800"}`}>
+              ₱{amountValue.toFixed(2)}
+            </span>
+          </div>
+        ))}
       </div>
     </ProductCardLayout>
   );

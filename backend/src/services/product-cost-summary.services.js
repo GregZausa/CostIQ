@@ -214,7 +214,6 @@ export const fetchProductCostSummaryExcelService = async (createdBy, type = "bat
   const s = getSummary(products, type);
   const workbook = new ExcelJS.Workbook();
 
-  // ---- EXECUTIVE SUMMARY SHEET ----
   const summarySheet = workbook.addWorksheet("Executive Summary");
   summarySheet.columns = [
     { header: "Metric", key: "metric", width: 30 },
@@ -256,7 +255,6 @@ export const fetchProductCostSummaryExcelService = async (createdBy, type = "bat
     if ([3, 4, 5, 6, 7].includes(index)) row.getCell("value").numFmt = '"₱"#,##0.00';
   });
 
-  // ---- PRODUCT BREAKDOWN SHEET ----
   const breakdown = workbook.addWorksheet("Product Breakdown");
   const cogsLabel = type === "batch" ? "Total COGS" : "COGS per Unit";
   const netProfitLabel = type === "batch" ? "Net Profit/Batch" : "Net Profit/Unit";
@@ -309,7 +307,6 @@ export const fetchProductCostSummaryExcelService = async (createdBy, type = "bat
     row.getCell("roi").numFmt = "0.00%";
   });
 
-  // ---- PER PRODUCT SHEETS ----
   products.forEach((p) => {
     const v = getValues(p, type);
     const sheet = workbook.addWorksheet(p.product_name.substring(0, 31));

@@ -50,7 +50,7 @@ const Sidebar = () => {
 
       <aside
         className={`
-          fixed top-0 left-0 min-h-full w-52 md:w-60 lg:w-64
+          fixed top-0 left-0 h-screen w-52 md:w-60 lg:w-64
           bg-slate-800 flex flex-col
           border-r border-slate-200
           transform transition-transform duration-300 z-40 overflow-y-auto
