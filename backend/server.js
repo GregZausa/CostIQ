@@ -26,7 +26,6 @@ app.use(
   }),
 );
 app.use(cookieParser());
-//routes
 app.use("/api/auth", express.json(), authRoutes);
 app.use("/api", express.json(), unitRoutes);
 app.use("/api", express.json(), rawMaterialRoutes);
