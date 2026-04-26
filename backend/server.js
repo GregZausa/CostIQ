@@ -21,11 +21,14 @@ const port = process.env.PORT || "5001";
 
 app.use(
   cors({
-    origin: process.env.URL,
+    origin: ["https://costiq-eight.vercel.app", process.env.URL],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 app.use(cookieParser());
+//routes
 app.use("/api/auth", express.json(), authRoutes);
 app.use("/api", express.json(), unitRoutes);
 app.use("/api", express.json(), rawMaterialRoutes);
@@ -36,7 +39,6 @@ app.use("/api", productRoutes);
 app.use("/api", express.json(), productCostSummary);
 app.use("/api", express.json(), financialOverview);
 app.use("/api", express.json(), pricingGuide);
-
 
 app.listen(port, () => {
   console.log(`Server started at ${port}`);
