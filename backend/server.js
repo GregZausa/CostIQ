@@ -10,6 +10,7 @@ import positionRoutes from "./src/routes/position.routes.js";
 import productRoutes from "./src/routes/product.route.js";
 import productCostSummary from "./src/routes/product-cost-summary.route.js";
 import financialOverview from "./src/routes/financial-overview.route.js";
+import pricingGuide from "./src/routes/pricing-guide.route.js";
 import dotenv from "dotenv";
 dotenv.config();
 import "./src/config/db.js";
@@ -35,6 +36,7 @@ app.use("/api", express.json(), positionRoutes);
 app.use("/api", productRoutes);
 app.use("/api", express.json(), productCostSummary);
 app.use("/api", express.json(), financialOverview);
+app.use("/api", express.json(), pricingGuide);
 
 
 app.listen(port, () => {

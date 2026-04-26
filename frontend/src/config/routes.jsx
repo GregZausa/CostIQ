@@ -18,7 +18,7 @@ import OtherExpenses from "../pages/OtherExpenses";
 import Products from "../pages/Products";
 import ProductList from "../pages/ProductList";
 import ProductCostSummary from "../pages/ProductCostSummary";
-import EmployeesReport from "../pages/EmployeesReport";
+import PricingGuideReport from "../pages/PricingGuideReport";
 import OtherExpensesReport from "../pages/OtherExpensesReport";
 import FinancialOverview from "../pages/FinancialOverview";
 
@@ -103,8 +103,8 @@ export const routes = [
         icon: FileBarChart,
       },
       {
-        path: "/reports/employees-report",
-        label: "Employees Report",
+        path: "/reports/pricing-guide",
+        label: "Pricing Guide Report",
         icon: FileBarChart,
       },
       {
@@ -163,10 +163,10 @@ export const routes = [
     ),
   },
   {
-    path: "/reports/employees-report",
+    path: "/reports/pricing-guide",
     element: (
       <MainLayout>
-        <EmployeesReport />
+        <PricingGuideReport />
       </MainLayout>
     ),
   },

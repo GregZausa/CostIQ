@@ -99,3 +99,37 @@ export const downloadFinancialOverviewExcel = async (reportType = "batch") => {
   a.click();
   window.URL.revokeObjectURL(url);
 };
+
+export const downloadPricingGuidePDF = async (maxDiscount = 50, step = 10, productId = null) => {
+  const params = new URLSearchParams({ maxDiscount, step })
+  if (productId) params.append("productId", productId)
+  const res = await authFetch(`${apiUrl}/pricing-guide/pdf?${params}`, {
+    method: "GET", credentials: "include",
+  })
+  if (!res.ok) { toast.error("Failed to download PDF"); return }
+  const blob = await res.blob()
+  const url = window.URL.createObjectURL(blob)
+  const today = new Date().toISOString().split("T")[0]
+  const a = document.createElement("a")
+  a.href = url
+  a.download = `pricing-guide-${today}.pdf`
+  a.click()
+  window.URL.revokeObjectURL(url)
+}
+
+export const downloadPricingGuideExcel = async (maxDiscount = 50, step = 10, productId = null) => {
+  const params = new URLSearchParams({ maxDiscount, step })
+  if (productId) params.append("productId", productId)
+  const res = await authFetch(`${apiUrl}/pricing-guide/excel?${params}`, {
+    method: "GET", credentials: "include",
+  })
+  if (!res.ok) { toast.error("Failed to download Excel"); return }
+  const blob = await res.blob()
+  const url = window.URL.createObjectURL(blob)
+  const today = new Date().toISOString().split("T")[0]
+  const a = document.createElement("a")
+  a.href = url
+  a.download = `pricing-guide-${today}.xlsx`
+  a.click()
+  window.URL.revokeObjectURL(url)
+}
