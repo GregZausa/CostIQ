@@ -150,13 +150,13 @@ const PricingGuideTable = ({ computedProducts }) => {
       </div>
       <Button
         label="Export to PDF"
-        onClick={() => downloadPricingGuidePDF(maxDiscount, step, selectedProductId)}
+        onClick={() => downloadPricingGuidePDF(maxDiscount, step, selectedProductId, selectedProduct?.product_name)}
         variant="danger"
         icon={<FileText size={16} />}
       />
       <Button
         label="Export to Excel"
-        onClick={() => downloadPricingGuideExcel(maxDiscount, step, selectedProductId)}
+        onClick={() => downloadPricingGuideExcel(maxDiscount, step, selectedProductId, selectedProduct?.product_name)}
         variant="excel"
         icon={<FileSpreadsheet size={16} />}
       />
