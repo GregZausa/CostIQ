@@ -100,7 +100,7 @@ export const downloadFinancialOverviewExcel = async (reportType = "batch") => {
   window.URL.revokeObjectURL(url);
 };
 
-export const downloadPricingGuidePDF = async (maxDiscount = 50, step = 10, productId = null) => {
+export const downloadPricingGuidePDF = async (maxDiscount = 50, step = 10, productId = null, selectedProduct) => {
   const params = new URLSearchParams({ maxDiscount, step })
   if (productId) params.append("productId", productId)
   const res = await authFetch(`${apiUrl}/pricing-guide/pdf?${params}`, {
@@ -112,12 +112,12 @@ export const downloadPricingGuidePDF = async (maxDiscount = 50, step = 10, produ
   const today = new Date().toISOString().split("T")[0]
   const a = document.createElement("a")
   a.href = url
-  a.download = `pricing-guide-${today}.pdf`
+  a.download = `pricing-guide-${selectedProduct}-${today}.pdf`
   a.click()
   window.URL.revokeObjectURL(url)
 }
 
-export const downloadPricingGuideExcel = async (maxDiscount = 50, step = 10, productId = null) => {
+export const downloadPricingGuideExcel = async (maxDiscount = 50, step = 10, productId = null, selectedProduct) => {
   const params = new URLSearchParams({ maxDiscount, step })
   if (productId) params.append("productId", productId)
   const res = await authFetch(`${apiUrl}/pricing-guide/excel?${params}`, {
@@ -129,7 +129,7 @@ export const downloadPricingGuideExcel = async (maxDiscount = 50, step = 10, pro
   const today = new Date().toISOString().split("T")[0]
   const a = document.createElement("a")
   a.href = url
-  a.download = `pricing-guide-${today}.xlsx`
+  a.download = `pricing-guide-${selectedProduct}-${today}.xlsx`
   a.click()
   window.URL.revokeObjectURL(url)
 }

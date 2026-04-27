@@ -49,7 +49,7 @@ export const fetchPricingGuidePDFService = async (
   const allProducts = await getProductsWithProfit(createdBy);
 
   const products = productId
-    ? allProducts.filter((p) => p.product_id === productId)
+    ? allProducts.filter((p) => String(p.product_id) === String(productId))
     : allProducts;
 
   const productPages = products
@@ -148,7 +148,6 @@ export const fetchPricingGuidePDFService = async (
         th { background: #1a1a2e; color: white; padding: 8px 10px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
         td { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; font-size: 10px; color: #374151; }
         tr:last-child td { border-bottom: none; }
-        .page { page-break-before: always; padding: 24px 0; }
         .product-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
         .product-meta { font-size: 10px; color: #6b7280; margin-top: 4px; }
         .breakeven-badge { background: #fef2f2; border: 1px solid #fca5a5; color: #dc2626; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; }
@@ -213,7 +212,7 @@ export const fetchPricingGuideExcelService = async (
   const allProducts = await getProductsWithProfit(createdBy);
 
   const products = productId
-    ? allProducts.filter((p) => p.product_id === productId)
+    ? allProducts.filter((p) => String(p.product_id) === String(productId))
     : allProducts;
   const workbook = new ExcelJS.Workbook();
 
