@@ -21,14 +21,13 @@ const port = process.env.PORT || "5001";
 
 app.use(
   cors({
-    origin: ["https://costiq-eight.vercel.app", process.env.URL],
+    origin: [process.env.PRODUCTION_URL, process.env.URL],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 app.use(cookieParser());
-//routes
 app.use("/api/auth", express.json(), authRoutes);
 app.use("/api", express.json(), unitRoutes);
 app.use("/api", express.json(), rawMaterialRoutes);
