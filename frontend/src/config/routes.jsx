@@ -21,6 +21,8 @@ import ProductCostSummary from "../pages/ProductCostSummary";
 import PricingGuideReport from "../pages/PricingGuideReport";
 import OtherExpensesReport from "../pages/OtherExpensesReport";
 import FinancialOverview from "../pages/FinancialOverview";
+import Pricing from "../pages/paymongo/Pricing";
+import PaymentSuccess from "../pages/paymongo/PaymentSuccess";
 
 export const routes = [
   {
@@ -31,6 +33,16 @@ export const routes = [
   {
     path: "/register",
     element: <Register />,
+    public: true,
+  },
+  {
+    path: "/pricing",
+    element: <Pricing />,
+    public: true,
+  },
+  {
+    path: "/payment/success",
+    element: <PaymentSuccess />,
     public: true,
   },
   {
