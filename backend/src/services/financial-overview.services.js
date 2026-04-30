@@ -1,6 +1,6 @@
 import { getProductsWithProfit } from "../models/product.model.js";
-import puppeteer from "puppeteer";
 import ExcelJS from "exceljs";
+import { getBrowser } from "../config/browser.js";
 
 const getValues = (p, type) => ({
   ingredients:
@@ -219,7 +219,7 @@ export const fetchFinancialOverviewPDFService = async (
     </body>
     </html>`;
 
-  const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
+  const browser = await getBrowser();
   const page = await browser.newPage();
   await page.setContent(html, { waitUntil: "networkidle0" });
   const pdf = await page.pdf({
