@@ -5,6 +5,8 @@ const PAYMONGO_SECRET = process.env.PAYMONGO_SECRET_KEY;
 const PAYMONGO_URL = "https://api.paymongo.com/v1";
 const isProduction = process.env.NODE_ENV === "production";
 
+const BASE_URL = isProduction ? process.env.PRODUCTION_URL : process.env.URL;
+
 const getAuthHeader = () => {
   return "Basic " + Buffer.from(PAYMONGO_SECRET + ":").toString("base64");
 };
@@ -51,8 +53,8 @@ export const createSubscriptionCheckout = async (userId, plan) => {
             },
           ],
           payment_method_types: ["card", "gcash", "paymaya", "qrph"],
-          success_url: `${isProduction ? process.env.PRODUCTION_URL : process.env.URL}/payment/success?plan=${plan}`,
-          cancel_url: `${isProduction ? process.env.PRODUCTION_URL : process.env.URL}/pricing`,
+          success_url: `${BASE_URL}/payment/success?plan=${plan}`,
+          cancel_url: `${BASE_URL}/pricing`,
           metadata: {
             userId: String(userId),
             plan,
