@@ -1,47 +1,86 @@
 import { getProductsWithProfit } from "../models/product.model.js";
-import puppeteer from "puppeteer";
 import ExcelJS from "exceljs";
+import { getBrowser } from "../config/browser.js";
 
 const getValues = (p, type) => ({
-  ingredients: type === "batch" ? Number(p.ingredients_cost) : Number(p.materialCPP),
+  ingredients:
+    type === "batch" ? Number(p.ingredients_cost) : Number(p.materialCPP),
   labor: type === "batch" ? Number(p.labor_cost) : Number(p.employeeCPP),
-  expenses: type === "batch" ? Number(p.expense_cost) : Number(p.otherExpenseCPP),
+  expenses:
+    type === "batch" ? Number(p.expense_cost) : Number(p.otherExpenseCPP),
   totalCOGS: type === "batch" ? Number(p.totalCPB) : Number(p.totalCPP),
-  netProfit: type === "batch"
-    ? Number(p.netProfitPerUnit) * Number(p.total_sellable_units)
-    : Number(p.netProfitPerUnit),
+  netProfit:
+    type === "batch"
+      ? Number(p.netProfitPerUnit) * Number(p.total_sellable_units)
+      : Number(p.netProfitPerUnit),
   cogsLabel: type === "batch" ? "Total COGS" : "COGS per Unit",
   netProfitLabel: type === "batch" ? "Net Profit/Batch" : "Net Profit/Unit",
 });
 
 const getSummary = (products, type) => {
   const totalProducts = products.length;
-  const avgROI = products.reduce((sum, p) => sum + Number(p.roi), 0) / totalProducts;
-  const avgMargin = products.reduce((sum, p) => sum + Number(p.profit_margin), 0) / totalProducts;
-  const mostProfitable = products.reduce((a, b) => Number(a.roi) > Number(b.roi) ? a : b);
-  const leastProfitable = products.reduce((a, b) => Number(a.roi) < Number(b.roi) ? a : b);
-  const highestCOGS = products.reduce((a, b) => getValues(a, type).totalCOGS > getValues(b, type).totalCOGS ? a : b);
-  const lowestCOGS = products.reduce((a, b) => getValues(a, type).totalCOGS < getValues(b, type).totalCOGS ? a : b);
-  const totalIngredients = products.reduce((sum, p) => sum + getValues(p, type).ingredients, 0);
-  const totalLabor = products.reduce((sum, p) => sum + getValues(p, type).labor, 0);
-  const totalExpenses = products.reduce((sum, p) => sum + getValues(p, type).expenses, 0);
-  const totalCOGS = products.reduce((sum, p) => sum + getValues(p, type).totalCOGS, 0);
-  const totalNetProfit = products.reduce((sum, p) => sum + getValues(p, type).netProfit, 0);
+  const avgROI =
+    products.reduce((sum, p) => sum + Number(p.roi), 0) / totalProducts;
+  const avgMargin =
+    products.reduce((sum, p) => sum + Number(p.profit_margin), 0) /
+    totalProducts;
+  const mostProfitable = products.reduce((a, b) =>
+    Number(a.roi) > Number(b.roi) ? a : b,
+  );
+  const leastProfitable = products.reduce((a, b) =>
+    Number(a.roi) < Number(b.roi) ? a : b,
+  );
+  const highestCOGS = products.reduce((a, b) =>
+    getValues(a, type).totalCOGS > getValues(b, type).totalCOGS ? a : b,
+  );
+  const lowestCOGS = products.reduce((a, b) =>
+    getValues(a, type).totalCOGS < getValues(b, type).totalCOGS ? a : b,
+  );
+  const totalIngredients = products.reduce(
+    (sum, p) => sum + getValues(p, type).ingredients,
+    0,
+  );
+  const totalLabor = products.reduce(
+    (sum, p) => sum + getValues(p, type).labor,
+    0,
+  );
+  const totalExpenses = products.reduce(
+    (sum, p) => sum + getValues(p, type).expenses,
+    0,
+  );
+  const totalCOGS = products.reduce(
+    (sum, p) => sum + getValues(p, type).totalCOGS,
+    0,
+  );
+  const totalNetProfit = products.reduce(
+    (sum, p) => sum + getValues(p, type).netProfit,
+    0,
+  );
 
   return {
-    totalProducts, avgROI, avgMargin,
-    mostProfitable, leastProfitable,
-    highestCOGS, lowestCOGS,
-    totalIngredients, totalLabor,
-    totalExpenses, totalCOGS, totalNetProfit,
+    totalProducts,
+    avgROI,
+    avgMargin,
+    mostProfitable,
+    leastProfitable,
+    highestCOGS,
+    lowestCOGS,
+    totalIngredients,
+    totalLabor,
+    totalExpenses,
+    totalCOGS,
+    totalNetProfit,
   };
 };
 
-export const fetchProductCostSummaryPDFService = async (createdBy, type = "batch") => {
+export const fetchProductCostSummaryPDFService = async (
+  createdBy,
+  type = "batch",
+) => {
   const products = await getProductsWithProfit(createdBy);
   const s = getSummary(products, type);
-
-  const summaryCards = `
+  try {
+    const summaryCards = `
     <div class="cards">
       <div class="card">
         <div class="card-label">Total Products</div>
@@ -95,11 +134,12 @@ export const fetchProductCostSummaryPDFService = async (createdBy, type = "batch
         <div class="card-value">${s.lowestCOGS.product_name}</div>
         <div class="card-sub">₱${getValues(s.lowestCOGS, type).totalCOGS.toFixed(2)}</div>
       </div>
-    </div>`
+    </div>`;
 
-  const summaryRows = products.map((p) => {
-    const v = getValues(p, type);
-    return `
+    const summaryRows = products
+      .map((p) => {
+        const v = getValues(p, type);
+        return `
       <tr>
         <td>${p.product_name}</td>
         <td>₱${v.ingredients.toFixed(2)}</td>
@@ -111,12 +151,14 @@ export const fetchProductCostSummaryPDFService = async (createdBy, type = "batch
         <td>${Number(p.roi).toFixed(2)}%</td>
         <td>${p.breakEvenUnits ?? "N/A"}</td>
         <td>₱${p.breakEvenRevenue ? Number(p.breakEvenRevenue).toFixed(2) : "N/A"}</td>
-      </tr>`
-  }).join("");
+      </tr>`;
+      })
+      .join("");
 
-  const detailPages = products.map((p) => {
-    const v = getValues(p, type);
-    return `
+    const detailPages = products
+      .map((p) => {
+        const v = getValues(p, type);
+        return `
       <div class="page">
         <h2>${p.product_name}</h2>
         <table>
@@ -131,10 +173,11 @@ export const fetchProductCostSummaryPDFService = async (createdBy, type = "batch
           <tr><td>Break-even Units</td><td>${p.breakEvenUnits ?? "N/A"}</td></tr>
           <tr><td>Break-even Revenue</td><td>₱${p.breakEvenRevenue ? Number(p.breakEvenRevenue).toFixed(2) : "N/A"}</td></tr>
         </table>
-      </div>`
-  }).join("");
+      </div>`;
+      })
+      .join("");
 
-  const html = `
+    const html = `
     <html>
     <head>
       <style>
@@ -196,20 +239,26 @@ export const fetchProductCostSummaryPDFService = async (createdBy, type = "batch
     </body>
     </html>`;
 
-  const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
-  const page = await browser.newPage();
-  await page.setContent(html, { waitUntil: "networkidle0" });
-  const pdf = await page.pdf({
-    format: "A4",
-    landscape: true,
-    printBackground: true,
-    margin: { top: "20px", bottom: "20px", left: "20px", right: "20px" },
-  });
-  await browser.close();
-  return pdf;
+    const browser = await getBrowser();
+    const page = await browser.newPage();
+    await page.setContent(html, { waitUntil: "networkidle0" });
+    const pdf = await page.pdf({
+      format: "A4",
+      landscape: true,
+      printBackground: true,
+      margin: { top: "20px", bottom: "20px", left: "20px", right: "20px" },
+    });
+    await browser.close();
+    return pdf;
+  } catch (err) {
+    console.error("Error: ", err);
+  }
 };
 
-export const fetchProductCostSummaryExcelService = async (createdBy, type = "batch") => {
+export const fetchProductCostSummaryExcelService = async (
+  createdBy,
+  type = "batch",
+) => {
   const products = await getProductsWithProfit(createdBy);
   const s = getSummary(products, type);
   const workbook = new ExcelJS.Workbook();
@@ -221,10 +270,19 @@ export const fetchProductCostSummaryExcelService = async (createdBy, type = "bat
   ];
 
   summarySheet.getRow(1).font = { bold: true, color: { argb: "FFFFFFFF" } };
-  summarySheet.getRow(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF1F2937" } };
+  summarySheet.getRow(1).fill = {
+    type: "pattern",
+    pattern: "solid",
+    fgColor: { argb: "FF1F2937" },
+  };
   summarySheet.getRow(1).height = 20;
   summarySheet.getRow(1).eachCell((cell) => {
-    cell.border = { top: { style: "thin" }, left: { style: "thin" }, bottom: { style: "thin" }, right: { style: "thin" } };
+    cell.border = {
+      top: { style: "thin" },
+      left: { style: "thin" },
+      bottom: { style: "thin" },
+      right: { style: "thin" },
+    };
     cell.alignment = { vertical: "middle", horizontal: "center" };
   });
 
@@ -237,10 +295,22 @@ export const fetchProductCostSummaryExcelService = async (createdBy, type = "bat
     ["Total Other Expenses", s.totalExpenses],
     ["Total COGS", s.totalCOGS],
     ["Total Net Profit", s.totalNetProfit],
-    ["Most Profitable Product", `${s.mostProfitable.product_name} (${Number(s.mostProfitable.roi).toFixed(2)}% ROI)`],
-    ["Least Profitable Product", `${s.leastProfitable.product_name} (${Number(s.leastProfitable.roi).toFixed(2)}% ROI)`],
-    ["Highest COGS Product", `${s.highestCOGS.product_name} (₱${getValues(s.highestCOGS, type).totalCOGS.toFixed(2)})`],
-    ["Lowest COGS Product", `${s.lowestCOGS.product_name} (₱${getValues(s.lowestCOGS, type).totalCOGS.toFixed(2)})`],
+    [
+      "Most Profitable Product",
+      `${s.mostProfitable.product_name} (${Number(s.mostProfitable.roi).toFixed(2)}% ROI)`,
+    ],
+    [
+      "Least Profitable Product",
+      `${s.leastProfitable.product_name} (${Number(s.leastProfitable.roi).toFixed(2)}% ROI)`,
+    ],
+    [
+      "Highest COGS Product",
+      `${s.highestCOGS.product_name} (₱${getValues(s.highestCOGS, type).totalCOGS.toFixed(2)})`,
+    ],
+    [
+      "Lowest COGS Product",
+      `${s.lowestCOGS.product_name} (₱${getValues(s.lowestCOGS, type).totalCOGS.toFixed(2)})`,
+    ],
   ];
 
   summaryData.forEach(([metric, value], index) => {
@@ -248,16 +318,27 @@ export const fetchProductCostSummaryExcelService = async (createdBy, type = "bat
     const isEven = index % 2 === 0;
     row.eachCell((cell) => {
       cell.alignment = { vertical: "middle" };
-      cell.border = { top: { style: "thin" }, left: { style: "thin" }, bottom: { style: "thin" }, right: { style: "thin" } };
-      cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: isEven ? "FFF9FAFB" : "FFFFFFFF" } };
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      };
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: isEven ? "FFF9FAFB" : "FFFFFFFF" },
+      };
     });
     if ([1, 2].includes(index)) row.getCell("value").numFmt = "0.00%";
-    if ([3, 4, 5, 6, 7].includes(index)) row.getCell("value").numFmt = '"₱"#,##0.00';
+    if ([3, 4, 5, 6, 7].includes(index))
+      row.getCell("value").numFmt = '"₱"#,##0.00';
   });
 
   const breakdown = workbook.addWorksheet("Product Breakdown");
   const cogsLabel = type === "batch" ? "Total COGS" : "COGS per Unit";
-  const netProfitLabel = type === "batch" ? "Net Profit/Batch" : "Net Profit/Unit";
+  const netProfitLabel =
+    type === "batch" ? "Net Profit/Batch" : "Net Profit/Unit";
 
   breakdown.columns = [
     { header: "Product", key: "product_name", width: 25 },
@@ -273,10 +354,19 @@ export const fetchProductCostSummaryExcelService = async (createdBy, type = "bat
   ];
 
   breakdown.getRow(1).font = { bold: true, color: { argb: "FFFFFFFF" } };
-  breakdown.getRow(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF1F2937" } };
+  breakdown.getRow(1).fill = {
+    type: "pattern",
+    pattern: "solid",
+    fgColor: { argb: "FF1F2937" },
+  };
   breakdown.getRow(1).height = 20;
   breakdown.getRow(1).eachCell((cell) => {
-    cell.border = { top: { style: "thin" }, left: { style: "thin" }, bottom: { style: "thin" }, right: { style: "thin" } };
+    cell.border = {
+      top: { style: "thin" },
+      left: { style: "thin" },
+      bottom: { style: "thin" },
+      right: { style: "thin" },
+    };
     cell.alignment = { vertical: "middle", horizontal: "center" };
   });
 
@@ -298,12 +388,31 @@ export const fetchProductCostSummaryExcelService = async (createdBy, type = "bat
     const isEven = index % 2 === 0;
     row.eachCell((cell) => {
       cell.alignment = { vertical: "middle", horizontal: "center" };
-      cell.border = { top: { style: "thin" }, left: { style: "thin" }, bottom: { style: "thin" }, right: { style: "thin" } };
-      cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: isEven ? "FFF9FAFB" : "FFFFFFFF" } };
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      };
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: isEven ? "FFF9FAFB" : "FFFFFFFF" },
+      };
     });
 
-    const moneyKeys = ["ingredients", "labor", "expenses", "totalCOGS", "finalPrice", "netProfit", "breakEvenRevenue"];
-    moneyKeys.forEach((key) => { row.getCell(key).numFmt = '"₱"#,##0.00' });
+    const moneyKeys = [
+      "ingredients",
+      "labor",
+      "expenses",
+      "totalCOGS",
+      "finalPrice",
+      "netProfit",
+      "breakEvenRevenue",
+    ];
+    moneyKeys.forEach((key) => {
+      row.getCell(key).numFmt = '"₱"#,##0.00';
+    });
     row.getCell("roi").numFmt = "0.00%";
   });
 
@@ -316,9 +425,18 @@ export const fetchProductCostSummaryExcelService = async (createdBy, type = "bat
     ];
 
     sheet.getRow(1).font = { bold: true, color: { argb: "FFFFFFFF" } };
-    sheet.getRow(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF1F2937" } };
+    sheet.getRow(1).fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "FF1F2937" },
+    };
     sheet.getRow(1).eachCell((cell) => {
-      cell.border = { top: { style: "thin" }, left: { style: "thin" }, bottom: { style: "thin" }, right: { style: "thin" } };
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      };
       cell.alignment = { vertical: "middle", horizontal: "center" };
     });
 
@@ -331,16 +449,25 @@ export const fetchProductCostSummaryExcelService = async (createdBy, type = "bat
       [v.netProfitLabel, v.netProfit],
       ["ROI", Number(p.roi) / 100],
       ["Break-even Units", p.breakEvenUnits ?? "N/A"],
-      ["Break-even Revenue", p.breakEvenRevenue ? Number(p.breakEvenRevenue) : 0],
+      [
+        "Break-even Revenue",
+        p.breakEvenRevenue ? Number(p.breakEvenRevenue) : 0,
+      ],
     ];
 
     data.forEach((rowData, index) => {
       const row = sheet.addRow(rowData);
       row.eachCell((cell) => {
         cell.alignment = { vertical: "middle" };
-        cell.border = { top: { style: "thin" }, left: { style: "thin" }, bottom: { style: "thin" }, right: { style: "thin" } };
+        cell.border = {
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
+        };
       });
-      if ([0, 1, 2, 3, 4, 5, 8].includes(index)) row.getCell(2).numFmt = '"₱"#,##0.00';
+      if ([0, 1, 2, 3, 4, 5, 8].includes(index))
+        row.getCell(2).numFmt = '"₱"#,##0.00';
       if (index === 6) row.getCell(2).numFmt = "0.00%";
     });
   });
