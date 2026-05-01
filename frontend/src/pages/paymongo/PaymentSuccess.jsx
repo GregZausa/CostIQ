@@ -15,9 +15,11 @@ const PaymentSuccess = () => {
       try {
         const res = await authFetch(`${apiUrl}/auth/me`);
         const data = await res.json();
+        console.log("ME RESPONSE:", data)
 
-        if (data.is_premium) {
+        if (data.user?.is_premium) {
           setStatus("success");
+          clearInterval(interval)
         } else {
           setStatus("pending");
         }
@@ -33,7 +35,7 @@ const PaymentSuccess = () => {
     const timer = setTimeout(() => {
       clearInterval(interval);
       navigate("/dashboard");
-    }, 5000);
+    }, 10000);
 
     return () => {
       clearInterval(interval);

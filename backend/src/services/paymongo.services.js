@@ -74,12 +74,13 @@ export const createSubscriptionCheckout = async (userId, plan) => {
 
 export const handlePaymongoWebhook = async (payload) => {
   try {
-    console.log("WEBHOOK HIT");
+    console.log("WEBHOOK PAYLOAD:", JSON.stringify(payload, null, 2))
 
     const event = payload.data;
     const type = event.attributes.type;
+    console.log("EVENT TYPE:", type)
 
-    if (!type.includes("payment")) return;
+    if (type !== "checkout_session.payment.paid") return;
 
     const session = event.attributes.data;
     const metadata = session?.attributes?.metadata || {};
