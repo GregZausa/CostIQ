@@ -10,7 +10,10 @@ export const findUserByEmail = async (email) => {
 };
 
 export const getUserById = async (userId) => {
-  const query = `SELECT first_name FROM users WHERE id = $1 LIMIT 1`;
+  const query = `SELECT id, first_name, last_name,
+                email, is_premium, subscription_status, premium_since,
+                premium_until
+                FROM users WHERE id = $1 LIMIT 1`;
 
   const { rows } = await pool.query(query, [userId]);
   return rows[0];
