@@ -17,7 +17,9 @@ export const createCheckout = async (req, res) => {
 
 export const paymongoWebhook = async (req, res) => {
   try {
-    await handlePaymongoWebhook(req.body);
+    const payload = JSON.parse(req.body.toString());
+    console.log("WEBHOOK HIT", JSON.stringify(payload, null, 2));
+    await handlePaymongoWebhook(payload);
     res.sendStatus(200);
   } catch (err) {
     console.error("Webhook error", err);

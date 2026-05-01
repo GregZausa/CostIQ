@@ -11,11 +11,12 @@ import productRoutes from "./src/routes/product.route.js";
 import productCostSummary from "./src/routes/product-cost-summary.route.js";
 import financialOverview from "./src/routes/financial-overview.route.js";
 import pricingGuide from "./src/routes/pricing-guide.route.js";
-import paymongoRoutes from "./src/routes/paymongo.route.js"
+import paymongoRoutes from "./src/routes/paymongo.route.js";
 import dotenv from "dotenv";
 dotenv.config();
 import "./src/config/db.js";
 import "./src/jobs/cleanupPositions.js";
+import { paymongoWebhook } from "./src/controllers/paymongo.controller.js";
 
 const app = express();
 const port = process.env.PORT || "5001";
@@ -28,6 +29,12 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
+
+app.post(
+  "/api/paymongo/webhook",
+  express.raw({ type: "application/json" }),
+  paymongoWebhook,
+);
 app.use(cookieParser());
 app.use("/api/auth", express.json(), authRoutes);
 app.use("/api", express.json(), unitRoutes);
@@ -39,7 +46,7 @@ app.use("/api", productRoutes);
 app.use("/api", express.json(), productCostSummary);
 app.use("/api", express.json(), financialOverview);
 app.use("/api", express.json(), pricingGuide);
-app.use("/api/paymongo", paymongoRoutes)
+app.use("/api/paymongo", express.json(), paymongoRoutes);
 
 app.listen(port, () => {
   console.log(`Server started at ${port}`);
