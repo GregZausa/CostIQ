@@ -15,11 +15,11 @@ const PaymentSuccess = () => {
       try {
         const res = await authFetch(`${apiUrl}/auth/me`);
         const data = await res.json();
-        console.log("ME RESPONSE:", data)
+        console.log("ME RESPONSE:", data);
 
         if (data.user?.is_premium) {
           setStatus("success");
-          clearInterval(interval)
+          clearInterval(interval);
         } else {
           setStatus("pending");
         }
@@ -47,7 +47,7 @@ const PaymentSuccess = () => {
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center space-y-4">
         <div className="text-6xl">
-          {status === "success" ? "🎉" : "⏳"}
+          <span>{status === "success" ? "🎉" : "⏳"}</span>
         </div>
 
         <h1 className="text-2xl font-bold text-slate-800">
@@ -57,7 +57,8 @@ const PaymentSuccess = () => {
         </h1>
 
         <p className="text-slate-500">
-          Your {plan === "annual" ? "annual" : "monthly"} subscription is being verified.
+          Your {plan === "annual" ? "annual" : "monthly"} subscription is being
+          verified.
         </p>
 
         <p className="text-sm text-slate-400">
