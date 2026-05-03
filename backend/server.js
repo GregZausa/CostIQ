@@ -11,6 +11,7 @@ import productRoutes from "./src/routes/product.route.js";
 import productCostSummary from "./src/routes/product-cost-summary.route.js";
 import financialOverview from "./src/routes/financial-overview.route.js";
 import pricingGuide from "./src/routes/pricing-guide.route.js";
+import whatIfIncomeGoalReport from "./src/routes/what-if-income-goal-report.route.js"
 import paymongoRoutes from "./src/routes/paymongo.route.js";
 import dotenv from "dotenv";
 dotenv.config();
@@ -46,6 +47,7 @@ app.use("/api", productRoutes);
 app.use("/api", express.json(), productCostSummary);
 app.use("/api", express.json(), financialOverview);
 app.use("/api", express.json(), pricingGuide);
+app.use("/api", express.json(), whatIfIncomeGoalReport);
 app.use("/api/paymongo", express.json(), paymongoRoutes);
 
 app.listen(port, () => {

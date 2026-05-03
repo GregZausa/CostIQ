@@ -19,10 +19,10 @@ import Products from "../pages/Products";
 import ProductList from "../pages/ProductList";
 import ProductCostSummary from "../pages/ProductCostSummary";
 import PricingGuideReport from "../pages/PricingGuideReport";
-import OtherExpensesReport from "../pages/OtherExpensesReport";
 import FinancialOverview from "../pages/FinancialOverview";
 import Pricing from "../pages/paymongo/Pricing";
 import PaymentSuccess from "../pages/paymongo/PaymentSuccess";
+import WhatIfIncomeGoalReport from "../pages/WhatIfIncomeGoalReport";
 
 export const routes = [
   {
@@ -120,8 +120,8 @@ export const routes = [
         icon: FileBarChart,
       },
       {
-        path: "/reports/other-expenses-report",
-        label: "Other Expenses Report",
+        path: "/reports/what-if-income-goal-report",
+        label: "What-if Income Goal Report",
         icon: FileBarChart,
       },
     ],
@@ -191,10 +191,10 @@ export const routes = [
     ),
   },
   {
-    path: "/reports/other-expenses-report",
+    path: "/reports/what-if-income-goal-report",
     element: (
       <MainLayout>
-        <OtherExpensesReport />
+        <WhatIfIncomeGoalReport />
       </MainLayout>
     ),
   },
