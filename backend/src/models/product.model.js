@@ -149,7 +149,7 @@ export const getOtherExpenseCostPerBatch = async (id, createdBy) => {
                 SELECT SUM(
                   CASE 
                     WHEN oe.expense_type = 'per_unit'
-                      THEN (oe.expense_cost * poe.quantity) 
+                      THEN oe.expense_cost
                           / NULLIF(p.total_sellable_units, 0)
 
                     WHEN oe.expense_type = 'one_time'
@@ -158,12 +158,12 @@ export const getOtherExpenseCostPerBatch = async (id, createdBy) => {
                           / NULLIF(p.batch_per_day * 365, 0)
 
                     WHEN oe.expense_type = 'one_month'
-                      THEN oe.expense_cost 
-                          / COALESCE(epc.product_count, 1)
+                      THEN (oe.expense_cost 
+                          / COALESCE(epc.product_count, 1))
                           / NULLIF(p.batch_per_day * 30, 0)
 
                     WHEN oe.expense_type = 'per_batch'
-                      THEN oe.expense_cost * poe.quantity
+                      THEN oe.expense_cost
 
                     ELSE 0
                   END
