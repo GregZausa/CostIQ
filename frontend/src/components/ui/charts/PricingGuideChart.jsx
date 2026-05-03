@@ -15,6 +15,8 @@ import {
 } from "recharts";
 import ProductCardLayout from "../../layout/ProductCardLayout";
 import { TrendingDown } from "lucide-react";
+import { useAuth } from "../../../hooks/useAuth";
+import PremiumCard from "../../cards/PremiumCard";
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -47,6 +49,7 @@ const inputClass =
   "w-14 text-xs border border-slate-200 rounded-lg px-2 py-1.5 text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-100 bg-white";
 
 const PricingGuideChart = ({ computed = {} }) => {
+  const { user } = useAuth();
   const {
     totalCPP = 0,
     totalCPB = 0,
@@ -87,121 +90,149 @@ const PricingGuideChart = ({ computed = {} }) => {
 
   return (
     <ProductCardLayout title="Pricing Guide" icon={TrendingDown}>
-      <div className="flex items-center gap-3 px-3 pt-2 pb-1">
-        <div className="flex items-center gap-1.5">
-          <span className="text-xs text-slate-400 font-medium">Max Discount</span>
-          <input
-            type="number"
-            min={10}
-            max={99}
-            value={maxDiscount}
-            onChange={(e) => setMaxDiscount(Number(e.target.value))}
-            className={inputClass}
-          />
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="text-xs text-slate-400 font-medium">Step</span>
-          <select
-            value={step}
-            onChange={(e) => setStep(Number(e.target.value))}
-            className={inputClass}
-          >
-            <option value={5}>5%</option>
-            <option value={10}>10%</option>
-            <option value={20}>20%</option>
-          </select>
-        </div>
-        <div className="ml-auto flex items-center gap-3">
-          <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded-sm bg-blue-600" />
-            <span className="text-xs text-slate-400">Current: {discount}%</span>
-          </div>
-          {breakEvenDiscount && (
+      {!user?.is_premium ? (
+        <PremiumCard message="Unlock pricing guide to check how different prices works" />
+      ) : (
+        <>
+          <div className="flex items-center gap-3 px-3 pt-2 pb-1">
             <div className="flex items-center gap-1.5">
-              <div className="w-2.5 h-0.5 bg-red-400" style={{ borderTop: "2px dashed #f87171" }} />
-              <span className="text-xs text-red-400">Break-even: {breakEvenDiscount.discount}</span>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <ResponsiveContainer width="100%" height={230}>
-        <ComposedChart
-          data={data}
-          margin={{ top: 10, right: 20, bottom: 0, left: 0 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-          <XAxis
-            dataKey="discount"
-            tick={{ fontSize: 11, fill: "#94a3b8" }}
-            axisLine={false}
-            tickLine={false}
-          />
-          <YAxis
-            yAxisId="left"
-            tick={{ fontSize: 11, fill: "#94a3b8" }}
-            axisLine={false}
-            tickLine={false}
-            width={45}
-            tickFormatter={(v) => `₱${v}`}
-          />
-          <YAxis
-            yAxisId="right"
-            orientation="right"
-            tick={{ fontSize: 11, fill: "#94a3b8" }}
-            axisLine={false}
-            tickLine={false}
-            width={40}
-            unit="%"
-          />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: "#f8fafc" }} />
-          <Legend
-            wrapperStyle={{ fontSize: "12px", paddingTop: "8px" }}
-            iconType="circle"
-            iconSize={8}
-          />
-
-          {breakEvenDiscount && (
-            <ReferenceLine
-              x={breakEvenDiscount.discount}
-              yAxisId="left"
-              stroke="#f87171"
-              strokeDasharray="4 4"
-              strokeWidth={1.5}
-            />
-          )}
-
-          <Area
-            yAxisId="left"
-            type="monotone"
-            dataKey="finalPrice"
-            name="Final Price"
-            fill="#fef3c7"
-            stroke="#f59e0b"
-            strokeWidth={2}
-            dot={false}
-          />
-          <Bar yAxisId="right" dataKey="roi" name="ROI %" barSize={24} fill="#6e99f0">
-            {data.map((entry, index) => (
-              <Cell
-                key={index}
-                fill={entry.isCurrent ? "#2563eb" : "#6e99f0"}
-                radius={[4, 4, 0, 0]}
+              <span className="text-xs text-slate-400 font-medium">
+                Max Discount
+              </span>
+              <input
+                type="number"
+                min={10}
+                max={99}
+                value={maxDiscount}
+                onChange={(e) => setMaxDiscount(Number(e.target.value))}
+                className={inputClass}
               />
-            ))}
-          </Bar>
-          <Line
-            yAxisId="left"
-            type="monotone"
-            dataKey="profit"
-            name="Profit / Unit"
-            stroke="#4ade80"
-            strokeWidth={2.5}
-            dot={{ fill: "#4ade80", r: 3, strokeWidth: 0 }}
-            activeDot={{ r: 5, strokeWidth: 0 }}
-          />
-        </ComposedChart>
-      </ResponsiveContainer>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs text-slate-400 font-medium">Step</span>
+              <select
+                value={step}
+                onChange={(e) => setStep(Number(e.target.value))}
+                className={inputClass}
+              >
+                <option value={5}>5%</option>
+                <option value={10}>10%</option>
+                <option value={20}>20%</option>
+              </select>
+            </div>
+            <div className="ml-auto flex items-center gap-3">
+              <div className="flex items-center gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-sm bg-blue-600" />
+                <span className="text-xs text-slate-400">
+                  Current: {discount}%
+                </span>
+              </div>
+              {breakEvenDiscount && (
+                <div className="flex items-center gap-1.5">
+                  <div
+                    className="w-2.5 h-0.5 bg-red-400"
+                    style={{ borderTop: "2px dashed #f87171" }}
+                  />
+                  <span className="text-xs text-red-400">
+                    Break-even: {breakEvenDiscount.discount}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <ResponsiveContainer width="100%" height={230}>
+            <ComposedChart
+              data={data}
+              margin={{ top: 10, right: 20, bottom: 0, left: 0 }}
+            >
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="#f1f5f9"
+                vertical={false}
+              />
+              <XAxis
+                dataKey="discount"
+                tick={{ fontSize: 11, fill: "#94a3b8" }}
+                axisLine={false}
+                tickLine={false}
+              />
+              <YAxis
+                yAxisId="left"
+                tick={{ fontSize: 11, fill: "#94a3b8" }}
+                axisLine={false}
+                tickLine={false}
+                width={45}
+                tickFormatter={(v) => `₱${v}`}
+              />
+              <YAxis
+                yAxisId="right"
+                orientation="right"
+                tick={{ fontSize: 11, fill: "#94a3b8" }}
+                axisLine={false}
+                tickLine={false}
+                width={40}
+                unit="%"
+              />
+              <Tooltip
+                content={<CustomTooltip />}
+                cursor={{ fill: "#f8fafc" }}
+              />
+              <Legend
+                wrapperStyle={{ fontSize: "12px", paddingTop: "8px" }}
+                iconType="circle"
+                iconSize={8}
+              />
+
+              {breakEvenDiscount && (
+                <ReferenceLine
+                  x={breakEvenDiscount.discount}
+                  yAxisId="left"
+                  stroke="#f87171"
+                  strokeDasharray="4 4"
+                  strokeWidth={1.5}
+                />
+              )}
+
+              <Area
+                yAxisId="left"
+                type="monotone"
+                dataKey="finalPrice"
+                name="Final Price"
+                fill="#fef3c7"
+                stroke="#f59e0b"
+                strokeWidth={2}
+                dot={false}
+              />
+              <Bar
+                yAxisId="right"
+                dataKey="roi"
+                name="ROI %"
+                barSize={24}
+                fill="#6e99f0"
+              >
+                {data.map((entry, index) => (
+                  <Cell
+                    key={index}
+                    fill={entry.isCurrent ? "#2563eb" : "#6e99f0"}
+                    radius={[4, 4, 0, 0]}
+                  />
+                ))}
+              </Bar>
+              <Line
+                yAxisId="left"
+                type="monotone"
+                dataKey="profit"
+                name="Profit / Unit"
+                stroke="#4ade80"
+                strokeWidth={2.5}
+                dot={{ fill: "#4ade80", r: 3, strokeWidth: 0 }}
+                activeDot={{ r: 5, strokeWidth: 0 }}
+              />
+            </ComposedChart>
+          </ResponsiveContainer>
+        </>
+      )}
     </ProductCardLayout>
   );
 };

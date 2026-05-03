@@ -91,22 +91,18 @@ const ProductCostSummaryTable = ({ computedProducts, reportType, setReportType, 
       />
 
       <div className="flex items-center justify-end  gap-2">
-        <div className="flex items-center justify-between">
           <Button
             label="Export to PDF"
             onClick={() => downloadProductCostSummaryPDF(reportType)}
             variant="danger"
             icon={<FileText size={16} />}
           />
-        </div>
-        <div className="flex items-center justify-between">
           <Button
             label="Export to Excel"
             onClick={() => downloadProductCostSummaryExcel(reportType)}
             variant="excel"
             icon={<FileSpreadsheet size={16} />}
           />
-        </div>
       </div>
     </div>
   );

@@ -13,6 +13,8 @@ import {
 } from "recharts";
 import ProductCardLayout from "../../layout/ProductCardLayout";
 import { LayoutGrid } from "lucide-react";
+import { useAuth } from "../../../hooks/useAuth";
+import PremiumCard from "../../cards/PremiumCard";
 
 const QUADRANTS = [
   { label: "Goldmine", color: "#4ade80" },
@@ -52,7 +54,7 @@ const CustomTooltip = ({ active, payload }) => {
 
 const CustomDot = (props) => {
   const { cx, cy, payload, avgX, avgY } = props;
-  const isGoldmine = payload.y > 0 && payload.z >= 50; 
+  const isGoldmine = payload.y > 0 && payload.z >= 50;
   const isStar = payload.y > 0 && payload.z < 50;
   const isOptimize = payload.y <= 0 && payload.x <= avgX;
   const isDanger = payload.y <= 0 && payload.x > avgX;
@@ -95,86 +97,101 @@ const CustomDot = (props) => {
 };
 
 const ProductPerformanceChart = ({ data = [], avgX, avgY }) => {
+  const { user } = useAuth();
   if (data.length === 0) return null;
 
   return (
     <ProductCardLayout title="Product Performance Matrix" icon={LayoutGrid}>
-      <div className="flex items-center gap-3 px-3 pt-1 pb-1 flex-wrap">
-        {QUADRANTS.map((q) => (
-          <div key={q.label} className="flex items-center gap-1.5">
-            <div
-              className="w-2.5 h-2.5 rounded-full"
-              style={{ backgroundColor: q.color }}
-            />
-            <span className="text-xs text-slate-500">{q.label}</span>
+      {!user?.is_premium ? (
+        <PremiumCard message="Unlock Product Performance Matrix to check how well your products working"/>
+      ) : (
+        <>
+          <div className="flex items-center gap-3 px-3 pt-1 pb-1 flex-wrap">
+            {QUADRANTS.map((q) => (
+              <div key={q.label} className="flex items-center gap-1.5">
+                <div
+                  className="w-2.5 h-2.5 rounded-full"
+                  style={{ backgroundColor: q.color }}
+                />
+                <span className="text-xs text-slate-500">{q.label}</span>
+              </div>
+            ))}
+            <span className="text-xs text-slate-400 ml-auto">
+              Bubble size = ROI %
+            </span>
           </div>
-        ))}
-        <span className="text-xs text-slate-400 ml-auto">
-          Bubble size = ROI %
-        </span>
-      </div>
 
-      <div className="relative">
-        <ResponsiveContainer width="100%" height={200}>
-          <ScatterChart margin={{ top: 0, right: 30, bottom: 0, left: 10 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-            <XAxis
-              type="number"
-              dataKey="x"
-              name="COGS"
-              tick={{ fontSize: 11, fill: "#94a3b8" }}
-              axisLine={false}
-              tickLine={false}
-              tickFormatter={(v) => `₱${v}`}
-            >
-              <Label
-                value="Cost Per Unit (COGS)"
-                offset={-10}
-                position="insideBottom"
-                style={{ fontSize: 11, fill: "#94a3b8" }}
-              />
-            </XAxis>
-            <YAxis
-              type="number"
-              dataKey="y"
-              name="Profit"
-              tick={{ fontSize: 11, fill: "#94a3b8" }}
-              axisLine={false}
-              tickLine={false}
-              tickFormatter={(v) => `₱${v}`}
-              width={50}
-            >
-              <Label
-                value="Profit / Unit"
-                angle={-90}
-                position="insideLeft"
-                style={{ fontSize: 11, fill: "#94a3b8" }}
-              />
-            </YAxis>
-            <ZAxis type="number" dataKey="z" range={[100, 800]} name="ROI" />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: "#f8fafc" }} />
-            <ReferenceLine
-              x={avgX}
-              stroke="#cbd5e1"
-              strokeDasharray="4 4"
-              strokeWidth={1.5}
-            />
-            <ReferenceLine
-              y={avgY}
-              stroke="#cbd5e1"
-              strokeDasharray="4 4"
-              strokeWidth={1.5}
-            />
+          <div className="relative">
+            <ResponsiveContainer width="100%" height={200}>
+              <ScatterChart margin={{ top: 0, right: 30, bottom: 0, left: 10 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                <XAxis
+                  type="number"
+                  dataKey="x"
+                  name="COGS"
+                  tick={{ fontSize: 11, fill: "#94a3b8" }}
+                  axisLine={false}
+                  tickLine={false}
+                  tickFormatter={(v) => `₱${v}`}
+                >
+                  <Label
+                    value="Cost Per Unit (COGS)"
+                    offset={-10}
+                    position="insideBottom"
+                    style={{ fontSize: 11, fill: "#94a3b8" }}
+                  />
+                </XAxis>
+                <YAxis
+                  type="number"
+                  dataKey="y"
+                  name="Profit"
+                  tick={{ fontSize: 11, fill: "#94a3b8" }}
+                  axisLine={false}
+                  tickLine={false}
+                  tickFormatter={(v) => `₱${v}`}
+                  width={50}
+                >
+                  <Label
+                    value="Profit / Unit"
+                    angle={-90}
+                    position="insideLeft"
+                    style={{ fontSize: 11, fill: "#94a3b8" }}
+                  />
+                </YAxis>
+                <ZAxis
+                  type="number"
+                  dataKey="z"
+                  range={[100, 800]}
+                  name="ROI"
+                />
+                <Tooltip
+                  content={<CustomTooltip />}
+                  cursor={{ fill: "#f8fafc" }}
+                />
+                <ReferenceLine
+                  x={avgX}
+                  stroke="#cbd5e1"
+                  strokeDasharray="4 4"
+                  strokeWidth={1.5}
+                />
+                <ReferenceLine
+                  y={avgY}
+                  stroke="#cbd5e1"
+                  strokeDasharray="4 4"
+                  strokeWidth={1.5}
+                />
 
-            <Scatter
-              data={data}
-              shape={(props) => (
-                <CustomDot {...props} avgX={avgX} avgY={avgY} />
-              )}
-            />
-          </ScatterChart>
-        </ResponsiveContainer>
-      </div>
+                <Scatter
+                  data={data}
+                  shape={(props) => (
+                    <CustomDot {...props} avgX={avgX} avgY={avgY} />
+                  )}
+                />
+              </ScatterChart>
+            </ResponsiveContainer>
+          </div>
+        </>
+      )}
     </ProductCardLayout>
   );
 };
