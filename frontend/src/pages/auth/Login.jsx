@@ -9,7 +9,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { setIsAuthenticated } = useAuth();
+  const { setIsAuthenticated, fetchCurrentUser } = useAuth();
 
   const navigate = useNavigate();
 
@@ -42,6 +42,7 @@ const Login = () => {
       }
       localStorage.setItem("token", data.token);
       setIsAuthenticated(true);
+      await fetchCurrentUser();
       toast.success("Logged In Successfully!");
       navigate("/dashboard", { replace: true });
     } catch {
