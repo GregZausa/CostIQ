@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { X, Menu, ChevronDown, LogOut } from "lucide-react";
 import { routes } from "../../config/routes";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import logo from "../../../res/logo-icon-removebg-preview.png";
 
@@ -10,6 +10,7 @@ const Sidebar = () => {
   const [openMenu, setOpenMenu] = useState(null);
   const { logout, user } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleMenu = (path) =>
     setOpenMenu((prev) => (prev === path ? null : path));
@@ -27,9 +28,10 @@ const Sidebar = () => {
 
   const navClass = (isActive) =>
     `group relative flex items-center justify-between py-2 px-3 rounded-lg text-sm font-medium transition-all duration-150
-    ${isActive
-      ? "bg-slate-50 text-slate-800"
-      : "text-slate-100 hover:bg-slate-100 hover:text-slate-800"
+    ${
+      isActive
+        ? "bg-slate-50 text-slate-800"
+        : "text-slate-100 hover:bg-slate-100 hover:text-slate-800"
     }`;
 
   return (
@@ -68,13 +70,17 @@ const Sidebar = () => {
             <p className="text-[11px] font-bold uppercase tracking-widest text-slate-200 leading-none mb-0.5">
               CostIQ
             </p>
-            <p className="text-xs text-slate-200 leading-none truncate">A tool just for you</p>
+            <p className="text-xs text-slate-200 leading-none truncate">
+              A tool just for you
+            </p>
           </div>
         </div>
 
         <div className="px-5 py-4 border-b border-slate-100">
           <p className="text-[11px] text-slate-200 mb-0.5">Signed in as</p>
-          <p className="text-sm font-semibold text-slate-100 truncate">{displayName}</p>
+          <p className="text-sm font-semibold text-slate-100 truncate">
+            {displayName}
+          </p>
         </div>
 
         <nav className="flex flex-col gap-0.5 px-3 py-4 flex-1">
@@ -102,7 +108,11 @@ const Sidebar = () => {
                       <div className="flex items-center gap-2.5">
                         <Icon
                           size={16}
-                          className={activeParent ? "text-slate-800" : "text-slate-100 group-hover:text-slate-200 transition-colors"}
+                          className={
+                            activeParent
+                              ? "text-slate-800"
+                              : "text-slate-100 group-hover:text-slate-200 transition-colors"
+                          }
                         />
                         {label}
                       </div>
@@ -117,29 +127,41 @@ const Sidebar = () => {
                       style={{ maxHeight: isOpenMenu ? "500px" : "0px" }}
                     >
                       <div className="ml-4 mt-0.5 mb-1 flex flex-col gap-0.5 border-l-2 border-slate-700 pl-3">
-                        {children.map(({ label: childLabel, path: childPath, icon: ChildIcon }) => (
-                          <NavLink
-                            key={childPath}
-                            to={childPath}
-                            onClick={handleNavClick}
-                            className={({ isActive }) => navClass(isActive)}
-                          >
-                            {({ isActive }) => (
-                              <>
-                                {isActive && (
-                                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.75 h-4 bg-slate-800 rounded-r-full" />
-                                )}
-                                <div className="flex items-center gap-2">
-                                  <ChildIcon
-                                    size={14}
-                                    className={isActive ? "text-slate-800" : "text-slate-400 group-hover:text-slate-600 transition-colors"}
-                                  />
-                                  <span className="text-xs">{childLabel}</span>
-                                </div>
-                              </>
-                            )}
-                          </NavLink>
-                        ))}
+                        {children.map(
+                          ({
+                            label: childLabel,
+                            path: childPath,
+                            icon: ChildIcon,
+                          }) => (
+                            <NavLink
+                              key={childPath}
+                              to={childPath}
+                              onClick={handleNavClick}
+                              className={({ isActive }) => navClass(isActive)}
+                            >
+                              {({ isActive }) => (
+                                <>
+                                  {isActive && (
+                                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.75 h-4 bg-slate-800 rounded-r-full" />
+                                  )}
+                                  <div className="flex items-center gap-2">
+                                    <ChildIcon
+                                      size={14}
+                                      className={
+                                        isActive
+                                          ? "text-slate-800"
+                                          : "text-slate-400 group-hover:text-slate-600 transition-colors"
+                                      }
+                                    />
+                                    <span className="text-xs">
+                                      {childLabel}
+                                    </span>
+                                  </div>
+                                </>
+                              )}
+                            </NavLink>
+                          ),
+                        )}
                       </div>
                     </div>
                   </div>
@@ -161,7 +183,11 @@ const Sidebar = () => {
                       <div className="flex items-center gap-2.5">
                         <Icon
                           size={16}
-                          className={isActive ? "text-slate-800" : "text-slate-400 group-hover:text-slate-600 transition-colors"}
+                          className={
+                            isActive
+                              ? "text-slate-800"
+                              : "text-slate-400 group-hover:text-slate-600 transition-colors"
+                          }
                         />
                         {label}
                       </div>
@@ -171,6 +197,26 @@ const Sidebar = () => {
               );
             })}
         </nav>
+        <div className="mt-auto p-3">
+          <div className="bg-slate-800 rounded-xl p-3 text-white text-center">
+            <div className="text-xs font-semibold">
+              {user?.is_premium ? "Premium Plan" : "Free Plan"}
+            </div>
+            <div className="text-xs text-slate-400 mt-1">
+              {user?.is_premium
+                ? "You unlocked all the features"
+                : "Unlock reports & more"}
+            </div>
+            {!user?.is_premium && (
+              <button
+                onClick={() => navigate("/pricing")}
+                className="mt-2 w-full bg-white text-slate-800 text-xs font-semibold py-1.5 rounded-lg"
+              >
+                Upgrade to Premium
+              </button>
+            )}
+          </div>
+        </div>
 
         <div className="px-3 py-4 border-t border-slate-100">
           <button

@@ -4,6 +4,8 @@ import { useProductsQuery } from "../hooks/products/useProductsQuery";
 import ProductCostSummaryTable from "../tables/ProductCostSummaryTable";
 import { RATE_TYPES } from "../constants/options-type";
 import SummaryCard from "../components/cards/SummaryCard";
+import { useAuth } from "../hooks/useAuth";
+import PremiumModal from "../components/modals/PremiumModal";
 
 const getSummaryCards = (products, type) => {
   if (!products.length) return null;
@@ -67,58 +69,65 @@ const ProductCostSummary = () => {
   const { computedProducts } = useProductsQuery();
   const [reportType, setReportType] = useState("batch");
   const s = getSummaryCards(computedProducts, reportType);
+  const { user } = useAuth();
   return (
     <div>
       <Headers title="Product Cost Summary" />
-      {s && (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-          <SummaryCard label="Total Products" value={s.totalProducts} />
-          <SummaryCard label="Avg ROI" value={`${s.avgROI.toFixed(2)}%`} />
-          <SummaryCard
-            label="Avg Margin"
-            value={`${s.avgMargin.toFixed(2)}%`}
-          />
-          <SummaryCard
-            label="Ingredients Cost"
-            value={`₱${s.totalIngredients.toFixed(2)}`}
-          />
-          <SummaryCard
-            label="Employees Cost"
-            value={`₱${s.totalEmployees.toFixed(2)}`}
-          />
-          <SummaryCard
-            label="Other Expenses Cost"
-            value={`₱${s.totalOtherExpenses.toFixed(2)}`}
-          />
-          <SummaryCard
-            label="Projected Profit"
-            value={`₱${s.totalProjectedProfit.toFixed(2)}`}
-          />
-          <SummaryCard
-            label="Total COGS"
-            value={`₱${s.totalCOGS.toFixed(2)}`}
-          />
-          <SummaryCard
-            label="Most Profitable"
-            value={s.mostProfitable.product_name}
-            sub={`${Number(s.mostProfitable.roi).toFixed(2)}% ROI`}
-            color="green"
-          />
-          <SummaryCard
-            label="Least Profitable"
-            value={s.leastProfitable.product_name}
-            sub={`${Number(s.leastProfitable.roi).toFixed(2)}% ROI`}
-            color="red"
-          />
-        </div>
-      )}
+      {!user?.is_premium ? (
+        <PremiumModal />
+      ) : (
+        <>
+          {s && (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+              <SummaryCard label="Total Products" value={s.totalProducts} />
+              <SummaryCard label="Avg ROI" value={`${s.avgROI.toFixed(2)}%`} />
+              <SummaryCard
+                label="Avg Margin"
+                value={`${s.avgMargin.toFixed(2)}%`}
+              />
+              <SummaryCard
+                label="Ingredients Cost"
+                value={`₱${s.totalIngredients.toFixed(2)}`}
+              />
+              <SummaryCard
+                label="Employees Cost"
+                value={`₱${s.totalEmployees.toFixed(2)}`}
+              />
+              <SummaryCard
+                label="Other Expenses Cost"
+                value={`₱${s.totalOtherExpenses.toFixed(2)}`}
+              />
+              <SummaryCard
+                label="Projected Profit"
+                value={`₱${s.totalProjectedProfit.toFixed(2)}`}
+              />
+              <SummaryCard
+                label="Total COGS"
+                value={`₱${s.totalCOGS.toFixed(2)}`}
+              />
+              <SummaryCard
+                label="Most Profitable"
+                value={s.mostProfitable.product_name}
+                sub={`${Number(s.mostProfitable.roi).toFixed(2)}% ROI`}
+                color="green"
+              />
+              <SummaryCard
+                label="Least Profitable"
+                value={s.leastProfitable.product_name}
+                sub={`${Number(s.leastProfitable.roi).toFixed(2)}% ROI`}
+                color="red"
+              />
+            </div>
+          )}
 
-      <ProductCostSummaryTable
-        computedProducts={computedProducts}
-        reportType={reportType}
-        options={RATE_TYPES}
-        setReportType={setReportType}
-      />
+          <ProductCostSummaryTable
+            computedProducts={computedProducts}
+            reportType={reportType}
+            options={RATE_TYPES}
+            setReportType={setReportType}
+          />
+        </>
+      )}
     </div>
   );
 };
