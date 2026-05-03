@@ -16,10 +16,11 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsAuthenticated(!!token);
-    setLoading(false);
     if (token) {
       fetchCurrentUser();
+    } else {
+      setIsAuthenticated(false);
+      setLoading(false);
     }
   }, []);
 
@@ -34,6 +35,8 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(false);
       localStorage.removeItem("token");
       setUser(null);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -54,7 +57,14 @@ export const AuthProvider = ({ children }) => {
   };
   return (
     <AuthContext.Provider
-      value={{ logout, loading, isAuthenticated, setIsAuthenticated, user }}
+      value={{
+        logout,
+        loading,
+        isAuthenticated,
+        setIsAuthenticated,
+        user,
+        fetchCurrentUser,
+      }}
     >
       {children}
     </AuthContext.Provider>
