@@ -1,6 +1,7 @@
 import { getProductsWithProfit } from "../models/product.model.js";
 import ExcelJS from "exceljs";
 import { getBrowser } from "../config/browser.js";
+import { wrapHTML } from "../utils/pdfTemplates.js";
 
 const generateScenarios = (product, maxDiscount, step) => {
   const scenarios = [];
@@ -129,43 +130,10 @@ export const fetchPricingGuidePDFService = async (
     })
     .join("");
 
-  const html = `
-    <html>
-    <head>
-      <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: Arial, sans-serif; padding: 24px; color: #333; }
-        h1 { color: #1a1a2e; }
-        h2 { color: #1a1a2e; font-size: 15px; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #1a1a2e; padding-bottom: 12px; }
-        .badge { background: #1a1a2e; color: white; padding: 3px 10px; border-radius: 99px; font-size: 10px; }
-        .date { color: #888; font-size: 11px; margin-top: 6px; }
-        .settings { display: flex; gap: 16px; margin-bottom: 20px; }
-        .setting-chip { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 14px; font-size: 11px; color: #475569; }
-        .setting-chip span { font-weight: bold; color: #1a1a2e; }
-        .section-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: #6b7280; margin: 20px 0 10px; }
-        table { width: 100%; border-collapse: collapse; }
-        th { background: #1a1a2e; color: white; padding: 8px 10px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
-        td { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; font-size: 10px; color: #374151; }
-        tr:last-child td { border-bottom: none; }
-        .product-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-        .product-meta { font-size: 10px; color: #6b7280; margin-top: 4px; }
-        .breakeven-badge { background: #fef2f2; border: 1px solid #fca5a5; color: #dc2626; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; }
-        .safe-badge { background: #f0fdf4; border: 1px solid #86efac; color: #16a34a; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; }
-      </style>
-    </head>
-    <body>
-      <div class="header">
-        <div>
-          <h1>CostIQ — Pricing Guide</h1>
-        </div>
-        <div style="text-align: right;">
-          <div class="badge">CONFIDENTIAL</div>
-          <div class="date">Generated: ${new Date().toLocaleDateString("en-PH", { year: "numeric", month: "long", day: "numeric" })}</div>
-        </div>
-      </div>
-
-      <div class="settings">
+  const html = wrapHTML(
+    "CostIQ — Pricing Guide",
+    "",
+    `<div class="settings">
         <div class="setting-chip">Max Discount: <span>${maxDiscount}%</span></div>
         <div class="setting-chip">Step: <span>${step}%</span></div>
         <div class="setting-chip">Total Products: <span>${products.length}</span></div>
@@ -186,9 +154,8 @@ export const fetchPricingGuidePDFService = async (
         ${summaryRows}
       </table>
 
-      ${productPages}
-    </body>
-    </html>`;
+      ${productPages}`,
+  );
 
   const browser = await getBrowser();
   const page = await browser.newPage();

@@ -38,7 +38,7 @@ const Sidebar = () => {
     <>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed top-4 left-2 z-50 p-2 rounded-lg bg-slate-800 border border-slate-800 text-slate-100 shadow-sm"
+        className="lg:hidden fixed top-4 left-2 z-60 p-2 rounded-lg bg-slate-800 border border-slate-800 text-slate-100 shadow-sm"
       >
         {isOpen ? <X size={20} /> : <Menu size={20} />}
       </button>
@@ -55,7 +55,7 @@ const Sidebar = () => {
           fixed top-0 left-0 h-screen w-52 md:w-60 lg:w-64
           bg-slate-800 flex flex-col
           border-r border-slate-200
-          transform transition-transform duration-300 z-40 overflow-y-auto
+          transform transition-transform duration-300 z-60 overflow-y-auto
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
           lg:translate-x-0 lg:sticky
         `}

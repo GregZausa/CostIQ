@@ -83,10 +83,22 @@ export const insertProductOtherExpenses = async (
   }
 };
 
-export const getProduct = async (createdBy) => {
-  const query = `SELECT * FROM products WHERE created_by = $1 AND is_active = true ORDER BY created_at DESC`;
+export const getProduct = async (userId) => {
+  const userResult = await pool.query(
+    "SELECT is_premium FROM users WHERE id = $1",
+    [userId],
+  );
+  const isPremium = userResult.rows[0]?.is_premium;
 
-  const { rows } = await pool.query(query, [createdBy]);
+  const query = `
+    SELECT * FROM products
+    WHERE created_by = $1
+    AND is_active = true
+    ORDER BY created_at DESC
+    ${isPremium ? "" : "LIMIT 3"}
+  `;
+
+  const { rows } = await pool.query(query, [userId]);
   return rows;
 };
 
@@ -187,6 +199,12 @@ export const getOtherExpenseCostPerBatch = async (id, createdBy) => {
 };
 
 export const getProductsWithProfit = async (createdBy) => {
+  const userResult = await pool.query(
+    "SELECT is_premium FROM users WHERE id = $1",
+    [createdBy],
+  );
+  const isPremium = userResult.rows[0]?.is_premium;
+
   const query = `SELECT p.product_id, p.product_name, p.profit_margin, p.total_sellable_units, p.discount, p.sales_tax,
                   COALESCE(ing.ingredients_cost, 0) AS ingredients_cost,
                   COALESCE(emp.labor_cost, 0) AS labor_cost,
@@ -227,7 +245,10 @@ export const getProductsWithProfit = async (createdBy) => {
                   GROUP BY poe2.other_expense_id) epc ON epc.other_expense_id = oe.other_expense_id
                   WHERE p.is_active = true AND oe.is_active = true
                   GROUP BY poe.product_id) exp ON exp.product_id = p.product_id
-                  WHERE p.created_by = $1 AND p.is_active = true`;
+                  WHERE p.created_by = $1 AND p.is_active = true
+                  ORDER BY p.created_at DESC
+                  ${isPremium ? "" : "LIMIT 3"}`;
+
   const { rows } = await pool.query(query, [createdBy]);
   return rows.map((p) => ({
     ...p,
@@ -246,6 +267,13 @@ export const getPaginatedProducts = async (
   offset = 0,
 ) => {
   const searchValue = searchTerm ? `%${searchTerm}%` : "%";
+
+  const userResult = await pool.query(
+    "SELECT is_premium FROM users WHERE id = $1",
+    [createdBy],
+  );
+  const isPremium = userResult.rows[0]?.is_premium;
+
   let query = `SELECT 
                 p.product_id,
                 p.product_name,
@@ -256,7 +284,8 @@ export const getPaginatedProducts = async (
                 p.discount,
                 p.sales_tax,
                 p.batch_per_day,
-                (
+
+                COALESCE((
                   SELECT jsonb_agg(jsonb_build_object(
                     'material_name', rm.material_name,
                     'pack_unit', rm.pack_unit,
@@ -269,8 +298,9 @@ export const getPaginatedProducts = async (
                   FROM product_ingredients pi
                   JOIN raw_materials_view rm ON pi.material_id = rm.raw_material_id
                   WHERE pi.product_id = p.product_id
-                ) AS ingredients,
-                (
+                ), '[]') AS ingredients,
+
+                COALESCE((
                   SELECT jsonb_agg(jsonb_build_object(
                     'first_name', e.first_name,
                     'last_name', e.last_name,
@@ -279,8 +309,9 @@ export const getPaginatedProducts = async (
                   FROM product_employees pe
                   JOIN employees e ON pe.employee_id = e.employee_id
                   WHERE pe.product_id = p.product_id
-                ) AS employees,
-                (
+                ), '[]') AS employees,
+
+                COALESCE((
                   SELECT jsonb_agg(jsonb_build_object(
                     'category_name', oe.category_name,
                     'expense_cost', oe.expense_cost,
@@ -289,7 +320,8 @@ export const getPaginatedProducts = async (
                   FROM product_other_expenses poe
                   JOIN other_expenses oe ON poe.other_expense_id = oe.other_expense_id
                   WHERE poe.product_id = p.product_id
-                ) AS other_expenses
+                ), '[]') AS other_expenses
+
               FROM products p
               WHERE p.created_by = $1 
                 AND p.is_active = true
@@ -297,9 +329,13 @@ export const getPaginatedProducts = async (
 
   let values = [createdBy, searchValue];
 
-  query += ` ORDER BY created_at DESC LIMIT $${values.length + 1} OFFSET $${values.length + 2}`;
-
-  values.push(limit, offset);
+  if (isPremium) {
+    query += ` ORDER BY p.created_at DESC LIMIT $${values.length + 1} OFFSET $${values.length + 2}`;
+    values.push(limit, offset);
+  } else {
+    query += ` ORDER BY p.created_at DESC LIMIT 3 OFFSET $${values.length + 1}`;
+    values.push(offset);
+  }
 
   const { rows } = await pool.query(query, values);
 
@@ -308,23 +344,46 @@ export const getPaginatedProducts = async (
 
 export const getProductsCount = async (createdBy, searchTerm = "") => {
   const searchValue = searchTerm ? `%${searchTerm}%` : "%";
-  let query = `SELECT COUNT(*) AS total
-                FROM products
-                WHERE created_by = $1
-                AND is_active = true
-                AND product_name ILIKE $2`;
 
-  let values = [createdBy, searchValue];
-  const { rows } = await pool.query(query, values);
-  return Number(rows[0].total);
+  const userResult = await pool.query(
+    "SELECT is_premium FROM users WHERE id = $1",
+    [createdBy],
+  );
+  const isPremium = userResult.rows[0]?.is_premium;
+
+  const { rows } = await pool.query(
+    `SELECT COUNT(*) AS total
+     FROM products
+     WHERE created_by = $1
+       AND is_active = true
+       AND product_name ILIKE $2`,
+    [createdBy, searchValue],
+  );
+
+  const total = Number(rows[0].total);
+
+  // ✅ Apply business rule here (NOT in SQL)
+  return isPremium ? total : Math.min(total, 3);
 };
 
 export const getProductsTotalCount = async (createdBy) => {
-  const { rows } = await pool.query(
-    `SELECT COUNT(*) AS total FROM products WHERE created_by = $1 AND is_active = true`,
+  const userResult = await pool.query(
+    "SELECT is_premium FROM users WHERE id = $1",
     [createdBy],
   );
-  return Number(rows[0].total);
+  const isPremium = userResult.rows[0]?.is_premium;
+
+  const { rows } = await pool.query(
+    `SELECT COUNT(*) AS total
+     FROM products
+     WHERE created_by = $1
+       AND is_active = true`,
+    [createdBy],
+  );
+
+  const total = Number(rows[0].total);
+
+  return isPremium ? total : Math.min(total, 3);
 };
 
 export const deleteProducts = async (id) => {
