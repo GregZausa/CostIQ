@@ -15,6 +15,8 @@ import PricingGuideChart from "../components/ui/charts/PricingGuideChart";
 import CostPerProductChart from "../components/ui/charts/CostPerProductChart";
 import WhatIfScenarioCard from "../components/cards/WhatIfScenarioCard";
 import NoDataLayout from "../components/layout/NoDataLayout";
+import { useAuth } from "../hooks/useAuth";
+import toast from "react-hot-toast";
 
 const Products = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,11 +26,25 @@ const Products = () => {
   const { query: expensesQuery } = useOtherExpenses();
 
   const computed = query?.productDetail?.computedProduct || [];
+  const { user } = useAuth();
+
+  const isFreeLimitReached =
+    !user?.is_premium && query?.productOptions?.length >= 3;
+
+  const handleOpenModal = () => {
+    if (isFreeLimitReached) {
+      toast.error(
+        "That’s the max for free users. Upgrade to keep adding more!",
+      );
+      return;
+    }
+    setIsModalOpen(true);
+  };
 
   return (
     <div className="relative">
       <Headers
-        openModal={() => setIsModalOpen(true)}
+        openModal={handleOpenModal}
         title="Products"
         buttonLabel="Add Products"
       />

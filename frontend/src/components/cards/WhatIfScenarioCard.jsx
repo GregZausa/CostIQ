@@ -86,10 +86,7 @@ const WhatIfScenarioCard = ({ title, computed }) => {
   const showTimeline = !!metrics?.timeline;
 
   return (
-    <ProductCardLayout
-      title={user?.is_premium ? title : "Avail premium to unlock"}
-      icon={SlidersHorizontal}
-    >
+    <ProductCardLayout title="What-if Income Goal" icon={SlidersHorizontal}>
       {user?.is_premium ? (
         <div className="space-y-2">
           <div className="grid grid-cols-2 gap-2">

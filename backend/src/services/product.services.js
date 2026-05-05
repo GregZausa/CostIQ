@@ -143,13 +143,12 @@ export const createProductService = async ({ file, userId, body }) => {
 };
 
 export const fetchProductsService = async ({ userId }) => {
-  const [products, mostExpensiveProduct] = await Promise.all([
+  const [products] = await Promise.all([
     getProduct(userId),
   ]);
 
   return {
     products,
-    mostExpensiveProduct,
   };
 };
 
