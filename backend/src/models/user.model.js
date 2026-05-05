@@ -9,6 +9,7 @@ export const findUserByEmail = async (email) => {
   return rows[0];
 };
 
+
 export const getUserById = async (userId) => {
   const query = `SELECT id, first_name, last_name,
                 email, is_premium, subscription_status, premium_since,
