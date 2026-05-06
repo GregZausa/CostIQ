@@ -72,7 +72,7 @@ const milestoneColors = [
 ];
 
 const WhatIfIncomeGoalReportTable = ({ computedProducts }) => {
-  const isMobile = useBreakpoint(1400);
+  const isMobile = useBreakpoint(1420);
   const [selectedProductId, setSelectedProductId] = useState(
     computedProducts?.[0]?.product_id ?? null,
   );

@@ -13,7 +13,7 @@ const WhatIfIncomeGoalReport = () => {
     <div className="space-y-4">
       <Headers title="What-If Income Goal" />
       {!user?.is_premium ? (
-        <PremiumModal />
+        <PremiumModal message="Unlock what-if goal report to generate your desired goal reports" />
       ) : (
         <WhatIfIncomeGoalReportTable computedProducts={computedProducts} />
       )}

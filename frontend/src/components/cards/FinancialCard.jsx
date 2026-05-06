@@ -60,7 +60,7 @@ const FinancialCard = ({ title, computed }) => {
               >
                 <Icon size={14} />
               </div>
-              <span className="text-sm font-medium text-slate-600">
+              <span className="text-sm font-medium text-slate-600 flex-1 min-w-0 truncate">
                 {label}
               </span>
             </div>

@@ -7,7 +7,7 @@ import { useBreakpoint } from "../hooks/useBreakpoint";
 
 const ProductsTable = ({ query, actions }) => {
   const percentFields = ["profit_margin", "discount", "sales_tax"];
-  const isMobile = useBreakpoint(1400);
+  const isMobile = useBreakpoint(1420);
 
   const cols = useMemo(
     () => [

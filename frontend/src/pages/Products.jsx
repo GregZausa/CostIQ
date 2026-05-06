@@ -17,9 +17,21 @@ import WhatIfScenarioCard from "../components/cards/WhatIfScenarioCard";
 import NoDataLayout from "../components/layout/NoDataLayout";
 import { useAuth } from "../hooks/useAuth";
 import toast from "react-hot-toast";
+import Button from "../components/ui/Button";
+import { useNavigate } from "react-router-dom";
+import MarketPriceCard from "../components/cards/MarketPriceCard";
+import PremiumModal from "../components/modals/PremiumModal";
+import PremiumCard from "../components/cards/PremiumCard";
+
+const TABS = [
+  { key: "overview", label: "Overview" },
+  { key: "analytics", label: "Analytics" },
+  { key: "ai", label: "AI Insights" },
+];
 
 const Products = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("overview");
   const { form, actions, query } = useProducts();
   const { query: materialQuery } = useRawMaterials();
   const { query: employeeQuery } = useEmployee();
@@ -34,7 +46,7 @@ const Products = () => {
   const handleOpenModal = () => {
     if (isFreeLimitReached) {
       toast.error(
-        "That’s the max for free users. Upgrade to keep adding more!",
+        "That's the max for free users. Upgrade to keep adding more!",
       );
       return;
     }
@@ -48,47 +60,86 @@ const Products = () => {
         title="Products"
         buttonLabel="Add Products"
       />
+
       {query?.productOptions?.length > 0 ? (
-        <>
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-2 py-2">
-            <div className="space-y-2">
+        <div className="space-y-4">
+          <div className="flex items-center gap-1 border-b border-slate-100 pb-0">
+            {TABS.map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={`px-4 py-2 text-xs font-semibold rounded-t-lg transition-all border-b-2 ${
+                  activeTab === tab.key
+                    ? "border-slate-800 text-slate-800"
+                    : "border-transparent text-slate-400 hover:text-slate-600"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="w-64">
               <SelectBox
                 onChange={query.setSelectedProduct}
                 options={query.productOptions}
                 value={query.selectedProduct}
                 placeholder="Select product"
               />
-              <ProductImageCard src={computed?.product_image} />
             </div>
-            <div>
+          </div>
+
+          {activeTab === "overview" && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-2">
+              <ProductImageCard src={computed?.product_image} />
               <WhatIfScenarioCard
                 title="What-if Income Goal"
                 computed={computed}
               />
+
+              <div className="space-y-2">
+                <FinancialCard title="Financial Metrics" computed={computed} />
+                <CostCard
+                  title="Cost Per Batch"
+                  computed={computed}
+                  variant="batch"
+                />
+              </div>
+              <div className="space-y-2">
+                <PricingSummaryCard
+                  title="Pricing Summary"
+                  computed={computed}
+                />
+                <CostCard
+                  title="Cost Per Product"
+                  computed={computed}
+                  variant="unit"
+                />
+              </div>
             </div>
-            <div className="space-y-2">
-              <FinancialCard title="Financial Metrics" computed={computed} />
-              <CostCard
-                title="Cost Per Batch"
-                computed={computed}
-                variant="batch"
-              />
+          )}
+
+          {activeTab === "analytics" && (
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+              <MarginScenarioChart computed={computed} />
+              <PricingGuideChart computed={computed} />
+              <CostPerProductChart computed={computed} />
             </div>
-            <div className="space-y-2">
-              <PricingSummaryCard title="Pricing Summary" computed={computed} />
-              <CostCard
-                title="Cost Per Product"
-                computed={computed}
-                variant="unit"
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 py-4">
-            <MarginScenarioChart computed={computed} />
-            <PricingGuideChart computed={computed} />
-            <CostPerProductChart computed={computed} />
-          </div>
-        </>
+          )}
+
+          {activeTab === "ai" && (
+            <>
+              {user?.is_premium ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <MarketPriceCard computed={computed} />
+                </div>
+              ) : (
+                <PremiumCard message="Unlock AI Insights for more advance insights" />
+              )}
+            </>
+          )}
+        </div>
       ) : (
         <NoDataLayout message="No products yet. Add one to get started!" />
       )}

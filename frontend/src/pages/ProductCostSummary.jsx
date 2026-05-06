@@ -6,6 +6,7 @@ import { RATE_TYPES } from "../constants/options-type";
 import SummaryCard from "../components/cards/SummaryCard";
 import { useAuth } from "../hooks/useAuth";
 import PremiumModal from "../components/modals/PremiumModal";
+import PremiumCard from "../components/cards/PremiumCard";
 
 const getSummaryCards = (products, type) => {
   if (!products.length) return null;
@@ -74,7 +75,7 @@ const ProductCostSummary = () => {
     <div>
       <Headers title="Product Cost Summary" />
       {!user?.is_premium ? (
-        <PremiumModal />
+        <PremiumModal message="Unlock product cost summary to generate cost reports" />
       ) : (
         <>
           {s && (

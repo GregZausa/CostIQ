@@ -1,22 +1,28 @@
 // PremiumModal.jsx
 import { useNavigate } from "react-router-dom";
 
-const PremiumModal = () => {
-  const navigate = useNavigate(); 
+const PremiumModal = ({
+  message = "Unlock this feature and more with Premium.",
+}) => {
+  const navigate = useNavigate();
 
   return (
     <div className="absolute inset-0 z-50 backdrop-blur-lg bg-white/60 flex items-center justify-center rounded-xl">
-      <div className="bg-slate-800 rounded-2xl p-6 text-white text-center max-w-sm w-full mx-4 shadow-2xl">
-        <div className="text-4xl mb-3">🔒</div>
-        <div className="text-lg font-bold">Premium Feature</div>
-        <div className="text-sm text-slate-400 mt-2">
-          Upgrade to Premium to unlock reports, financial overview, and more.
+      <div className=" rounded-2xl p-6 text-white text-center max-w-sm w-full mx-4 shadow-2xl">
+        <span className=" w-12 h-12 rounded-full bg-yellow-50 border border-yellow-200 text-xl">
+          ⚡
+        </span>
+        <div className="text-center">
+          <p className="text-md font-bold text-slate-700">Premium Feature</p>
+          <p className="text-sm text-slate-400 mt-1 leading-relaxed max-w-sm">
+            {message}
+          </p>
         </div>
         <button
           onClick={() => navigate("/pricing")}
-          className="mt-4 w-full bg-white text-slate-800 text-sm font-semibold py-2.5 rounded-xl hover:bg-slate-100 transition-all"
+          className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-semibold rounded-xl transition-all"
         >
-          Upgrade to Premium
+          ⚡ Upgrade to Premium
         </button>
       </div>
     </div>
