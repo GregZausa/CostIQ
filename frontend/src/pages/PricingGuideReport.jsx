@@ -13,7 +13,7 @@ const PricingGuide = () => {
     <div className="space-y-4">
       <Headers title="Pricing Guide" />
       {!user?.is_premium ? (
-        <PremiumModal />
+        <PremiumModal message="Unlock pricing guide to generate reports for different prices"/>
       ) : (
         <PricingGuideTable computedProducts={computedProducts} />
       )}

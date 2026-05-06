@@ -61,7 +61,7 @@ const FinancialOverview = () => {
     <div>
       <Headers title="Financial Overview" />
       {!user?.is_premium ? (
-        <PremiumModal />
+        <PremiumModal message="Unlock financial overview to generate financial reports"/>
       ) : (
         <>
           {s && (

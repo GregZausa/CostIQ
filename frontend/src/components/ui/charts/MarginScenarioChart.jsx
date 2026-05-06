@@ -89,7 +89,7 @@ const MarginScenarioChart = ({ computed = {} }) => {
   return (
     <ProductCardLayout title="Margin Scenarios" icon={BarChart2}>
       {!user?.is_premium ? (
-        <PremiumCard message="Unlock Marging Scenarios to check different profit margins" />
+        <PremiumCard message="Unlock Margin Scenarios to check different profit margins" />
       ) : (
         <>
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2 px-3 pt-2 pb-1">
