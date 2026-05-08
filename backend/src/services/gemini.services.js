@@ -19,7 +19,7 @@ const loadModels = async () => {
   console.log("Usable models:", AVAILABLE_MODELS);
 };
 
-const buildPrompt = (product) => `
+const marketPriceAnalysisPrompt = (product) => `
 You are a business pricing analyst in the Philippines. 
 
 A small business owner has a product with the following details:
@@ -44,6 +44,63 @@ Respond ONLY in this exact JSON format, no markdown, no extra text:
   "comparison": "competitive" | "too_high" | "too_low",
   "comparisonText": "<short explanation>",
   "recommendation": "<1-2 sentence actionable advice>",
+  "modelUsed": "<model name>"
+}
+`;
+
+const costOptmizationPrompt = (product) => `
+You are an expert business cost optimization consultant in the Philippines.
+
+A small business owner has this product:
+- Product Name: ${product.product_name}
+- Ingredients/Materials Cost: ₱${Number(product.ingredients_cost).toFixed(2)} per batch
+- Labor Cost: ₱${Number(product.labor_cost).toFixed(2)} per batch
+- Other Expenses: ₱${Number(product.expense_cost).toFixed(2)} per batch
+- Total COGS per Batch: ₱${Number(product.totalCPB).toFixed(2)}
+- Total COGS per Unit: ₱${Number(product.totalCPP).toFixed(2)}
+- Selling Price: ₱${Number(product.finalPrice).toFixed(2)}
+- Profit Margin: ${Number(product.profit_margin).toFixed(2)}%
+- ROI: ${Number(product.roi).toFixed(2)}%
+- Units per Batch: ${product.total_sellable_units}
+- Profit per Unit: ₱${Number(product.netProfitPerUnit).toFixed(2)}
+
+Ingredients as % of COGS: ${(
+  (Number(product.ingredients_cost) / Number(product.totalCPB)) *
+  100
+).toFixed(1)}%
+Labor as % of COGS: ${(
+  (Number(product.labor_cost) / Number(product.totalCPB)) *
+  100
+).toFixed(1)}%
+Expenses as % of COGS: ${(
+  (Number(product.expense_cost) / Number(product.totalCPB)) *
+  100
+).toFixed(1)}%
+
+Based on Philippine small business standards:
+1. Score their cost efficiency from 0-100
+2. Identify strengths
+3. Give specific cost optimization suggestions with potential savings
+4. Give quick wins they can implement today
+5. Consider Philippine market context (local suppliers, labor rates, etc)
+
+Respond ONLY in this exact JSON format, no markdown, no extra text:
+{
+  "overallScore": <0-100>,
+  "scoreLabel": "Critical" | "Needs Improvement" | "Good" | "Excellent",
+  "summary": "<one sentence overall assessment>",
+  "strengths": ["<strength 1>", "<strength 2>"],
+  "suggestions": [
+    {
+      "category": "ingredients" | "labor" | "expenses" | "pricing" | "strategy",
+      "priority": "high" | "medium" | "low",
+      "difficulty": "easy" | "moderate" | "hard",
+      "title": "<short title>",
+      "suggestion": "<specific actionable suggestion>",
+      "potentialSaving": "<estimated saving or impact>"
+    }
+  ],
+  "quickWins": ["<action 1>", "<action 2>", "<action 3>"],
   "modelUsed": "<model name>"
 }
 `;
@@ -75,7 +132,7 @@ export const getMarketPriceAnalysis = async (product) => {
 
       const result = await genAI.models.generateContent({
         model: modelName,
-        contents: buildPrompt(product),
+        contents: marketPriceAnalysisPrompt(product),
       });
 
       const text =
@@ -101,4 +158,53 @@ export const getMarketPriceAnalysis = async (product) => {
     }
   }
   throw new Error("There's something wrong, please try again later.");
+};
+
+export const getCostOptimizationSuggestions = async (product) => {
+  if (AVAILABLE_MODELS.length === 0) {
+    await loadModels();
+  }
+
+  for (const modelName of AVAILABLE_MODELS) {
+    try {
+      console.log(`Trying model: ${modelName}`);
+
+      const result = await genAI.models.generateContent({
+        model: modelName,
+        contents: costOptmizationPrompt(product),
+      });
+
+      const text =
+        result.text || result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+      if (!text) {
+        throw new Error("No text returned from Gemini");
+      }
+
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+
+      if (!jsonMatch) {
+        console.error("RAW AI RESPONSE:", text);
+        throw new Error("Invalid AI response format");
+      }
+
+      const parsed = JSON.parse(jsonMatch[0]);
+      parsed.modelUsed = modelName;
+
+      return parsed;
+    } catch (err) {
+      console.error(`Error on ${modelName}:`, err.message);
+
+      if (isRetryableError(err)) {
+        console.warn(`Retryable error on ${modelName}, trying next model...`);
+        continue;
+      }
+
+      throw err;
+    }
+  }
+
+  throw new Error(
+    "All Gemini models are currently unavailable. Please try again later.",
+  );
 };
