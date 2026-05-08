@@ -22,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import MarketPriceCard from "../components/cards/MarketPriceCard";
 import PremiumModal from "../components/modals/PremiumModal";
 import PremiumCard from "../components/cards/PremiumCard";
+import CostOptimizationCard from "../components/cards/CostOptimizationCard";
 
 const TABS = [
   { key: "overview", label: "Overview" },
@@ -133,6 +134,7 @@ const Products = () => {
               {user?.is_premium ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <MarketPriceCard computed={computed} />
+                  <CostOptimizationCard computed={computed} />
                 </div>
               ) : (
                 <PremiumCard message="Unlock AI Insights for more advance insights" />
