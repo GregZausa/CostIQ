@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Pagination from "../layout/Pagination";
 import NoDataLayout from "../layout/NoDataLayout";
+import { useTheme } from "../../context/ThemeContext";
 
 const PREVIEW_COUNT = 6;
 
@@ -18,6 +19,7 @@ const MobileCard = ({
   previewKeys,
 }) => {
   const [expandedKey, setExpandedKey] = useState(null);
+  const { isDark } = useTheme();
 
   const titleCol = columns.find((col) => col.key !== "action");
   const bodyColumns = columns.filter(
@@ -65,16 +67,22 @@ const MobileCard = ({
             return (
               <div
                 key={key}
-                className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden"
+                className={`border ${isDark ? "bg-slate-800 border-slate-700" : "bg-slate-50 border-slate-100 "} rounded-xl   shadow-sm overflow-hidden`}
               >
-                <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
+                <div
+                  className={`flex items-center justify-between px-4 py-3 border-b ${isDark ? "border-slate-700" : "border-slate-100"} `}
+                >
                   <div className="flex items-center gap-3 min-w-0">
                     {initials !== null && (
-                      <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-600 text-xs font-bold shrink-0">
+                      <div
+                        className={`flex items-center justify-center w-8 h-8 rounded-lg ${isDark ? "bg-slate-700 text-blue-200" : "bg-blue-50 text-blue-600"} text-xs font-bold shrink-0`}
+                      >
                         {initials || "?"}
                       </div>
                     )}
-                    <p className="text-sm font-semibold text-slate-800 truncate">
+                    <p
+                      className={`text-sm font-semibold ${isDark ? "text-slate-50" : "text-slate-800"} truncate`}
+                    >
                       {titleValue}
                     </p>
                   </div>
@@ -82,13 +90,20 @@ const MobileCard = ({
                 </div>
 
                 {previewCols.length > 0 && (
-                  <div className="grid grid-cols-3 divide-x divide-y divide-slate-100">
+                  <div
+                    className={` grid grid-cols-3  divide-x divide-y ${isDark ? "divide-slate-700" : "divide-slate-100"}`}
+                  >
                     {previewCols.map((col) => (
-                      <div key={col.key} className="px-4 py-3 flex flex-col gap-0.5">
+                      <div
+                        key={col.key}
+                        className="px-4 py-3 flex flex-col gap-0.5"
+                      >
                         <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
                           {col.label}
                         </span>
-                        <span className="text-sm font-medium text-slate-700 truncate">
+                        <span
+                          className={`text-sm font-medium ${isDark ? "text-slate-100" : "text-slate-700"} truncate`}
+                        >
                           {col.render ? col.render(row) : (row[col.key] ?? "—")}
                         </span>
                       </div>
@@ -99,8 +114,11 @@ const MobileCard = ({
                 {hiddenCols.length > 0 && (
                   <button
                     onClick={() => setExpandedKey(isExpanded ? null : key)}
-                    className="w-full flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium text-slate-500
-                      hover:bg-slate-50 hover:text-blue-600 transition-colors duration-150 border-t border-slate-100"
+                    className={`w-full flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium border-t ${
+                      isDark
+                        ? "text-slate-200 hover:bg-slate-800 hover:text-blue-200 border-slate-700"
+                        : "text-slate-600 hover:bg-slate-50 hover:text-blue-600 border-slate-100"
+                    }  transition-colors duration-300  `}
                   >
                     {isExpanded ? (
                       <>
@@ -110,20 +128,28 @@ const MobileCard = ({
                     ) : (
                       <>
                         <ChevronDown size={13} />
-                        Show {hiddenCols.length} more field{hiddenCols.length !== 1 ? "s" : ""}
+                        Show {hiddenCols.length} more field
+                        {hiddenCols.length !== 1 ? "s" : ""}
                       </>
                     )}
                   </button>
                 )}
 
                 {isExpanded && hiddenCols.length > 0 && (
-                  <div className="grid grid-cols-3 divide-x divide-y divide-slate-100 border-t border-slate-100">
+                  <div
+                    className={`grid grid-cols-3 divide-x divide-y border-t ${isDark ? "divide-slate-700 border-slate-700" : "divide-slate-100 border-slate-100"}  `}
+                  >
                     {hiddenCols.map((col) => (
-                      <div key={col.key} className="px-4 py-3 flex flex-col gap-0.5">
+                      <div
+                        key={col.key}
+                        className="px-4 py-3 flex flex-col gap-0.5"
+                      >
                         <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
                           {col.label}
                         </span>
-                        <span className="text-sm font-medium text-slate-700 truncate">
+                        <span
+                          className={`text-sm font-medium ${isDark ? "text-slate-100" : "text-slate-700"} truncate`}
+                        >
                           {col.render ? col.render(row) : (row[col.key] ?? "—")}
                         </span>
                       </div>

@@ -13,7 +13,7 @@ import {
 } from "recharts";
 import ProductCardLayout from "../../layout/ProductCardLayout";
 import { TrendingUp } from "lucide-react";
-import { useAuth } from "../../../hooks/useAuth";
+import { useAuth } from "../../../context/useAuth";
 import PremiumCard from "../../cards/PremiumCard";
 
 const CustomTooltip = ({ active, payload, label }) => {

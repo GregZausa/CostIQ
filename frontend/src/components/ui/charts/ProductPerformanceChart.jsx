@@ -13,8 +13,10 @@ import {
 } from "recharts";
 import ProductCardLayout from "../../layout/ProductCardLayout";
 import { LayoutGrid } from "lucide-react";
-import { useAuth } from "../../../hooks/useAuth";
+import { useAuth } from "../../../context/useAuth";
 import PremiumCard from "../../cards/PremiumCard";
+import { useTheme } from "../../../context/ThemeContext";
+import { chartColors } from "../../../utils/palette";
 
 const QUADRANTS = [
   { label: "Goldmine", color: "#4ade80" },
@@ -53,19 +55,23 @@ const CustomTooltip = ({ active, payload }) => {
 };
 
 const CustomDot = (props) => {
-  const { cx, cy, payload, avgX, avgY } = props;
+  const { cx, cy, payload, avgX, avgY, isDark } = props;
   const isGoldmine = payload.y > 0 && payload.z >= 50;
   const isStar = payload.y > 0 && payload.z < 50;
   const isOptimize = payload.y <= 0 && payload.x <= avgX;
   const isDanger = payload.y <= 0 && payload.x > avgX;
 
   const color = isGoldmine
-    ? "#4ade80"
+    ? isDark
+      ? chartColors.positive.dark
+      : chartColors.positive.light
     : isStar
       ? "#facc15"
       : isOptimize
         ? "#60a5fa"
-        : "#f87171";
+        : isDark
+          ? chartColors.negative.dark
+          : chartColors.negative.light;
 
   const size = Math.max(16, Math.min(40, Math.abs(payload.z) / 5 + 16));
 
@@ -77,8 +83,8 @@ const CustomDot = (props) => {
         r={size / 2}
         fill={color}
         fillOpacity={0.85}
-        stroke="white"
-        strokeWidth={2}
+        stroke={isDark ? chartColors.neutral.dark : chartColors.neutral.light}
+        strokeWidth={1}
       />
       <text
         x={cx}
@@ -98,12 +104,13 @@ const CustomDot = (props) => {
 
 const ProductPerformanceChart = ({ data = [], avgX, avgY }) => {
   const { user } = useAuth();
+  const { isDark } = useTheme();
   if (data.length === 0) return null;
 
   return (
     <ProductCardLayout title="Product Performance Matrix" icon={LayoutGrid}>
       {!user?.is_premium ? (
-        <PremiumCard message="Unlock Product Performance Matrix to check how well your products working"/>
+        <PremiumCard message="Unlock Product Performance Matrix to check how well your products working" />
       ) : (
         <>
           <div className="flex items-center gap-3 px-3 pt-1 pb-1 flex-wrap">
@@ -184,7 +191,12 @@ const ProductPerformanceChart = ({ data = [], avgX, avgY }) => {
                 <Scatter
                   data={data}
                   shape={(props) => (
-                    <CustomDot {...props} avgX={avgX} avgY={avgY} />
+                    <CustomDot
+                      {...props}
+                      avgX={avgX}
+                      avgY={avgY}
+                      isDark={isDark}
+                    />
                   )}
                 />
               </ScatterChart>

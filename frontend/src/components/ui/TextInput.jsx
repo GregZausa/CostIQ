@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, Search, AlertCircle } from "lucide-react";
+import { useTheme } from "../../context/ThemeContext";
 
 const TextInput = ({
   type = "text",
@@ -17,6 +18,8 @@ const TextInput = ({
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+
+  const { isDark } = useTheme();
 
   const inputType =
     type === "password" ? (showPassword ? "text" : "password") : type;
@@ -77,20 +80,26 @@ const TextInput = ({
           required={required}
           disabled={disabled}
           className={`
-            w-full text-sm text-slate-800 placeholder:text-slate-400
-            px-4 py-2.5 rounded-xl border outline-none
-            transition-all duration-200
-            ${hasLeftIcon ? "pl-9" : ""}
-            ${hasRightIcon ? "pr-10" : ""}
-            ${disabled
-              ? "bg-slate-50 text-slate-400 cursor-not-allowed border-slate-200"
-              : error
-                ? "bg-white border-rose-300 ring-4 ring-rose-100"
-                : isFocused
-                  ? "bg-white border-slate-800/50 ring-4 ring-indigo-100 shadow-sm"
-                  : "bg-white border-slate-200 hover:border-slate-300 shadow-xs"
-            }
-          `}
+                w-full text-sm
+                placeholder:text-slate-400
+                px-4 py-2.5 rounded-xl border outline-none
+                transition-all duration-200
+
+                ${isDark ? "text-slate-50 bg-slate-800" : "text-slate-800 bg-white"}
+
+                ${hasLeftIcon ? "pl-9" : ""}
+                ${hasRightIcon ? "pr-10" : ""}
+
+                ${
+                  disabled
+                    ? `opacity-60 cursor-not-allowed ${isDark ? "border-slate-600" : "border-slate-300"} `
+                    : error
+                      ? `border-rose-300 ring-4 ${isDark ? "ring-rose-900/30" : "ring-rose-100"} `
+                      : isFocused
+                        ? `border-indigo-400 ring-4 ${isDark ? "ring-indigo-900/30" : "ring-indigo-100"} shadow-sm`
+                        : `hover:border-slate-300 ${isDark ? "border-slate-700" : "border-slate-200"}`
+                }
+              `}
         />
         {type === "password" && (
           <button

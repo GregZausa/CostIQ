@@ -12,7 +12,7 @@ import {
 import ProductCardLayout from "../../layout/ProductCardLayout";
 import { Activity } from "lucide-react";
 import { getRandomColor } from "../../../utils/palette";
-import { useAuth } from "../../../hooks/useAuth";
+import { useAuth } from "../../../context/useAuth";
 import PremiumCard from "../../cards/PremiumCard";
 
 const COLORS = Array.from({ length: 7 }, () => getRandomColor());

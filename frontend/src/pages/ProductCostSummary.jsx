@@ -4,7 +4,7 @@ import { useProductsQuery } from "../hooks/products/useProductsQuery";
 import ProductCostSummaryTable from "../tables/ProductCostSummaryTable";
 import { RATE_TYPES } from "../constants/options-type";
 import SummaryCard from "../components/cards/SummaryCard";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../context/useAuth";
 import PremiumModal from "../components/modals/PremiumModal";
 import PremiumCard from "../components/cards/PremiumCard";
 

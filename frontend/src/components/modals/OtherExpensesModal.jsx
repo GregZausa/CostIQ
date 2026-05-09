@@ -12,10 +12,11 @@ const OtherExpensesModal = ({
 }) => {
   const expenseTypes = EXPENSE_TYPES;
   return (
-    <ModalLayout closeModal={closeModal}>
-      <h1 className="text-xl font-bold mb-4">
-        {editingId ? "Edit Expenses" : "Add Expenses"}
-      </h1>
+    <ModalLayout
+      closeModal={closeModal}
+      header="Expenses"
+      editingId={editingId}
+    >
       <AddOtherExpensesForm
         closeModal={closeModal}
         handleSubmit={actions.handleSubmit}

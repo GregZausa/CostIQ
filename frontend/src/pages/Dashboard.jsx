@@ -2,7 +2,13 @@ import React from "react";
 import Headers from "../components/layout/Headers";
 import ProductsOverviewCard from "../components/cards/ProductsOverviewCard";
 import useProducts from "../hooks/products/useProducts";
-import { Box, DollarSign, TrendingDown, TrendingUp } from "lucide-react";
+import {
+  Box,
+  DollarSign,
+  LayoutDashboardIcon,
+  TrendingDown,
+  TrendingUp,
+} from "lucide-react";
 import useRawMaterials from "../hooks/raw-materials/useRawMaterials";
 import useEmployee from "../hooks/employees/useEmployee";
 import useOtherExpenses from "../hooks/other-expenses/useOtherExpenses";
@@ -12,6 +18,7 @@ import ProductPerformanceChart from "../components/ui/charts/ProductPerformanceC
 import RevenueGapChart from "../components/ui/charts/RevenueGapChart";
 import CostEfficiencyRadarChart from "../components/ui/charts/CostEfficiencyRadarChart";
 import NoDataLayout from "../components/layout/NoDataLayout";
+import { useTheme } from "../context/ThemeContext";
 
 const Dashboard = () => {
   const {
@@ -31,6 +38,8 @@ const Dashboard = () => {
   const { totalRawMaterials } = useRawMaterials();
   const { totalEmployees } = useEmployee();
   const { totalOtherExpenses } = useOtherExpenses();
+
+  const { isDark } = useTheme();
 
   const hasData =
     totalProducts > 0 ||
@@ -52,7 +61,11 @@ const Dashboard = () => {
 
   return (
     <div>
-      <Headers title="Dashboard" buttonLabel="Add Product" />
+      <Headers
+        subTitle="Placeholder subtitle"
+        icon={<LayoutDashboardIcon size={20} className="text-indigo-500" />}
+        title="Dashboard"
+      />
 
       {!hasData && !hasCharts ? (
         <NoDataLayout message="No products yet, Add one to get started!" />

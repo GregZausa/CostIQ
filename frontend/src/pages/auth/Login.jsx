@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import LoginForm from "../../components/forms/LoginForm";
 import toast from "react-hot-toast";
 import { apiUrl } from "../../config/apiUrl";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../context/useAuth";
 
 const Login = () => {
   const [email, setEmail] = useState("");

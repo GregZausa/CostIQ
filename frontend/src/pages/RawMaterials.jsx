@@ -3,12 +3,14 @@ import RawMaterialsModal from "../components/modals/RawMaterialsModal";
 import RawMaterialsTable from "../tables/RawMaterialsTable";
 import HeaderCard from "../components/cards/HeaderCard";
 import useRawMaterials from "../hooks/raw-materials/useRawMaterials";
-import { Box, Tag, TrendingUp } from "lucide-react";
+import { Box, Package, Plus, Tag, TrendingUp } from "lucide-react";
 import Headers from "../components/layout/Headers";
+import { useTheme } from "../context/ThemeContext";
 
 const RawMaterials = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { isDark } = useTheme();
   const onSuccessRef = useRef(null);
 
   const openModal = () => {
@@ -39,10 +41,13 @@ const RawMaterials = () => {
   onSuccessRef.current = closeModal;
 
   return (
-    <div>
+    <div className="relative">
       <Headers
-        title={"Raw Materials"}
-        buttonLabel={"Add Raw Materials"}
+        title="Raw Materials"
+        subTitle={`${totalRawMaterials} material${totalRawMaterials !== 1 ? "s" : ""} tracked`}
+        icon={<Package size={20} className="text-indigo-500" />}
+        buttonLabel="Add Raw Material"
+        buttonIcon={Plus}
         openModal={openModal}
       />
       {isModalOpen && (

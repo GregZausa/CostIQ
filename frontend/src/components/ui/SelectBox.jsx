@@ -1,34 +1,38 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Check, ChevronsUpDown, Search } from 'lucide-react';
+import React, { useState, useRef, useEffect } from "react";
+import { Check, ChevronsUpDown, Search } from "lucide-react";
+import { useTheme } from "../../context/ThemeContext";
 
 const SelectBox = ({
   options = [],
   value,
   onChange,
-  placeholder = 'Select an option',
-  label = '',
+  placeholder = "Select an option",
+  label = "",
   disabled = false,
-  className = '',
+  className = "",
   required = false,
   searchable = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
+
   const containerRef = useRef(null);
   const searchRef = useRef(null);
+
+  const { isDark } = useTheme();
 
   const selectedOption = options.find((opt) => opt.value === value);
 
   const filtered = searchable
     ? options.filter((o) =>
-        o.label.toLowerCase().includes(search.toLowerCase())
+        o.label.toLowerCase().includes(search.toLowerCase()),
       )
     : options;
 
   const handleSelect = (optionValue) => {
     onChange(optionValue);
     setIsOpen(false);
-    setSearch('');
+    setSearch("");
   };
 
   useEffect(() => {
@@ -41,11 +45,11 @@ const SelectBox = ({
     const handleClickOutside = (e) => {
       if (containerRef.current && !containerRef.current.contains(e.target)) {
         setIsOpen(false);
-        setSearch('');
+        setSearch("");
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -65,36 +69,47 @@ const SelectBox = ({
           group w-full flex items-center justify-between gap-3
           px-4 py-3 rounded-xl text-sm font-medium
           border transition-all duration-200 outline-none
-          ${disabled
-            ? 'bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed'
-            : isOpen
-              ? 'bg-white border-slate-800/50 ring-4 ring-indigo-100 text-slate-800 shadow-sm'
-              : 'bg-white border-slate-200 text-slate-700 hover:border-indigo-300 hover:shadow-sm shadow-xs'
+          ${
+            disabled
+              ? `${isDark ? "bg-slate-700 border-slate-600" : "bg-slate-100 border-slate-200"} text-slate-400 cursor-not-allowed`
+              : isOpen
+                ? ` ring-4 ${isDark ? "bg-slate-800 border-slate-50/50 ring-slate-700 text-slate-50" : "bg-slate-50 border-slate-800/50  ring-slate-100 text-slate-800"} shadow-sm`
+                : `hover:shadow-sm ${isDark ? "bg-slate-800 border-slate-700 text-slate-50 hover:border-slate-700/50 " : "bg-slate-50 border-slate-100 text-slate-800 hover:border-slate-50/50 "} shadow-xs`
           }
         `}
       >
-        <span className={selectedOption ? 'text-slate-800' : 'text-slate-400'}>
+        <span
+          className={
+            selectedOption
+              ? `${isDark ? "text-slate-200" : "text-slate-800"}`
+              : "text-slate-400"
+          }
+        >
           {selectedOption ? selectedOption.label : placeholder}
         </span>
         <ChevronsUpDown
           size={15}
           className={`shrink-0 transition-all duration-200 ${
-            isOpen ? 'text-slate-800 rotate-180' : 'text-slate-400 group-hover:text-slate-800'
+            isOpen
+              ? `${isDark ? "text-slate-50" : "text-slate-800"} rotate-180`
+              : `${isDark ? "group-hover:text-slate-50" : "group-hover:text-slate-800"}text-slate-400 `
           }`}
         />
       </button>
       {isOpen && !disabled && (
         <div
-          className="
+          className={`
             absolute z-50 mt-2 w-full
-            bg-white border border-slate-200
-            rounded-xl shadow-xl shadow-slate-200/70
+            ${isDark ? "bg-slate-800 border-slate-700 shadow-slate-700/80" : "bg-white border border-slate-100 shadow-slate-100/80"}
+            rounded-xl shadow-xl 
             overflow-hidden
             animate-in fade-in slide-in-from-top-2 duration-150
-          "
+          `}
         >
           {searchable && (
-            <div className="flex items-center gap-2 px-3 py-2 border-b border-slate-100">
+            <div
+              className={`flex items-center gap-2 px-3 py-2 border-b ${isDark ? "border-slate-700" : "border-slate-100"}`}
+            >
               <Search size={13} className="text-slate-400 shrink-0" />
               <input
                 ref={searchRef}
@@ -102,7 +117,7 @@ const SelectBox = ({
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search..."
-                className="w-full text-sm text-slate-700 placeholder:text-slate-400 outline-none bg-transparent"
+                className={`w-full text-sm ${isDark ? "text-slate-100" : "text-slate-700"}  placeholder:text-slate-400 outline-none bg-transparent`}
               />
             </div>
           )}
@@ -122,9 +137,10 @@ const SelectBox = ({
                       flex items-center justify-between
                       px-4 py-2.5 text-sm cursor-pointer
                       transition-colors duration-100
-                      ${isSelected
-                        ? 'bg-indigo-50 text-slate-500 font-semibold'
-                        : 'text-slate-700 hover:bg-slate-50'
+                      ${
+                        isSelected
+                          ? ` ${isDark ? "bg-indigo-800 text-slate-200" :"text-slate-600 bg-indigo-50"}  font-semibold`
+                          : `${isDark ? "text-slate-100 hover:bg-slate-700" : "text-slate-700 hover:bg-slate-100"}`
                       }
                     `}
                   >

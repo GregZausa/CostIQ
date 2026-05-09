@@ -7,7 +7,7 @@ import {
   downloadWhatIfPDF,
   downloadWhatIfExcel,
 } from "../services/reports.api";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../context/useAuth";
 import PremiumModal from "../components/modals/PremiumModal";
 
 import MobileCard from "../components/ui/MobileCard";

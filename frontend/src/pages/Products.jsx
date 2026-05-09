@@ -15,7 +15,7 @@ import PricingGuideChart from "../components/ui/charts/PricingGuideChart";
 import CostPerProductChart from "../components/ui/charts/CostPerProductChart";
 import WhatIfScenarioCard from "../components/cards/WhatIfScenarioCard";
 import NoDataLayout from "../components/layout/NoDataLayout";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../context/useAuth";
 import toast from "react-hot-toast";
 import Button from "../components/ui/Button";
 import { useNavigate } from "react-router-dom";
@@ -23,6 +23,8 @@ import MarketPriceCard from "../components/cards/MarketPriceCard";
 import PremiumModal from "../components/modals/PremiumModal";
 import PremiumCard from "../components/cards/PremiumCard";
 import CostOptimizationCard from "../components/cards/CostOptimizationCard";
+import { Plus, ShoppingBagIcon } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 
 const TABS = [
   { key: "overview", label: "Overview" },
@@ -33,10 +35,13 @@ const TABS = [
 const Products = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
+
   const { form, actions, query } = useProducts();
   const { query: materialQuery } = useRawMaterials();
   const { query: employeeQuery } = useEmployee();
   const { query: expensesQuery } = useOtherExpenses();
+
+  const { isDark } = useTheme();
 
   const computed = query?.productDetail?.computedProduct || [];
   const { user } = useAuth();
@@ -57,9 +62,12 @@ const Products = () => {
   return (
     <div className="relative">
       <Headers
+        icon={<ShoppingBagIcon size={20} className="text-indigo-500" />}
+        subTitle="Placeholder subtitle"
         openModal={handleOpenModal}
         title="Products"
         buttonLabel="Add Products"
+        buttonIcon={Plus}
       />
 
       {query?.productOptions?.length > 0 ? (

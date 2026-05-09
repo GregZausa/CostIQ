@@ -1,5 +1,6 @@
 import Pagination from "../layout/Pagination";
 import NoDataLayout from "../layout/NoDataLayout";
+import { useTheme } from "../../context/ThemeContext";
 
 const Table = ({
   columns,
@@ -10,6 +11,7 @@ const Table = ({
   totalPages,
   onPageChange,
 }) => {
+  const { isDark } = useTheme();
   return (
     <div className="w-full space-y-3">
       <div className="flex items-center justify-between gap-3">
@@ -19,11 +21,11 @@ const Table = ({
       <div className="w-full rounded-2xl  min-h-130 flex flex-col">
         <table className="min-w-full">
           <thead>
-            <tr className="bg-slate-800 border-b border-slate-100">
+            <tr className={`${isDark ? "bg-slate-800 border-slate-700" : "bg-slate-50 border-slate-200" } border-b `}>
               {columns.map((col, i) => (
                 <th
                   key={col.key}
-                  className={`px-5 py-3 text-left text-xs font-semibold tracking-wider uppercase text-slate-200 ${
+                  className={`px-5 py-3 text-left text-xs font-semibold tracking-wider uppercase ${isDark ?"text-slate-100" : "text-slate-700"} ${
                     i === 0 ? "rounded-tl-2xl" : ""
                   } ${i === columns.length - 1 ? "rounded-tr-2xl" : ""}`}
                 >
@@ -32,18 +34,18 @@ const Table = ({
               ))}
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-slate-50">
+          <tbody className={`divide-y ${isDark ? "divide-slate-700 bg-slate-800" : "divide-slate-200 bg-slate-100"} `}>
             {data.length > 0 ? (
               data.map((row, idx) => (
                 <tr
                   key={idx}
-                  className="group hover:bg-slate-50/80 transition-colors duration-150"
+                  className={`group ${isDark ? "hover:bg-slate-600/80" : "hover:bg-slate-200/80"} transition-colors duration-150`}
                 >
                   {columns.map((col, colIdx) => (
                     <td
                       key={col.key}
-                      className={`px-5 py-3.5 text-sm text-slate-600 ${
-                        colIdx === 0 ? "font-medium text-slate-800" : ""
+                      className={`px-5 py-3.5 text-sm ${isDark ? "text-slate-200" : "text-slate-600"} ${
+                        colIdx === 0 ? `font-medium ${isDark ? "text-slate-50" : "text-slate-800"}` : ""
                       } ${
                         idx === data.length - 1 && colIdx === 0
                           ? "rounded-bl-2xl"

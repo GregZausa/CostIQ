@@ -13,10 +13,11 @@ const RawMaterialsModal = ({
 }) => {
   const { unitOptions } = useUnits();
   return (
-    <ModalLayout closeModal={closeModal}>
-      <h1 className="text-xl font-bold mb-4">
-        {editingId ? "Edit Raw Materials" : "Add Raw Materials"}
-      </h1>
+    <ModalLayout
+      closeModal={closeModal}
+      header="Raw Material"
+      editingId={editingId}
+    >
       <AddRawMaterialsForm
         state={form.state}
         handleChange={form.handleChange}

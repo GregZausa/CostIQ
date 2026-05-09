@@ -5,7 +5,7 @@ const MainLayout = ({ children }) => {
   return (
     <div className="flex min-h-screen">
       <Sidebar />
-      <main className="flex-1 ml-12 md:ml-6 p-6 space-y-5 relative">{children}</main>
+      <main className="flex-1 ml-12 md:ml-6 pt-14 px-6 lg:pt-4 space-y-5 relative">{children}</main>
     </div>
   );
 };

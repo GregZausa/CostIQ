@@ -4,7 +4,8 @@ import EmployeesTable from "../tables/EmployeesTable";
 import useEmployee from "../hooks/employees/useEmployee";
 import Headers from "../components/layout/Headers";
 import HeaderCard from "../components/cards/HeaderCard";
-import { Box } from "lucide-react";
+import { Box, IdCardLanyard, Plus } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 
 const Employee = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,16 +13,25 @@ const Employee = () => {
 
   const onSuccessRef = useRef(null);
 
+  const { isDark } = useTheme();
+
   const openModal = () => {
     setIsModalOpen(true);
   };
 
-  const { query, actions, form, totalEmployees, mostUsedPosition, mostUsedEmployee, mostPaidEmployee } =
-    useEmployee({
-      openModal,
-      setIsLoading,
-      onSuccess: () => onSuccessRef.current?.(),
-    });
+  const {
+    query,
+    actions,
+    form,
+    totalEmployees,
+    mostUsedPosition,
+    mostUsedEmployee,
+    mostPaidEmployee,
+  } = useEmployee({
+    openModal,
+    setIsLoading,
+    onSuccess: () => onSuccessRef.current?.(),
+  });
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -34,8 +44,11 @@ const Employee = () => {
   return (
     <div>
       <Headers
-        title={"Employees"}
-        buttonLabel={"Add Employees"}
+        title="Employees"
+        subTitle="Placeholder subtitle"
+        icon={<IdCardLanyard size={20} className="text-indigo-500" />}
+        buttonLabel="Add Employees"
+        buttonIcon={Plus}
         openModal={openModal}
       />
       {isModalOpen && (
