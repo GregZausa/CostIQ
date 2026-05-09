@@ -16,10 +16,12 @@ const PositionModal = ({
         className="z-60 fixed inset-0 backdrop-blur-sm"
         onClick={closePositionModal}
       />
-      <ModalLayout widthStyle={"w-96"}>
+      <ModalLayout
+        widthStyle={"w-96"}
+        header={opened === "add" ? "Position" : "Position List"}
+      >
         {opened === "add" ? (
           <div>
-            <h1 className="text-xl font-bold mb-4">Add Position</h1>
             <AddPositionForm
               closePositionModal={closePositionModal}
               state={form.state}
@@ -29,7 +31,6 @@ const PositionModal = ({
           </div>
         ) : (
           <div>
-            <h1 className="text-xl font-bold mb-4">Position List</h1>
             <PositionsTable query={query} actions={actions} />
           </div>
         )}

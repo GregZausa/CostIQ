@@ -1,11 +1,15 @@
 import { Toaster } from "react-hot-toast";
 import AppRouter from "./router";
+import { useTheme } from "../context/ThemeContext";
 
 const App = () => {
+  const { isDark } = useTheme();
   return (
-    <div className="min-h-screen absolute inset-0 bg-linear-to-br from-slate-800/50 via-white/10 to white/5">
+    <div
+      className={`min-h-screen ${isDark ? "bg-slate-800" : "bg-slate-50"}`}
+    >
       <Toaster position="top-center" reverseOrder={false} />
-      <AppRouter/>
+      <AppRouter />
     </div>
   );
 };

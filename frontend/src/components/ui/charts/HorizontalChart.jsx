@@ -9,17 +9,28 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { useTheme } from "../../../context/ThemeContext";
+import { chartColors } from "../../../utils/palette";
 
-const CustomTooltip = ({ active, payload, label, formatter }) => {
+const CustomTooltip = ({ active, payload, label, formatter, isDark }) => {
   if (active && payload && payload.length) {
     const value = Number(payload[0].value);
 
     const formattedValue = formatter ? formatter(value) : value.toFixed(2);
 
     return (
-      <div className="bg-white border border-slate-100 rounded-lg shadow-lg px-3">
-        <p className="text-xs font-semibold text-slate-700 mb-1">{label}</p>
-        <p className="text-xs font-bold" style={{ color: payload[0].fill }}>
+      <div
+        className={`border ${isDark ? "bg-slate-800 border-slate-700" : "bg-slate-50 border-slate-100"} rounded-lg shadow-lg px-3`}
+      >
+        <p
+          className={`text-xs font-semibold ${isDark ? "text-slate-100" : "text-slate-700"}  mb-1`}
+        >
+          {label}
+        </p>
+        <p
+          className={`text-xs font-bold ${isDark ? "text-slate-100" : "text-slate-700"}`}
+          style={{ color: payload[0].fill }}
+        >
           {formattedValue}
         </p>
       </div>
@@ -29,6 +40,7 @@ const CustomTooltip = ({ active, payload, label, formatter }) => {
 };
 
 const HorizontalChart = ({ data = [], formatter, fillType, title, icon }) => {
+  const { isDark } = useTheme();
   const maxValue = Math.max(...data.map((d) => d.data), 0);
 
   const truncated = data.map((d) => ({
@@ -55,8 +67,10 @@ const HorizontalChart = ({ data = [], formatter, fillType, title, icon }) => {
             width={80}
           />
           <Tooltip
-            content={<CustomTooltip formatter={formatter} />}
-            cursor={{ fill: "#f8fafc" }}
+            content={<CustomTooltip formatter={formatter} isDark={isDark} />}
+            cursor={{
+              fill: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)",
+            }}
           />
           <Bar dataKey="data" barSize={16} radius={[0, 6, 6, 0]}>
             {data.map((entry, index) => (
@@ -64,10 +78,16 @@ const HorizontalChart = ({ data = [], formatter, fillType, title, icon }) => {
                 key={index}
                 fill={
                   fillType === "positive"
-                    ? "#4ade80"
+                    ? isDark
+                      ? chartColors[fillType].dark
+                      : chartColors[fillType].light
                     : fillType === "negative"
-                      ? "#f87171"
-                      : "#334155"
+                      ? isDark
+                        ? chartColors[fillType].dark
+                        : chartColors[fillType].light
+                      : isDark
+                        ? chartColors[fillType].dark
+                        : chartColors[fillType].light
                 }
               />
             ))}

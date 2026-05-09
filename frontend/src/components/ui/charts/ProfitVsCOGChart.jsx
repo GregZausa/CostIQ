@@ -12,6 +12,8 @@ import {
   YAxis,
 } from "recharts";
 import { BarChart2 } from "lucide-react";
+import { useTheme } from "../../../context/ThemeContext";
+import { chartColors } from "../../../utils/palette";
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -37,6 +39,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 const ProfitVsCOGChart = ({ data = [] }) => {
+  const { isDark } = useTheme();
   return (
     <ProductCardLayout title="Price Vs. COGS" icon={BarChart2}>
       <ResponsiveContainer width="100%" height={220}>
@@ -46,7 +49,11 @@ const ProfitVsCOGChart = ({ data = [] }) => {
           barGap={4}
           barCategoryGap="30%"
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#f8fafc" vertical={false} />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="#f8fafc"
+            vertical={false}
+          />
           <XAxis
             dataKey="name"
             tick={{ fontSize: 12, fill: "#94a3b8" }}
@@ -60,7 +67,12 @@ const ProfitVsCOGChart = ({ data = [] }) => {
             width={40}
             tickFormatter={(v) => `₱${v}`}
           />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: "#f8fafc" }} />
+          <Tooltip
+            content={<CustomTooltip />}
+            cursor={{
+              fill: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)",
+            }}
+          />
           <Legend
             wrapperStyle={{ fontSize: "12px", paddingTop: "12px" }}
             iconType="circle"
@@ -70,14 +82,18 @@ const ProfitVsCOGChart = ({ data = [] }) => {
             dataKey="cogs"
             name="COGS"
             barSize={24}
-            fill="#f87171"
+            fill={
+              isDark ? chartColors.negative.dark : chartColors.negative.light
+            }
             radius={[4, 4, 0, 0]}
           />
           <Bar
             dataKey="sellingPrice"
             name="Selling Price"
             barSize={24}
-            fill="#4ade80"
+            fill={
+              isDark ? chartColors.positive.dark : chartColors.positive.light
+            }
             radius={[4, 4, 0, 0]}
           />
         </BarChart>

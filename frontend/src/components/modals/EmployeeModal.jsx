@@ -37,10 +37,8 @@ const EmployeeModal = ({
   onSuccessRef.current = closePositionModal;
   return (
     <>
-      <ModalLayout closeModal={closeModal} widthStyle={"w-150"}>
-        <h1 className="text-xl font-bold mb-4">
-          {editingId !== null ? "Edit Employee" : "Add Employee"}
-        </h1>
+      <ModalLayout closeModal={closeModal} widthStyle={"w-150"} editingId={editingId} header="Employee">
+        
         <AddEmployeeForm
           openPositionModal={openPositionModal}
           closeModal={closeModal}

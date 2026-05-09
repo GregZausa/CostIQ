@@ -15,7 +15,7 @@ import {
 } from "recharts";
 import ProductCardLayout from "../../layout/ProductCardLayout";
 import { TrendingDown } from "lucide-react";
-import { useAuth } from "../../../hooks/useAuth";
+import { useAuth } from "../../../context/useAuth";
 import PremiumCard from "../../cards/PremiumCard";
 
 const CustomTooltip = ({ active, payload, label }) => {

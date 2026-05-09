@@ -1,5 +1,6 @@
 import React from "react";
 import TextInput from "../ui/TextInput";
+import { useTheme } from "../../context/ThemeContext";
 
 const SelectorLayout = ({
   search,
@@ -12,35 +13,48 @@ const SelectorLayout = ({
   columns,
   idKey,
 }) => {
+  const { isDark } = useTheme();
   return (
     <div>
       <div className="flex items-center gap-2 mb-5">
         {Icon}
-        <h1 className="text-xl font-bold">{title}</h1>
+        <h1
+          className={`text-xl font-bold ${isDark ? "text-slate-50" : "text-slate-800"}`}
+        >
+          {title}
+        </h1>
       </div>
       <div className="relative mb-4">
         <TextInput type="search" value={search} onChange={setSearch} />
       </div>
-      <div className="border border-slate-200 rounded-lg overflow-hidden mb-5">
-        <div className="bg-slate-50 px-4 border-b border-slate-200">
+      <div
+        className={`border ${isDark ? "border-slate-700" : "border-slate-100"} rounded-lg overflow-hidden mb-5`}
+      >
+        <div
+          className={`border-b ${isDark ? "bg-slate-800 border-slate-700" : "bg-slate-50 border-slate-100"} px-4  `}
+        >
           <div className="flex justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+            <span
+              className={`text-xs font-semibold ${isDark ? "text-slate-200" : "text-slate-600"} uppercase tracking-wide`}
+            >
               Select
             </span>
             {columns.map((col) => (
               <span
                 key={col.key}
-                className="text-xs font-semibold text-slate-500 uppercase tracking-wide"
+                className={`text-xs font-semibold ${isDark ? "text-slate-200" : "text-slate-600"} uppercase tracking-wide`}
               >
                 {col.label}
               </span>
             ))}
           </div>
         </div>
-        <div className="max-h-48 overflow-y-auto divide-y divide-slate-100">
+        <div
+          className={`max-h-48 overflow-y-auto divide-y ${isDark ? "divide-slate-700" : "divide-slate-100"}`}
+        >
           {filtered.length === 0 ? (
             <span className="text-center py-10 text-slate-500 italic font-semibold text-sm">
-              No employee found
+              Search not found
             </span>
           ) : (
             filtered.map((item) => (
@@ -49,8 +63,8 @@ const SelectorLayout = ({
                 onClick={() => toggleSelect(item)}
                 className={`flex items-center text-center justify-between px-4 py-2.5 cursor-pointer transition-colors ${
                   isSelected(item[idKey])
-                    ? "bg-slate-800 text-white"
-                    : "hover:bg-slate-50 text-slate-700"
+                    ? `${isDark ? "bg-slate-800 text-slate-50" : "bg-slate-50 text-slate-800"}`
+                    : ` ${isDark ? "hover:bg-slate-700 text-slate-50" : "hover:bg-slate-100 text-slate-800"}`
                 }`}
               >
                 <div

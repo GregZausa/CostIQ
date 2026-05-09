@@ -4,11 +4,14 @@ import OtherExpensesTable from "../tables/OtherExpensesTable";
 import useOtherExpenses from "../hooks/other-expenses/useOtherExpenses";
 import Headers from "../components/layout/Headers";
 import HeaderCard from "../components/cards/HeaderCard";
-import { Box } from "lucide-react";
+import { Box, Plus, Toolbox } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 
 const OtherExpenses = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const { isDark } = useTheme();
 
   const onSuccessRef = useRef(null);
 
@@ -35,8 +38,11 @@ const OtherExpenses = () => {
   return (
     <div>
       <Headers
-        title={"Other Expenses"}
-        buttonLabel={"Add Other Expenses"}
+        title="Other Expenses"
+        subTitle="Placeholder subtitle"
+        icon={<Toolbox size={20} className="text-indigo-500" />}
+        buttonLabel="Add Other Expenses"
+        buttonIcon={Plus}
         openModal={openModal}
       />
       {isModalOpen && (

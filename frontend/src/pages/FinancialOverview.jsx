@@ -4,7 +4,7 @@ import { useProductsQuery } from "../hooks/products/useProductsQuery";
 import FinancialOverviewTable from "../tables/FinancialOverviewTable";
 import { RATE_TYPES } from "../constants/options-type";
 import SummaryCard from "../components/cards/SummaryCard";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../context/useAuth";
 import PremiumModal from "../components/modals/PremiumModal";
 
 const getSummaryCards = (products, type) => {

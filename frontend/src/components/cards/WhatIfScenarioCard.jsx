@@ -10,7 +10,7 @@ import {
 import React, { useState, useMemo } from "react";
 import ProductCardLayout from "../layout/ProductCardLayout";
 import TextInput from "../ui/TextInput";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../context/useAuth";
 import { useNavigate } from "react-router-dom";
 import PremiumCard from "./PremiumCard";
 

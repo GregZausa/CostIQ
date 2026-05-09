@@ -1,5 +1,6 @@
 import React from "react";
 import { Loader2 } from "lucide-react";
+import { useTheme } from "../../context/ThemeContext";
 
 const Button = ({
   label,
@@ -13,16 +14,15 @@ const Button = ({
   size = "md",
 }) => {
   const isDisabled = disabled || loading;
+  const { isDark } = useTheme();
 
   const variants = {
     primary:
       "bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-white border-transparent shadow-sm hover:shadow-slate-200 hover:shadow-md",
     secondary:
       "bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-700 border-slate-200 shadow-xs hover:border-slate-300",
-    ghost:
-      "bg-transparent hover:bg-slate-100 active:bg-slate-200 text-slate-600 border-transparent",
-    danger:
-      "bg-rose-600 hover:bg-rose-500 active:bg-rose-700 text-white border-transparent shadow-sm hover:shadow-rose-200 hover:shadow-md",
+    ghost: `bg-transparent ${isDark ? "text-slate-200 hover:bg-slate-700" : " hover:bg-slate-100 text-slate-600"} active:bg-slate-200  border-transparent`,
+    danger: `${isDark ? "bg-rose-600 hover:shadow-rose-600" : "bg-rose-400 hover:shadow-rose-400"} hover:bg-rose-500 active:bg-rose-700  text-white border-transparent shadow-sm  hover:shadow-md`,
     ghostDanger:
       "bg-transparent hover:bg-rose-600 active:bg-rose-100 text-rose-500 border-transparent shadow-sm hover:text-white hover:shadow-rose-600 hover:shadow-md",
     excel:

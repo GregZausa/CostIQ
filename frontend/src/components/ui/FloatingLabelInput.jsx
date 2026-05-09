@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { useTheme } from "../../context/ThemeContext";
 
 const FloatingLabelInput = ({
   type = "text",
@@ -16,11 +17,13 @@ const FloatingLabelInput = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const { isDark } = useTheme();
 
   const inputType =
     type === "password" ? (showPassword ? "text" : "password") : type;
 
-  const isFloated = isFocused || value !== "" && value !== undefined && value !== null;
+  const isFloated =
+    isFocused || (value !== "" && value !== undefined && value !== null);
 
   const blockInvalidKeys = (e) => {
     if (type === "number" && ["e", "E", "+", "-", "="].includes(e.key)) {
@@ -48,13 +51,13 @@ const FloatingLabelInput = ({
         onBlur={() => setIsFocused(false)}
         onChange={(e) => onChange(e.target.value)}
         className={`
-          peer w-full px-4 pt-5 pb-2 text-sm text-slate-800
-          bg-white rounded-xl border outline-none
+          peer w-full px-4 pt-5 pb-2 text-sm ${isDark ? "text-slate-50 bg-slate-800" : "text-slate-800 bg-slate-50"} rounded-xl border outline-none
           transition-all duration-200
-          ${readOnly ? "cursor-default bg-slate-50 text-slate-500" : ""}
-          ${isFocused
-            ? "border-slate-800/50 ring-4 ring-indigo-100 shadow-sm"
-            : "border-slate-200 hover:border-slate-300 shadow-xs"
+          ${readOnly ? `cursor-default ${isDark ? "text-slate-50" : "text-slate-800"}` : ""}
+          ${
+            isFocused
+              ? `ring-4 ${isDark ? "border-slate-700 ring-slate-700" : "border-slate-100 ring-slate-100"} shadow-sm`
+              : "border-slate-200 hover:border-slate-300 shadow-xs"
           }
           ${suffix || type === "password" ? "pr-10" : ""}
         `}
@@ -63,9 +66,10 @@ const FloatingLabelInput = ({
         className={`
           absolute left-4 pointer-events-none font-medium
           transition-all duration-200 select-none
-          ${isFloated
-            ? "top-2 text-[10px] tracking-widest uppercase text-slate-800"
-            : "top-1/2 -translate-y-1/2 text-sm text-slate-400"
+          ${
+            isFloated
+              ? `top-2 text-[10px] tracking-widest uppercase ${isDark ? "text-slate-50" : "text-slate-800"}`
+              : "top-1/2 -translate-y-1/2 text-sm text-slate-400"
           }
         `}
       >

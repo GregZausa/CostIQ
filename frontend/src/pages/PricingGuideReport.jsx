@@ -2,7 +2,7 @@ import { useState } from "react";
 import Headers from "../components/layout/Headers";
 import { useProductsQuery } from "../hooks/products/useProductsQuery";
 import PricingGuideTable from "../tables/PricingGuideReportTable";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../context/useAuth";
 import PremiumModal from "../components/modals/PremiumModal";
 
 const PricingGuide = () => {

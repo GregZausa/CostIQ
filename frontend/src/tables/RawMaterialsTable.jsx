@@ -52,6 +52,7 @@ const RawMaterialsTable = ({ query, actions }) => {
         onChange={query.setSearch}
       />
       <SelectBox
+      searchable
               placeholder="Filter Pack Unit"
               name="packUnit"
               options={unitOptionsWithAll}
