@@ -14,6 +14,7 @@ import {
   insertProductIngredients,
   insertProductOtherExpenses,
 } from "../models/product.model.js";
+import { checkIfUserIsPremium } from "../models/user.model.js";
 import { getPaginationParams } from "../utils/pagination.js";
 import { uploadImage } from "../utils/uploadImage.js";
 
@@ -143,10 +144,8 @@ export const createProductService = async ({ file, userId, body }) => {
 };
 
 export const fetchProductsService = async ({ userId }) => {
-  const [products] = await Promise.all([
-    getProduct(userId),
-  ]);
-
+  const isPremium = await checkIfUserIsPremium(userId);
+  const [products] = await Promise.all([getProduct(userId, isPremium)]);
   return {
     products,
   };
@@ -155,11 +154,12 @@ export const fetchProductsService = async ({ userId }) => {
 export const fetchPaginatedProductsService = async (req) => {
   const { page, limit, offset, searchTerm, createdBy } =
     getPaginationParams(req);
+  const isPremium = await checkIfUserIsPremium(createdBy);
 
   const [rows, totalRows, totalAllRows] = await Promise.all([
-    getPaginatedProducts(createdBy, searchTerm, limit, offset),
-    getProductsCount(createdBy, searchTerm),
-    getProductsTotalCount(createdBy),
+    getPaginatedProducts(createdBy, searchTerm, limit, offset, isPremium),
+    getProductsCount(createdBy, searchTerm, isPremium),
+    getProductsTotalCount(createdBy, isPremium),
   ]);
 
   const totalPages = Math.ceil(totalRows / limit);
