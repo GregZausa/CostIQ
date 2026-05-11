@@ -56,8 +56,8 @@ const FloatingLabelInput = ({
           ${readOnly ? `cursor-default ${isDark ? "text-slate-50" : "text-slate-800"}` : ""}
           ${
             isFocused
-              ? `ring-4 ${isDark ? "border-slate-700 ring-slate-700" : "border-slate-100 ring-slate-100"} shadow-sm`
-              : "border-slate-200 hover:border-slate-300 shadow-xs"
+              ? `ring-4 ${isDark ? "border-slate-600 ring-slate-600" : "border-slate-100 ring-slate-100"} shadow-sm`
+              : `${isDark ? "border-slate-700 hover:border-slate-600" : "border-slate-200 hover:border-slate-300"} shadow-xs`
           }
           ${suffix || type === "password" ? "pr-10" : ""}
         `}
