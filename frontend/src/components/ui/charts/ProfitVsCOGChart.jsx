@@ -15,11 +15,17 @@ import { BarChart2 } from "lucide-react";
 import { useTheme } from "../../../context/ThemeContext";
 import { chartColors } from "../../../utils/palette";
 
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({ active, payload, label, isDark }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white border border-slate-100 rounded-lg shadow-lg px-3 py-2 space-y-1">
-        <p className="text-xs font-semibold text-slate-700 mb-1">{label}</p>
+      <div
+        className={`${isDark ? "bg-slate-800 border-slate-700" : "bg-slate-50 border border-slate-100"} rounded-lg shadow-lg px-3 py-2 space-y-1`}
+      >
+        <p
+          className={`text-xs font-semibold ${isDark ? "text-slate-100" : "text-slate-700"} mb-1`}
+        >
+          {label}
+        </p>
         {payload.map((entry, index) => (
           <div key={index} className="flex items-center gap-2">
             <div
@@ -49,11 +55,7 @@ const ProfitVsCOGChart = ({ data = [] }) => {
           barGap={4}
           barCategoryGap="30%"
         >
-          <CartesianGrid
-            strokeDasharray="3 3"
-            stroke="#f8fafc"
-            vertical={false}
-          />
+          <CartesianGrid stroke="rgba(255,255,255,0.03)" vertical={false} />
           <XAxis
             dataKey="name"
             tick={{ fontSize: 12, fill: "#94a3b8" }}
@@ -68,7 +70,7 @@ const ProfitVsCOGChart = ({ data = [] }) => {
             tickFormatter={(v) => `₱${v}`}
           />
           <Tooltip
-            content={<CustomTooltip />}
+            content={<CustomTooltip isDark={isDark} />}
             cursor={{
               fill: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)",
             }}

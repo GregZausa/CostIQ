@@ -14,13 +14,17 @@ import { Activity } from "lucide-react";
 import { getRandomColor } from "../../../utils/palette";
 import { useAuth } from "../../../context/useAuth";
 import PremiumCard from "../../cards/PremiumCard";
+import { useTheme } from "../../../context/ThemeContext";
 
-const COLORS = Array.from({ length: 7 }, () => getRandomColor());
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({ active, payload, label, isDark }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white border border-slate-100 rounded-xl px-3 py-2.5 shadow-md text-xs space-y-1.5">
-        <p className="font-bold text-slate-700 border-b border-slate-100 pb-1">
+      <div
+        className={`border ${isDark ? "bg-slate-800 border-slate-700" : "bg-slate-50 border-slate-100"}   rounded-xl px-3 py-2.5 shadow-md text-xs space-y-1.5`}
+      >
+        <p
+          className={`font-bold border-b ${isDark ? "text-slate-100 border-slate-700 " : "text-slate-700 border-slate-100"}   pb-1`}
+        >
           {label}
         </p>
         {payload.map((entry, i) => (
@@ -32,7 +36,9 @@ const CustomTooltip = ({ active, payload, label }) => {
               />
               <span className="text-slate-400">{entry.name}</span>
             </div>
-            <span className="font-semibold text-slate-700">
+            <span
+              className={`font-semibold ${isDark ? "text-slate-100" : "text-slate-700"}`}
+            >
               {Number(entry.value).toFixed(1)}
             </span>
           </div>
@@ -46,6 +52,12 @@ const CustomTooltip = ({ active, payload, label }) => {
 const CostEfficiencyRadarChart = ({ data = [], products = [] }) => {
   const [highlighted, setHighlighted] = useState(null);
   const { user } = useAuth();
+  const { isDark } = useTheme();
+
+  const COLORS = React.useMemo(
+    () => Array.from({ length: 7 }, () => getRandomColor(isDark)),
+    [isDark],
+  );
 
   if (data.length === 0 || products.length === 0) return null;
 
@@ -94,7 +106,9 @@ const CostEfficiencyRadarChart = ({ data = [], products = [] }) => {
               data={data}
               margin={{ top: 5, right: 20, bottom: 5, left: 20 }}
             >
-              <PolarGrid stroke="#e2e8f0" />
+              <PolarGrid
+                stroke={isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)"}
+              />
               <PolarAngleAxis
                 dataKey="metric"
                 tick={{ fontSize: 11, fill: "#94a3b8", fontWeight: 500 }}
@@ -105,7 +119,7 @@ const CostEfficiencyRadarChart = ({ data = [], products = [] }) => {
                 tick={{ fontSize: 9, fill: "#cbd5e1" }}
                 tickCount={4}
               />
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip content={<CustomTooltip isDark={isDark} />} />
               {products.map((p, i) => (
                 <Radar
                   key={p.product_name}

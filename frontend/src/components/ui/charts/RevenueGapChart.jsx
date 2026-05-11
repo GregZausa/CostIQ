@@ -15,8 +15,9 @@ import ProductCardLayout from "../../layout/ProductCardLayout";
 import { TrendingUp } from "lucide-react";
 import { useAuth } from "../../../context/useAuth";
 import PremiumCard from "../../cards/PremiumCard";
+import { useTheme } from "../../../context/ThemeContext";
 
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({ active, payload, label, isDark }) => {
   if (active && payload && payload.length) {
     const breakEven = payload.find((p) => p.dataKey === "breakEvenRevenue");
     const gap = payload.find((p) => p.dataKey === "gap");
@@ -25,8 +26,12 @@ const CustomTooltip = ({ active, payload, label }) => {
     const isViable = gap?.value > 0;
 
     return (
-      <div className="bg-white border border-slate-100 rounded-xl px-3 py-2.5 shadow-md text-xs space-y-1.5">
-        <p className="font-bold text-slate-700 border-b border-slate-100 pb-1">
+      <div
+        className={`border ${isDark ? "bg-slate-800 border-slate-700" : "bg-slate-50 border-slate-100"}  rounded-xl px-3 py-2.5 shadow-md text-xs space-y-1.5`}
+      >
+        <p
+          className={`font-bold  border-b ${isDark ? "text-slate-100 border-slate-700" : "text-slate-700 border-slate-100"}   pb-1`}
+        >
           {label}
         </p>
         {breakEven && (
@@ -35,7 +40,9 @@ const CustomTooltip = ({ active, payload, label }) => {
               <div className="w-2 h-2 rounded-full bg-red-400" />
               <span className="text-slate-400">Break-even</span>
             </div>
-            <span className="font-semibold text-slate-700">
+            <span
+              className={`font-semibold ${isDark ? "text-slate-100" : " text-slate-700"}`}
+            >
               ₱{Number(breakEven.value).toLocaleString()}
             </span>
           </div>
@@ -80,6 +87,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 const RevenueGapChart = ({ data = [] }) => {
   const { user } = useAuth();
+  const { isDark } = useTheme();
   if (data.length === 0) return null;
 
   return (
@@ -112,11 +120,7 @@ const RevenueGapChart = ({ data = [] }) => {
               margin={{ top: 10, right: 20, bottom: 0, left: 10 }}
               barCategoryGap="30%"
             >
-              <CartesianGrid
-                strokeDasharray="3 3"
-                stroke="#f1f5f9"
-                vertical={false}
-              />
+              <CartesianGrid stroke="rgba(255,255,255,0.03)" vertical={false} />
               <XAxis
                 dataKey="name"
                 tick={{ fontSize: 11, fill: "#94a3b8" }}
@@ -132,8 +136,10 @@ const RevenueGapChart = ({ data = [] }) => {
                 tickFormatter={(v) => `₱${v}`}
               />
               <Tooltip
-                content={<CustomTooltip />}
-                cursor={{ fill: "#f8fafc" }}
+                content={<CustomTooltip isDark={isDark} />}
+                cursor={{
+                  fill: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)",
+                }}
               />
 
               <Bar

@@ -15,8 +15,12 @@ const useProducts = () => {
   const limit = Math.min(5, half);
 
   const products = useMemo(
-    () => [...query.computedProducts ?? []],
+    () => [...(query.computedProducts ?? [])],
     [query.computedProducts],
+  );
+
+  const selectedProductData = query.data.find(
+    (p) => p.product_id === query.selectedProduct,
   );
 
   const avgCOGS = useMemo(() => medianHelper(products, "totalCPP"), [products]);
@@ -126,6 +130,7 @@ const useProducts = () => {
     form,
     query,
     actions,
+    selectedProductData,
   };
 };
 

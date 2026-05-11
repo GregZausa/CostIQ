@@ -62,7 +62,7 @@ const Dashboard = () => {
   return (
     <div>
       <Headers
-        subTitle="Placeholder subtitle"
+        subTitle="Monitor your business performance and product insights."
         icon={<LayoutDashboardIcon size={20} className="text-indigo-500" />}
         title="Dashboard"
       />
