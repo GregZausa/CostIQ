@@ -1,8 +1,10 @@
-export const getRandomColor = () => {
+export const getRandomColor = (isDark = false) => {
   const hue = Math.floor(Math.random() * 360);
-  return `hsl(${hue}, 70%, 60%)`;
-};
+  const saturation = isDark ? 75 : 65;
+  const lightness = isDark ? 68 : 52;
 
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+};
 export const costPerProductColor = {
   Materials: { fill: "#818cf8", light: "#e0e7ff" },
   Labor: { fill: "#a78bfa", light: "#ede9fe" },

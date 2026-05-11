@@ -7,7 +7,6 @@ import {
   ZAxis,
   CartesianGrid,
   Tooltip,
-  ReferenceLine,
   ResponsiveContainer,
   Label,
 } from "recharts";
@@ -25,18 +24,26 @@ const QUADRANTS = [
   { label: "Danger", color: "#f87171" },
 ];
 
-const CustomTooltip = ({ active, payload }) => {
+const CustomTooltip = ({ active, payload, isDark }) => {
   if (active && payload && payload.length) {
     const { name, x, y, z } = payload[0].payload;
     const profitColor = y >= 0 ? "#4ade80" : "#f87171";
     return (
-      <div className="bg-white border border-slate-100 rounded-xl px-3 py-2.5 shadow-md text-xs space-y-1.5">
-        <p className="font-bold text-slate-700 border-b border-slate-100 pb-1">
+      <div
+        className={`border ${isDark ? "bg-slate-800 border-slate-700" : "bg-slate-50 border-slate-100"} rounded-xl px-3 py-2.5 shadow-md text-xs space-y-1.5`}
+      >
+        <p
+          className={`font-bold border-b ${isDark ? "text-slate-100 border-slate-700" : "text-slate-700 border-slate-100"}   pb-1`}
+        >
           {name}
         </p>
         <div className="flex justify-between gap-6">
           <span className="text-slate-400">COGS</span>
-          <span className="font-semibold text-slate-700">₱{x.toFixed(2)}</span>
+          <span
+            className={`font-semibold ${isDark ? "text-slate-100" : "text-slate-700"} `}
+          >
+            ₱{x.toFixed(2)}
+          </span>
         </div>
         <div className="flex justify-between gap-6">
           <span className="text-slate-400">Profit/Unit</span>
@@ -131,7 +138,10 @@ const ProductPerformanceChart = ({ data = [], avgX, avgY }) => {
           <div className="relative">
             <ResponsiveContainer width="100%" height={200}>
               <ScatterChart margin={{ top: 0, right: 30, bottom: 0, left: 10 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                <CartesianGrid
+                  stroke="rgba(255,255,255,0.03)"
+                  vertical={false}
+                />
                 <XAxis
                   type="number"
                   dataKey="x"
@@ -172,20 +182,12 @@ const ProductPerformanceChart = ({ data = [], avgX, avgY }) => {
                   name="ROI"
                 />
                 <Tooltip
-                  content={<CustomTooltip />}
-                  cursor={{ fill: "#f8fafc" }}
-                />
-                <ReferenceLine
-                  x={avgX}
-                  stroke="#cbd5e1"
-                  strokeDasharray="4 4"
-                  strokeWidth={1.5}
-                />
-                <ReferenceLine
-                  y={avgY}
-                  stroke="#cbd5e1"
-                  strokeDasharray="4 4"
-                  strokeWidth={1.5}
+                  content={<CustomTooltip isDark={isDark} />}
+                  cursor={{
+                    fill: isDark
+                      ? "rgba(255,255,255,0.05)"
+                      : "rgba(0,0,0,0.03)",
+                  }}
                 />
 
                 <Scatter
