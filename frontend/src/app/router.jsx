@@ -2,12 +2,22 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { routes } from "../config/routes";
 import RequireAuth from "../config/RequireAuth";
+import PublicRoute from "./PublicRoute";
 
 const AppRouter = () => {
   return (
     <Routes>
-      {routes.map(({ path, element, public: isPublic }) => {
+      {routes.map(({ path, element, public: isPublic, authRedirect }) => {
         if (isPublic) {
+          if (authRedirect) {
+            return (
+              <Route
+                key={path}
+                path={path}
+                element={<PublicRoute>{element}</PublicRoute>}
+              />
+            );
+          }
           return <Route key={path} path={path} element={element} />;
         }
 
