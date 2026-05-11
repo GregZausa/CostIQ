@@ -29,11 +29,13 @@ export const routes = [
     path: "/login",
     element: <Login />,
     public: true,
+    authRedirect: true,
   },
   {
     path: "/register",
     element: <Register />,
     public: true,
+    authRedirect: true,
   },
   {
     path: "/pricing",
