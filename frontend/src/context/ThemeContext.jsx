@@ -16,7 +16,7 @@ export const ThemeProvider = ({ children }) => {
     } else {
       root.classList.remove("dark");
     }
-    localStorage.setItem("ph_study_theme", isDark ? "dark" : "light");
+    localStorage.setItem("cost_iq_theme", isDark ? "dark" : "light");
   }, [isDark]);
 
   const toggleTheme = () => setIsDark((v) => !v);
