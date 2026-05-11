@@ -25,6 +25,10 @@ import PremiumCard from "../components/cards/PremiumCard";
 import CostOptimizationCard from "../components/cards/CostOptimizationCard";
 import { Plus, ShoppingBagIcon } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
+import ProductDetailsCard from "../components/cards/ProductDetailsCard";
+import MaterialsCard from "../components/cards/MaterialsCard";
+import EmployeesCard from "../components/cards/EmployeeCard";
+import OtherExpensesCard from "../components/cards/OtherExepnsesCard";
 
 const TABS = [
   { key: "overview", label: "Overview" },
@@ -36,7 +40,7 @@ const Products = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
 
-  const { form, actions, query } = useProducts();
+  const { form, actions, query, selectedProductData } = useProducts();
   const { query: materialQuery } = useRawMaterials();
   const { query: employeeQuery } = useEmployee();
   const { query: expensesQuery } = useOtherExpenses();
@@ -100,30 +104,46 @@ const Products = () => {
           </div>
 
           {activeTab === "overview" && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-2">
-              <ProductImageCard src={computed?.product_image} />
-              <WhatIfScenarioCard
-                title="What-if Income Goal"
-                computed={computed}
-              />
+            <div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-2">
+                <ProductImageCard src={computed?.product_image} />
+                <WhatIfScenarioCard
+                  title="What-if Income Goal"
+                  computed={computed}
+                />
 
-              <div className="space-y-2">
-                <FinancialCard title="Financial Metrics" computed={computed} />
-                <CostCard
-                  title="Cost Per Batch"
-                  computed={computed}
-                  variant="batch"
-                />
+                <div className="space-y-2">
+                  <FinancialCard
+                    title="Financial Metrics"
+                    computed={computed}
+                  />
+                  <CostCard
+                    title="Cost Per Batch"
+                    computed={computed}
+                    variant="batch"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <PricingSummaryCard
+                    title="Pricing Summary"
+                    computed={computed}
+                  />
+                  <CostCard
+                    title="Cost Per Product"
+                    computed={computed}
+                    variant="unit"
+                  />
+                </div>
               </div>
-              <div className="space-y-2">
-                <PricingSummaryCard
-                  title="Pricing Summary"
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-2">
+                <ProductDetailsCard
+                  product={selectedProductData}
                   computed={computed}
                 />
-                <CostCard
-                  title="Cost Per Product"
-                  computed={computed}
-                  variant="unit"
+                <MaterialsCard ingredients={selectedProductData?.ingredients} />
+                <EmployeesCard employees={selectedProductData?.employees} />
+                <OtherExpensesCard
+                  expenses={selectedProductData?.other_expenses}
                 />
               </div>
             </div>
