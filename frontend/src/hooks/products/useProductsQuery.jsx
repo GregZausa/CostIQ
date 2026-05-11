@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   fetchAllProducts,
   fetchComputedProducts,
@@ -12,9 +12,7 @@ export const useProductsQuery = () => {
   const [mostExpensive, setMostExpensive] = useState(null);
   const [highestROI, setHighestROI] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
-
   const [productDetail, setProductDetail] = useState(null);
-
   const [data, setData] = useState([]);
   const [columns, setColumns] = useState([]);
   const [page, setPage] = useState(1);
@@ -23,74 +21,74 @@ export const useProductsQuery = () => {
   const [totalAllRows, setTotalAllRows] = useState();
   const [search, setSearch] = useState("");
 
-  const productOptions = (products ?? []).map((p) => ({
-    label: p.product_name.toUpperCase(),
-    value: p.product_id,
-  }));
+  const productOptions = useMemo(
+    () => (products ?? []).map((p) => ({
+      label: p.product_name.toUpperCase(),
+      value: p.product_id,
+    })),
+    [products]
+  )
 
   const loadPaginatedProducts = useCallback(async () => {
     try {
-      const result = await fetchPaginatedProducts({
-        search,
-        page,
-      });
-      const rows = result.rows ?? [];
-      setData(rows);
-      if (rows.length > 0) setColumns(Object.keys(rows[0]));
-      setPage(result.page);
-      setTotalPages(result.totalPages);
-      setTotalRows(result.totalRows);
-      setTotalAllRows(result.totalAllRows);
+      const result = await fetchPaginatedProducts({ search, page })
+      const rows = result.rows ?? []
+      setData(rows)
+      if (rows.length > 0) setColumns(Object.keys(rows[0]))
+      setTotalPages(result.totalPages)
+      setTotalRows(result.totalRows)
+      setTotalAllRows(result.totalAllRows)
     } catch (err) {
-      console.error(err);
+      console.error(err)
     }
-  }, [search, page]);
+  }, [search, page])
 
   const loadProducts = useCallback(async () => {
     try {
       const [allProducts, computedProducts] = await Promise.all([
         fetchAllProducts(),
         fetchComputedProducts(),
-      ]);
-      setProducts(allProducts.products);
-      setMostExpensive(allProducts.mostExpensiveProduct);
-      setHighestROI(allProducts.highestROIProduct);
-      setComputedProducts(computedProducts.products);
+      ])
+      setProducts(allProducts.products)
+      setMostExpensive(allProducts.mostExpensiveProduct)
+      setHighestROI(allProducts.highestROIProduct)
+      setComputedProducts(computedProducts.products)
     } catch (err) {
-      console.error("Failed to fetch products", err);
+      console.error("Failed to fetch products", err)
     }
-  }, []);
+  }, [])
 
   const loadSelectedProduct = useCallback(async () => {
-    if (!selectedProduct) return;
+    if (!selectedProduct) return
     try {
-      const result = await fetchSelectedProduct({ selectedProduct });
-      setProductDetail(result);
+      const result = await fetchSelectedProduct({ selectedProduct })
+      setProductDetail(result)
     } catch (err) {
-      console.error("Failed to fetch product", err);
+      console.error("Failed to fetch product", err)
     }
-  }, [selectedProduct]);
+  }, [selectedProduct])
 
   useEffect(() => {
-    loadPaginatedProducts();
-  }, [loadPaginatedProducts]);
+    loadPaginatedProducts()
+  }, [loadPaginatedProducts])
 
   useEffect(() => {
-    setPage(1);
-  }, [search]);
-  
+    setPage(1)
+  }, [search])
+
   useEffect(() => {
-    loadProducts();
-  }, [loadProducts]);
+    loadProducts()
+  }, [loadProducts])
 
   useEffect(() => {
     if (products.length > 0 && !selectedProduct) {
-      setSelectedProduct(productOptions[0].value);
+      setSelectedProduct(productOptions[0].value)
     }
-  }, [products]);
+  }, [products, productOptions])
+
   useEffect(() => {
-    loadSelectedProduct();
-  }, [loadSelectedProduct]);
+    loadSelectedProduct()
+  }, [loadSelectedProduct])
 
   return {
     products,
@@ -112,5 +110,5 @@ export const useProductsQuery = () => {
     search,
     setSearch,
     loadPaginatedProducts,
-  };
-};
+  }
+}
