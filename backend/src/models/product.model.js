@@ -83,13 +83,7 @@ export const insertProductOtherExpenses = async (
   }
 };
 
-export const getProduct = async (userId) => {
-  const userResult = await pool.query(
-    "SELECT is_premium FROM users WHERE id = $1",
-    [userId],
-  );
-  const isPremium = userResult.rows[0]?.is_premium;
-
+export const getProduct = async (userId, isPremium) => {
   const query = `
     SELECT * FROM products
     WHERE created_by = $1
@@ -265,14 +259,9 @@ export const getPaginatedProducts = async (
   searchTerm = "",
   limit = 8,
   offset = 0,
+  isPremium,
 ) => {
   const searchValue = searchTerm ? `%${searchTerm}%` : "%";
-
-  const userResult = await pool.query(
-    "SELECT is_premium FROM users WHERE id = $1",
-    [createdBy],
-  );
-  const isPremium = userResult.rows[0]?.is_premium;
 
   let query = `SELECT 
                 p.product_id,
@@ -333,8 +322,7 @@ export const getPaginatedProducts = async (
     query += ` ORDER BY p.created_at DESC LIMIT $${values.length + 1} OFFSET $${values.length + 2}`;
     values.push(limit, offset);
   } else {
-    query += ` ORDER BY p.created_at DESC LIMIT 3 OFFSET $${values.length + 1}`;
-    values.push(offset);
+    query += ` ORDER BY p.created_at DESC LIMIT 3`;
   }
 
   const { rows } = await pool.query(query, values);
@@ -342,14 +330,12 @@ export const getPaginatedProducts = async (
   return rows;
 };
 
-export const getProductsCount = async (createdBy, searchTerm = "") => {
+export const getProductsCount = async (
+  createdBy,
+  searchTerm = "",
+  isPremium,
+) => {
   const searchValue = searchTerm ? `%${searchTerm}%` : "%";
-
-  const userResult = await pool.query(
-    "SELECT is_premium FROM users WHERE id = $1",
-    [createdBy],
-  );
-  const isPremium = userResult.rows[0]?.is_premium;
 
   const { rows } = await pool.query(
     `SELECT COUNT(*) AS total
@@ -362,17 +348,10 @@ export const getProductsCount = async (createdBy, searchTerm = "") => {
 
   const total = Number(rows[0].total);
 
-  // ✅ Apply business rule here (NOT in SQL)
   return isPremium ? total : Math.min(total, 3);
 };
 
-export const getProductsTotalCount = async (createdBy) => {
-  const userResult = await pool.query(
-    "SELECT is_premium FROM users WHERE id = $1",
-    [createdBy],
-  );
-  const isPremium = userResult.rows[0]?.is_premium;
-
+export const getProductsTotalCount = async (createdBy, isPremium) => {
   const { rows } = await pool.query(
     `SELECT COUNT(*) AS total
      FROM products

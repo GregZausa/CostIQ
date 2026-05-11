@@ -9,6 +9,13 @@ export const findUserByEmail = async (email) => {
   return rows[0];
 };
 
+export const checkIfUserIsPremium = async (userId) => {
+  const userResult = await pool.query(
+    "SELECT is_premium FROM users WHERE id = $1",
+    [userId],
+  );
+  return userResult.rows?.[0]?.is_premium ?? false;
+};
 
 export const getUserById = async (userId) => {
   const query = `SELECT id, first_name, last_name,
@@ -20,14 +27,12 @@ export const getUserById = async (userId) => {
   return rows[0];
 };
 
-//function to create a user
 export const createUser = async ({
   firstName,
   lastName,
   email,
   hashedPassword,
 }) => {
-  //insert query
   const insertQuery =
     "INSERT INTO users (first_name, last_name, email, password_hash) VALUES($1, $2, $3, $4) RETURNING id, email, first_name, last_name";
   const { rows } = await pool.query(insertQuery, [
