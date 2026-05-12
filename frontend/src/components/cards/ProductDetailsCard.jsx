@@ -1,7 +1,9 @@
 import { Package } from "lucide-react";
 import ProductCardLayout from "../layout/ProductCardLayout";
+import { useTheme } from "../../context/ThemeContext";
 
 const ProductDetailsCard = ({ product, computed }) => {
+  const { isDark } = useTheme();
   const details = [
     { label: "Batch Per Day", value: product?.batch_per_day ?? "—" },
     { label: "Total Input", value: product?.total_input ?? "—" },
@@ -34,10 +36,12 @@ const ProductDetailsCard = ({ product, computed }) => {
         {details.map(({ label, value }) => (
           <div
             key={label}
-            className="flex items-center justify-between px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-100"
+            className={`flex items-center justify-between px-3 py-1.5 rounded-lg border ${isDark ? "bg-slate-800 border-slate-700" : "bg-slate-50 border-slate-100"}  `}
           >
             <span className="text-xs text-slate-400">{label}</span>
-            <span className="text-xs font-semibold text-slate-700">
+            <span
+              className={`text-xs font-semibold ${isDark ? "text-slate-100" : "text-slate-700"}`}
+            >
               {value}
             </span>
           </div>

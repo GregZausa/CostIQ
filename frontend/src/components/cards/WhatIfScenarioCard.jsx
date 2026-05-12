@@ -13,12 +13,14 @@ import TextInput from "../ui/TextInput";
 import { useAuth } from "../../context/useAuth";
 import { useNavigate } from "react-router-dom";
 import PremiumCard from "./PremiumCard";
+import { useTheme } from "../../context/ThemeContext";
 
 const fmt = (n) =>
   "₱" + Math.round(n).toLocaleString("en-PH", { minimumFractionDigits: 0 });
 
 const WhatIfScenarioCard = ({ title, computed }) => {
   const { user } = useAuth();
+  const { isDark } = useTheme();
   const [goalInput, setGoalInput] = useState("");
   const [batchesPerDayInput, setBatchesPerDayInput] = useState("");
   const navigate = useNavigate();
@@ -108,7 +110,9 @@ const WhatIfScenarioCard = ({ title, computed }) => {
             />
           </div>
           {!goal && (
-            <div className="flex items-center gap-2 py-3 px-3 rounded-xl bg-slate-50 border border-slate-100">
+            <div
+              className={`flex items-center gap-2 py-3 px-3 rounded-xl border  ${isDark ? "bg-slate-800 border-slate-700" : "bg-slate-50"} border-slate-100`}
+            >
               <Target size={14} className="text-slate-400 shrink-0" />
               <p className="text-xs text-slate-400">
                 Enter an income goal and your daily batch capacity to get a
@@ -117,11 +121,17 @@ const WhatIfScenarioCard = ({ title, computed }) => {
             </div>
           )}
           {goal > 0 && !batchesPerDay && metrics && (
-            <div className="flex items-center gap-2 py-1 px-3 rounded-xl bg-indigo-50 border border-indigo-100">
+            <div
+              className={`flex items-center gap-2 py-1 px-3 rounded-xl border ${isDark ? "bg-indigo-800 border-indigo-700" : "bg-indigo-50 border-indigo-100"}`}
+            >
               <Package size={14} className="text-indigo-400 shrink-0" />
-              <p className="text-xs text-indigo-500">
+              <p
+                className={`text-xs ${isDark ? "text-indigo-300" : "text-indigo-500"}`}
+              >
                 You need{" "}
-                <strong className="text-indigo-600">
+                <strong
+                  className={`${isDark ? "text-indigo-200" : "text-indigo-600"}`}
+                >
                   {metrics.batchesNeeded} batches
                 </strong>{" "}
                 to hit {fmt(goal)}. Add your daily batch capacity to see a
@@ -131,36 +141,50 @@ const WhatIfScenarioCard = ({ title, computed }) => {
           )}
           {showResults && (
             <>
-              <div className="flex items-center justify-between px-3 py-0.5 rounded-xl bg-indigo-50 border border-indigo-100">
+              <div
+                className={`flex items-center justify-between px-3 py-0.5 rounded-xl border ${isDark ? "bg-slate-800 border-slate-700" : "bg-indigo-50 border-indigo-100"}  `}
+              >
                 <div className="flex items-center gap-2">
-                  <Package size={14} className="text-indigo-500 shrink-0" />
+                  <Package size={14} className="text-indigo-400 shrink-0" />
                   <div>
-                    <p className="text-[11px] text-indigo-400 font-semibold uppercase tracking-wider">
+                    <p
+                      className={`text-[11px] ${isDark ? "text-indigo-400" : "text-indigo-600"} font-semibold uppercase tracking-wider`}
+                    >
                       Batches needed
                     </p>
-                    <p className="text-xs text-indigo-500 mt-0.5">
+                    <p
+                      className={`text-xs ${isDark ? "text-indigo-400" : "text-indigo-600"} mt-0.5`}
+                    >
                       {metrics.beBatches} to break even
                       {metrics.profitBatches > 0 &&
                         ` + ${metrics.profitBatches} for profit`}
                     </p>
                   </div>
                 </div>
-                <p className="text-2xl font-bold text-indigo-600">
+                <p
+                  className={`text-2xl font-bold ${isDark ? "text-indigo-600" : "text-indigo-800"}`}
+                >
                   {metrics.batchesNeeded}
                 </p>
               </div>
               {showTimeline && (
-                <div className="flex items-center justify-between px-3 py-0.5 rounded-xl bg-emerald-50 border border-emerald-100">
+                <div
+                  className={`flex items-center justify-between px-3 py-0.5 rounded-xl border ${isDark ? "bg-slate-800 border-slate-700" : "bg-emerald-50  border-emerald-100"}`}
+                >
                   <div className="flex items-center gap-2">
                     <CalendarClock
                       size={14}
-                      className="text-emerald-500 shrink-0"
+                      className="text-emerald-400 shrink-0"
                     />
                     <div>
-                      <p className="text-[11px] text-emerald-500 font-semibold uppercase tracking-wider">
+                      <p
+                        className={`text-[11px] ${isDark ? "text-emerald-400" : "text-emerald-600"} font-semibold uppercase tracking-wider`}
+                      >
                         Time to hit goal
                       </p>
-                      <p className="text-xs text-emerald-500 mt-0.5">
+                      <p
+                        className={`text-xs ${isDark ? "text-emerald-300" : "text-emerald-500"} mt-0.5`}
+                      >
                         {fmt(metrics.timeline.profitPerDay)}/day ·{" "}
                         {fmt(metrics.timeline.profitPerWeek)}/week at current
                         pace
@@ -168,7 +192,9 @@ const WhatIfScenarioCard = ({ title, computed }) => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-bold text-emerald-600">
+                    <p
+                      className={`text-2xl font-bold ${isDark ? "text-emerald-600" : "text-emerald-800"}`}
+                    >
                       {metrics.timeline.weeksNeeded}
                       <span className="text-sm font-medium ml-1">wks</span>
                     </p>
@@ -186,33 +212,33 @@ const WhatIfScenarioCard = ({ title, computed }) => {
                     value: metrics.unitsNeeded.toLocaleString(),
                     sub: `${batchSize} units × ${metrics.batchesNeeded} batches`,
                     icon: <TrendingUp size={12} />,
-                    accent: "text-indigo-600",
+                    accent: isDark ? "text-indigo-400" : "text-indigo-600",
                   },
                   {
                     label: "Revenue needed",
                     value: fmt(metrics.revenueNeeded),
                     sub: `at ₱${price.toFixed(2)} / unit`,
                     icon: <Target size={12} />,
-                    accent: "text-slate-700",
+                    accent: isDark ? "text-slate-400" : "text-slate-600",
                   },
                   {
                     label: "Total cost",
                     value: fmt(metrics.totalCost),
                     sub: `₱${costPerUnit.toFixed(2)} × ${metrics.unitsNeeded.toLocaleString()} units`,
                     icon: <TrendingDown size={12} />,
-                    accent: "text-slate-700",
+                    accent: isDark ? "text-slate-400" : "text-slate-600",
                   },
                   {
                     label: "Profit per batch",
                     value: fmt(profitPerBatch),
                     sub: `${batchSize} units × ₱${profitPerUnit.toFixed(2)}`,
                     icon: <Package size={12} />,
-                    accent: "text-emerald-600",
+                    accent: isDark ? "text-emerald-400" : "text-emerald-600",
                   },
                 ].map(({ label, value, sub, icon, accent }) => (
                   <div
                     key={label}
-                    className="bg-slate-50 rounded-xl px-3 py-0.5 border border-slate-100"
+                    className={`border ${isDark ? "bg-slate-800 border-slate-700" : "bg-slate-50 border-slate-100"} rounded-xl px-3 py-0.5  `}
                   >
                     <div className="flex items-center gap-1 text-slate-400 mb-1">
                       {icon}
@@ -225,11 +251,17 @@ const WhatIfScenarioCard = ({ title, computed }) => {
                   </div>
                 ))}
               </div>
-              <div className="flex items-start gap-2 px-3 py-0.5 rounded-xl text-xs border bg-amber-50 border-amber-100 text-amber-700">
+              <div
+                className={`flex items-start gap-2 px-3 py-0.5 rounded-xl text-xs border ${isDark ? "bg-slate-800 border-slate-700 text-amber-400" : "bg-amber-50 border-amber-100 text-amber-600"} `}
+              >
                 <AlertCircle size={13} className="shrink-0 mt-0.5" />
                 <span>
-                  You need <strong>{metrics.batchesNeeded} batches</strong> (
-                  {metrics.unitsNeeded.toLocaleString()} units) to earn{" "}
+                  You need{" "}
+                  <strong>
+                    {metrics.batchesNeeded}{" "}
+                    {metrics.batchesNeeded === 1 ? "batch" : "batches"}
+                  </strong>{" "}
+                  ({metrics.unitsNeeded.toLocaleString()} units) to earn{" "}
                   <strong>{fmt(goal)}</strong>.
                   {showTimeline ? (
                     <>

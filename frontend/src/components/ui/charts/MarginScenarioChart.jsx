@@ -16,6 +16,7 @@ import ProductCardLayout from "../../layout/ProductCardLayout";
 import { BarChart2 } from "lucide-react";
 import { useAuth } from "../../../context/useAuth";
 import PremiumCard from "../../cards/PremiumCard";
+import { useTheme } from "../../../context/ThemeContext";
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -46,6 +47,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 const MarginScenarioChart = ({ computed = {} }) => {
   const { user } = useAuth();
+  const { isDark } = useTheme();
   const {
     totalCPP = 0,
     totalCPB = 0,

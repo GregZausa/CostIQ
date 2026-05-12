@@ -25,8 +25,10 @@ const ProductsModal = ({
   const handleExpensesConfirm = (items) => {
     handleChange({ target: { name: "otherExpenses", value: items } });
   };
-  const clamped = useCallback((val, min = 0, max = 100) =>
-    Math.min(max, Math.max(min, Number(val))),[]);
+  const clamped = useCallback(
+    (val, min = 0, max = 100) => Math.min(max, Math.max(min, Number(val))),
+    [],
+  );
   const handleOpenModal = (params) => {
     if (form.state?.totalSellableUnits === 0) {
       toast.error("Total sellable units must not be 0");
@@ -35,10 +37,13 @@ const ProductsModal = ({
     setOpenModal(params);
   };
   return (
-    <ModalLayout closeModal={closeModal} widthStyle={"w-250"}>
-      <h1 className="text-xl font-bold mb-4">Add Product</h1>
+    <ModalLayout
+      closeModal={closeModal}
+      widthStyle={"w-250"}
+      header="Product"
+    >
       <AddProductForm
-      handleSubmit={actions.handleSubmit}
+        handleSubmit={actions.handleSubmit}
         closeModal={closeModal}
         handleChange={form.handleChange}
         state={form.state}
