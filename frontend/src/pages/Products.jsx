@@ -83,8 +83,10 @@ const Products = () => {
                 onClick={() => setActiveTab(tab.key)}
                 className={`px-4 py-2 text-xs font-semibold rounded-t-lg transition-all border-b-2 ${
                   activeTab === tab.key
-                    ? "border-slate-800 text-slate-800"
-                    : "border-transparent text-slate-400 hover:text-slate-600"
+                    ? isDark
+                      ? "border-slate-50 text-slate-50"
+                      : "border-slate-800 text-slate-800"
+                    : `border-transparent text-slate-400 ${isDark ? "hover:text-slate-200" : " hover:text-slate-600"}`
                 }`}
               >
                 {tab.label}

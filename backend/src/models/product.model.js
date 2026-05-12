@@ -74,10 +74,10 @@ export const insertProductOtherExpenses = async (
 ) => {
   for (const expense of otherExpenses) {
     const query = `INSERT INTO product_other_expenses 
-                        (product_id, other_expense_id, quantity)
+                        (product_id, other_expense_id, expense_type)
                         VALUES($1, $2, $3)`;
 
-    const values = [productId, expense.other_expense_id, expense.quantity];
+    const values = [productId, expense.other_expense_id, expense.expense_type];
 
     await client.query(query, values);
   }
@@ -304,7 +304,7 @@ export const getPaginatedProducts = async (
                   SELECT jsonb_agg(jsonb_build_object(
                     'category_name', oe.category_name,
                     'expense_cost', oe.expense_cost,
-                    'quantity', poe.quantity
+                    'expense_type', poe.expense_type
                   ))
                   FROM product_other_expenses poe
                   JOIN other_expenses oe ON poe.other_expense_id = oe.other_expense_id

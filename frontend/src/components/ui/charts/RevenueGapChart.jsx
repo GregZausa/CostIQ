@@ -169,7 +169,7 @@ const RevenueGapChart = ({ data = [] }) => {
                 type="monotone"
                 dataKey="revenueAtCapacity"
                 name="Max Revenue"
-                stroke="#60a5fa"
+                stroke={"#60a5fa"}
                 strokeWidth={2.5}
                 dot={{ fill: "#60a5fa", r: 4, strokeWidth: 0 }}
                 activeDot={{ r: 6, strokeWidth: 0 }}
