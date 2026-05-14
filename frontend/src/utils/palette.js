@@ -32,4 +32,18 @@ export const chartColors = {
     light: "#475569",
     dark: "#94a3b8",
   },
+  yellow: {
+    light: "#ca8a04",
+    dark: "#facc15",
+  },
+  blue: {
+    light: "#2563eb",
+    dark: "#60a5fa",
+    highlightedLight: "#1d4ed8",
+    highlightedDark: "#93c5fd",
+  },
+  green: {
+    light: "#16a34a",
+    dark: "#4ade80",
+  },
 };
