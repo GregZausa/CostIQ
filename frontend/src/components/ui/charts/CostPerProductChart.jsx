@@ -9,17 +9,26 @@ import {
 } from "recharts";
 import ProductCardLayout from "../../layout/ProductCardLayout";
 import { PieChart as PieIcon } from "lucide-react";
-import { costPerProductColor } from "../../../utils/palette";
+import { chartColors, costPerProductColor } from "../../../utils/palette";
+import { useTheme } from "../../../context/ThemeContext";
 
 const COLORS = costPerProductColor;
 
-const CustomTooltip = ({ active, payload }) => {
+const CustomTooltip = ({ active, payload, isDark }) => {
   if (active && payload && payload.length) {
     const { name, value } = payload[0];
     return (
-      <div className="bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs shadow-sm">
-        <p className="text-slate-600 font-medium">{name}</p>
-        <p className="text-slate-800 font-semibold">
+      <div
+        className={`border ${isDark ? "bg-slate-800 border-slate-700" : "bg-slate-50 border-slate-100"}  rounded-xl px-3 py-2.5 shadow-md space-y-1.5 text-xs`}
+      >
+        <p
+          className={`${isDark ? "text-slate-200" : "text-slate-600"} font-medium`}
+        >
+          {name}
+        </p>
+        <p
+          className={`${isDark ? "text-slate-50" : "text-slate-800"} font-semibold`}
+        >
           ₱{Number(value).toFixed(2)}
         </p>
       </div>
@@ -29,6 +38,7 @@ const CustomTooltip = ({ active, payload }) => {
 };
 
 const CostPerProductChart = ({ computed = {} }) => {
+  const { isDark } = useTheme();
   const {
     materialCPP = 0,
     employeeCPP = 0,
@@ -71,7 +81,7 @@ const CostPerProductChart = ({ computed = {} }) => {
               y="47%"
               textAnchor="middle"
               dominantBaseline="middle"
-              fill="#1e293b"
+              fill={`${isDark ? chartColors.neutral.dark : chartColors.neutral.light}`}
               fontSize={16}
               fontWeight={600}
             >
@@ -82,17 +92,17 @@ const CostPerProductChart = ({ computed = {} }) => {
               y="57%"
               textAnchor="middle"
               dominantBaseline="middle"
-              fill="#94a3b8"
+              fill={`${isDark ? chartColors.neutral.dark : chartColors.neutral.light}`}
               fontSize={11}
             >
               Cost / Unit
             </text>
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<CustomTooltip isDark={isDark} />} />
             <Legend
               formatter={(value, entry) => {
                 const val = entry?.payload?.value ?? 0;
                 return (
-                  <span className="text-xs text-slate-600">
+                  <span className="text-xs text-slate-400">
                     {value} — ₱{val.toFixed(2)} (
                     {((val / total) * 100).toFixed(1)}%)
                   </span>
