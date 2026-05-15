@@ -19,7 +19,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import "./src/config/db.js";
 import "./src/jobs/cleanupPositions.js";
-import "./src/jobs/cleanupTokens.js";
+import "./src/jobs/cleanUpTokens.js";
 import { paymongoWebhook } from "./src/controllers/paymongo.controller.js";
 
 const app = express();
