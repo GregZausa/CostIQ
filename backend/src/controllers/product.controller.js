@@ -39,6 +39,7 @@ export const fetchProducts = async (req, res) => {
 };
 
 export const fetchPaginatedProducts = async (req, res) => {
+  console.log("USER:", req.user);
   try {
     const result = await fetchPaginatedProductsService(req);
     res.json(result);
