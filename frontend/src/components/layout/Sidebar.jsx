@@ -140,7 +140,7 @@ const Sidebar = () => {
           </div>
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
+        <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5 scrollbar-none">
           <div>
             <div className="text-[10px] uppercase tracking-widest text-slate-400 font-semibold px-2 mb-2">
               Menu
