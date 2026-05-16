@@ -13,6 +13,5 @@ export const handleSubscription = async (
   const values = [premium_since, premium_until, subscription_id, id];
 
   const result = await pool.query(query, values);
-  console.log("DB RESULT:", result.rows);
   return result;
 };
