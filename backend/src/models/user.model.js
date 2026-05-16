@@ -53,7 +53,7 @@ export const saveRefreshToken = async (userId, token) => {
 export const findUserByRefreshToken = async (token) => {
   const tokenHash = hashToken(token);
   const { rows } = await pool.query(
-    `SELECT u.*, rt.id as token_id
+    `SELECT u.first_name, u.last_name, email, is_premium, rt.id as token_id
      FROM refresh_tokens rt
      JOIN users u ON u.id = rt.user_id
      WHERE rt.token_hash = $1

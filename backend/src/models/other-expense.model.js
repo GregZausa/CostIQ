@@ -62,7 +62,7 @@ export const getOtherExpensesCount = async (
   selectedExpenseType = "",
 ) => {
   const searchValue = searchTerm ? `%${searchTerm}%` : "%";
-  let query = `SELECT COUNT(*) as total
+  let query = `SELECT COUNT(other_expense_id) as total
                 FROM other_expenses
                 WHERE created_by = $1
                 AND is_active = true
