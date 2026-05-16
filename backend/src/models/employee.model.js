@@ -62,7 +62,7 @@ export const getEmployees = async (
 export const getEmployeesCount = async (createdBy, searchTerm = "") => {
   const searchValue = searchTerm ? `%${searchTerm}%` : "%";
 
-  const query = `SELECT COUNT(*) AS total
+  const query = `SELECT COUNT(employee_id) AS total
                   FROM employees e
                   JOIN positions p ON e.position_id = p.position_id
                   WHERE e.created_by = $1

@@ -42,7 +42,7 @@ export const getPositions = async (
     "SELECT * FROM positions WHERE created_by = $1 AND is_active = true";
   const optionResult = await pool.query(optionsQuery, [createdBy]);
 
-  const countQuery = `SELECT COUNT(*) AS total
+  const countQuery = `SELECT COUNT(position_id) AS total
                       FROM positions
                       WHERE created_by = $1 
                       AND is_active = true

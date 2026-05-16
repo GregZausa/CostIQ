@@ -14,7 +14,7 @@ const getAuthHeader = () => {
 export const createSubscriptionCheckout = async (userId, plan) => {
   const plans = {
     monthly: {
-      amount: 29900,
+      amount: 1000,
       description: "CostIQ Premium — Monthly",
       interval: "month",
     },

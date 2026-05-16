@@ -89,7 +89,7 @@ export const getRawMaterialsCount = async (
   selectedUnit = "",
 ) => {
   const searchValue = searchTerm ? `%${searchTerm}%` : "%";
-  let query = `SELECT COUNT(*) AS total
+  let query = `SELECT COUNT(raw_material_id) AS total
                 FROM raw_materials_view
                 WHERE created_by = $1
                 AND is_active = true
@@ -129,7 +129,7 @@ export const deleteRawMaterials = async (id) => {
 };
 
 export const getMostExpensiveMaterial = async (createdBy) => {
-  const query = `SELECT * 
+  const query = `SELECT material_name, cost_per_unit 
                   FROM raw_materials_view 
                   WHERE created_by = $1
                   AND is_active = true 
@@ -140,7 +140,7 @@ export const getMostExpensiveMaterial = async (createdBy) => {
 };
 
 export const getLeastExpensiveMaterial = async (createdBy) => {
-  const query = `SELECT * 
+  const query = `SELECT material_name, cost_per_unit
                   FROM raw_materials_view 
                   WHERE created_by = $1 
                   AND is_active = true
