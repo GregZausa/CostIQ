@@ -45,7 +45,7 @@ const Employee = () => {
     <div>
       <Headers
         title="Employees"
-        subTitle="Placeholder subtitle"
+        subTitle={`${totalEmployees} employee${totalEmployees !== 1 ? "s" : ""} tracked`}
         icon={<IdCardLanyard size={20} className="text-indigo-500" />}
         buttonLabel="Add Employees"
         buttonIcon={Plus}
