@@ -39,7 +39,7 @@ const OtherExpenses = () => {
     <div>
       <Headers
         title="Other Expenses"
-        subTitle="Placeholder subtitle"
+        subTitle={`${totalOtherExpenses} expense${totalOtherExpenses !== 1 ? "s" : ""} tracked`}
         icon={<Toolbox size={20} className="text-indigo-500" />}
         buttonLabel="Add Other Expenses"
         buttonIcon={Plus}

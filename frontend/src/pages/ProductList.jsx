@@ -12,7 +12,7 @@ const ProductList = () => {
     <div>
       <Headers
         icon={<ShoppingBagIcon size={20} className="text-indigo-500" />}
-        subTitle="Placeholder subtitle"
+        subTitle="View and organize your product business data."
         isDark={isDark}
         title="Product List"
       />

@@ -29,6 +29,9 @@ import ProductDetailsCard from "../components/cards/ProductDetailsCard";
 import MaterialsCard from "../components/cards/MaterialsCard";
 import EmployeesCard from "../components/cards/EmployeeCard";
 import OtherExpensesCard from "../components/cards/OtherExepnsesCard";
+import ProductCardLayout from "../components/layout/ProductCardLayout";
+import CostSensitivityChart from "../components/ui/charts/CostSensitivityChart";
+import BreakEvenSummaryCard from "../components/cards/BreakEvenSummaryCard";
 
 const TABS = [
   { key: "overview", label: "Overview" },
@@ -67,7 +70,7 @@ const Products = () => {
     <div className="relative">
       <Headers
         icon={<ShoppingBagIcon size={20} className="text-indigo-500" />}
-        subTitle="Placeholder subtitle"
+        subTitle="Track product performance with analytics and AI insights."
         openModal={handleOpenModal}
         title="Products"
         buttonLabel="Add Products"
@@ -152,10 +155,16 @@ const Products = () => {
           )}
 
           {activeTab === "analytics" && (
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-              <MarginScenarioChart computed={computed} />
-              <PricingGuideChart computed={computed} />
-              <CostPerProductChart computed={computed} />
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+                <MarginScenarioChart computed={computed} />
+                <PricingGuideChart computed={computed} />
+                <CostPerProductChart computed={computed} />
+              </div>
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                <CostSensitivityChart computed={computed} />
+                <BreakEvenSummaryCard computed={computed} />
+              </div>
             </div>
           )}
 
