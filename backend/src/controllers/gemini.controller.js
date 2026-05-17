@@ -3,10 +3,11 @@ import {
   getMarketPriceAnalysis,
 } from "../services/gemini.services.js";
 import { getProductsWithProfit } from "../models/product.model.js";
-import { checkAndConsumeToken, getTokenStatus } from "../models/ad.model.js";
+import { checkAndConsumeToken, getTokenStatus } from "../models/ai.model.js";
 
 export const analyzeMarketPrice = async (req, res) => {
   try {
+    const tokenInfo = await checkAndConsumeToken(req.user.id);
     const { productId } = req.params;
     const allProducts = await getProductsWithProfit(req.user.id);
     const product = allProducts.find(
@@ -15,7 +16,7 @@ export const analyzeMarketPrice = async (req, res) => {
     if (!product) return res.status(404).json({ message: "Product not found" });
 
     const analysis = await getMarketPriceAnalysis(product);
-    res.json(analysis);
+    res.json({ ...analysis, tokenInfo });
   } catch (err) {
     console.error("FULL ERROR:", err);
     res
