@@ -3,6 +3,7 @@ import React from "react";
 import { Target } from "lucide-react";
 import { useAuth } from "../../context/useAuth";
 import ProductCardLayout from "../layout/ProductCardLayout";
+import PremiumCard from "./PremiumCard";
 
 const fmt = (n) =>
   "₱" +
