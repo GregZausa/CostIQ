@@ -112,7 +112,7 @@ export const getOtherExpensesById = async (createdBy, id) => {
   return result.rows[0];
 };
 export const deleteOtherExpense = async (id) => {
-  const query = `UPDATE other_expenses SET is_active = false WHERE other_expense_id = $1 RETRUNING *`;
+  const query = `UPDATE other_expenses SET is_active = false, updated_at = NOW()  WHERE other_expense_id = $1 RETURNING *`;
   const { rows } = await pool.query(query, [id]);
   return rows[0];
 };

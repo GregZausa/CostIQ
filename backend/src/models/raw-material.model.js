@@ -123,7 +123,7 @@ export const getRawMaterialsById = async (createdBy, id) => {
 };
 
 export const deleteRawMaterials = async (id) => {
-  const query = `UPDATE raw_materials SET is_active = false WHERE raw_material_id = $1 RETURNING *`;
+  const query = `UPDATE raw_materials SET is_active = false, updated_at = NOW() WHERE raw_material_id = $1 RETURNING *`;
   const { rows } = await pool.query(query, [id]);
   return rows[0];
 };
