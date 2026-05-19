@@ -1,6 +1,7 @@
 import React from "react";
 import FloatingLabelInput from "../ui/FloatingLabelInput";
 import Button from "../ui/Button";
+import { useTheme } from "../../context/ThemeContext";
 
 const RegisterForm = ({
   lastName,
@@ -17,10 +18,15 @@ const RegisterForm = ({
   onCancel,
   isLoading,
 }) => {
+  const { isDark } = useTheme();
   return (
     <div className="space-y-8 border backdrop-blur-xl bg-white/10 border-white/5 rounded-xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out text-black overflow-hidden w-full max-w-md mx-4">
       <div className="text-center">
-        <h1 className="font-bold text-2xl">Sign Up</h1>
+        <h1
+          className={`font-bold text-2xl ${isDark ? "text-slate-200" : "text-slate-600"}`}
+        >
+          Sign Up
+        </h1>
       </div>
       <div className="grid grid-cols-2 gap-2.5">
         <FloatingLabelInput

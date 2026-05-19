@@ -16,6 +16,7 @@ import ProductCardLayout from "../../layout/ProductCardLayout";
 import { TrendingUp } from "lucide-react";
 import { useTheme } from "../../../context/ThemeContext";
 import PremiumCard from "../../cards/PremiumCard";
+import { useAuth } from "../../../context/useAuth";
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -48,7 +49,7 @@ const CHANGES = [-20, -10, 0, 10, 20];
 
 const CostSensitivityChart = ({ computed = {} }) => {
   const [costType, setCostType] = useState("all");
-  const { user } = useTheme();
+  const { user } = useAuth();
 
   const {
     totalCPP = 0,
@@ -105,7 +106,7 @@ const CostSensitivityChart = ({ computed = {} }) => {
   return (
     <ProductCardLayout title="Cost Sensitivity Analysis" icon={TrendingUp}>
       {!user?.is_premium ? (
-        <PremiumCard message="Unlock pricing guide to check how different prices works" />
+        <PremiumCard message="Unlock cost sensitvity analysis to check how the price of expenses change the costs." />
       ) : (
         <>
           <div className="flex items-center gap-3 px-3 pt-2 pb-1">
