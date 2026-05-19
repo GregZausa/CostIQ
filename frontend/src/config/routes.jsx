@@ -23,8 +23,14 @@ import FinancialOverview from "../pages/FinancialOverview";
 import Pricing from "../pages/paymongo/Pricing";
 import PaymentSuccess from "../pages/paymongo/PaymentSuccess";
 import WhatIfIncomeGoalReport from "../pages/WhatIfIncomeGoalReport";
+import LandingPage from "../pages/LandingPage";
 
 export const routes = [
+  {
+    path: "/home",
+    element: <LandingPage />,
+    public: true,
+  },
   {
     path: "/login",
     element: <Login />,
