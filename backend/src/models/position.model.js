@@ -87,7 +87,7 @@ export const getPositionsById = async (createdBy, id) => {
 
 export const deletePositions = async (id) => {
   const query = `UPDATE positions
-                  SET is_active = false
+                  SET is_active = false, updated_at = NOW()
                   WHERE position_id = $1 RETURNING *`;
 
   const { rows } = await pool.query(query, [id]);

@@ -4,20 +4,20 @@ import {
   fetchFinancialOverviewExcel,
 } from "../controllers/financial-overview-controller.js";
 import { requireAuth } from "../middleware/auth.middleware.js";
-import { submitLimiter } from "../middleware/rate-limiter.js";
+import { reportLimiter, submitLimiter } from "../middleware/rate-limiter.js";
 
 const router = express.Router();
 
 router.get(
   "/financial-overview/pdf/",
   requireAuth,
-  submitLimiter,
+  reportLimiter,
   fetchFinancialOverviewPDF,
 );
 router.get(
   "/financial-overview/excel/",
   requireAuth,
-  submitLimiter,
+  reportLimiter,
   fetchFinancialOverviewExcel,
 );
 

@@ -18,9 +18,13 @@ import paymongoRoutes from "./src/routes/paymongo.route.js";
 import dotenv from "dotenv";
 dotenv.config();
 import "./src/config/db.js";
-import "./src/jobs/cleanupPositions.js";
+import "./src/jobs/cleanupTables.js";
 import "./src/jobs/cleanUpTokens.js";
 import { paymongoWebhook } from "./src/controllers/paymongo.controller.js";
+import {
+  globalLimiter,
+  webhookLimiter,
+} from "./src/middleware/rate-limiter.js";
 
 const app = express();
 const port = process.env.PORT || "5001";
@@ -34,8 +38,11 @@ app.use(
   }),
 );
 
+app.use(globalLimiter);
+
 app.post(
   "/api/paymongo/webhook",
+  webhookLimiter,
   express.raw({ type: "application/json" }),
   paymongoWebhook,
 );
