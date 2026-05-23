@@ -7,6 +7,7 @@ import {
   saveRefreshToken,
   deleteRefreshToken,
   deleteAllUserRefreshTokens,
+  markUserOnboarded,
 } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import { AppError } from "../utils/AppError.js";
@@ -91,4 +92,8 @@ export const logoutUser = async (token) => {
 };
 export const logoutAllDevices = async (userId) => {
   await deleteAllUserRefreshTokens(userId);
+};
+
+export const completeOnboarding = async (userId) => {
+  await markUserOnboarded(userId);
 };

@@ -49,7 +49,7 @@ export const submitLimiter = createLimiter(
 
 export const reportLimiter = createLimiter(
   mins(15),
-  10,
+  50,
   "Too many report requests. Please try again after 15 minutes.",
   {
     keyGenerator: (req) => req.user?.id || req.ip,
