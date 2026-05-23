@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createCheckoutSession } from "../../services/subscriptions.api";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
-import { useTheme } from "../../context/ThemeContext";
+import pricingStyles from "../../styles/pricintStyles";
 
 const features = [
   { label: "Product Costing", free: true, premium: true },
@@ -23,7 +23,6 @@ const Pricing = () => {
   const [billing, setBilling] = useState("monthly");
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
-  const { isDark } = useTheme();
   const navigate = useNavigate();
   const isPremium = user?.is_premium;
 
@@ -34,140 +33,347 @@ const Pricing = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      <div className="text-center mb-10 ">
-        <h1
-          className={`text-3xl font-bold ${isDark ? "text-slate-50" : "text-slate-800"}`}
-        >
-          Simple, Honest Pricing
-        </h1>
-        <p className="text-slate-500 mt-2">
-          Free tells you what your costs are. Premium tells you what to do about
-          them.
-        </p>
+    <div
+      style={{
+        fontFamily: "'DM Sans', sans-serif",
+        background: "#080c14",
+        minHeight: "100vh",
+        color: "#e8edf5",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "60px 24px",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <style>{pricingStyles}</style>
 
-        {isPremium && (
-          <div className={`mt-4 inline-flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 text-sm font-medium px-4 py-2 rounded-full`}>
-            ⚡ You're on Premium
-            {user?.premium_until && (
-              <span className="text-green-500 text-xs">
-                · Renews{" "}
-                {new Date(user.premium_until).toLocaleDateString("en-PH", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </span>
-            )}
-          </div>
-        )}
+      <div className="noise" />
+      <div className="pricing-grid-bg" />
+      <div
+        className="pricing-glow"
+        style={{
+          width: 600,
+          height: 600,
+          top: -200,
+          left: "30%",
+          transform: "translateX(-50%)",
+        }}
+      />
+      <div
+        className="pricing-glow"
+        style={{
+          width: 400,
+          height: 400,
+          bottom: -100,
+          right: 0,
+          background:
+            "radial-gradient(circle, rgba(96,165,250,0.05) 0%, transparent 70%)",
+        }}
+      />
 
-        {!isPremium && (
-          <div className="flex items-center justify-center gap-3 mt-6">
-            <button
-              onClick={() => setBilling("monthly")}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-700 ${billing === "monthly" ? "bg-slate-800 text-white" : "bg-slate-100 text-slate-600"}`}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setBilling("annual")}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-700 ${billing === "annual" ? "bg-slate-800 text-white" : "bg-slate-100 text-slate-600"}`}
-            >
-              Annual
-              <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                Save ₱589
-              </span>
-            </button>
-          </div>
-        )}
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-6">
-        <div
-          className={`border rounded-2xl p-6 transition-all ${isPremium ? "border-slate-100 opacity-60" : "border-slate-200"}`}
-        >
-          <div className="mb-6">
-            <h2 className="text-lg font-bold text-slate-800">Free</h2>
-            <div className="text-3xl font-bold text-slate-800 mt-2">₱0</div>
-            <p className="text-slate-500 text-sm mt-1">Forever free</p>
-          </div>
-          <div className="space-y-3">
-            {features.map((f) => (
-              <div key={f.label} className="flex items-center gap-2">
-                <span className={f.free ? "text-green-500" : "text-slate-300"}>
-                  {f.free ? "✓" : "✕"}
-                </span>
-                <span
-                  className={`text-sm ${f.free ? "text-slate-700" : "text-slate-400"}`}
-                >
-                  {f.label}
-                </span>
-              </div>
-            ))}
-          </div>
-          <button
-            disabled
-            className="w-full mt-6 py-2.5 rounded-xl border border-slate-200 text-slate-400 text-sm font-medium cursor-not-allowed"
+      <div
+        style={{
+          position: "relative",
+          zIndex: 1,
+          width: "100%",
+          maxWidth: 860,
+        }}
+      >
+        {/* Header */}
+        <div style={{ textAlign: "center", marginBottom: 48 }}>
+          <div
+            onClick={() => navigate("/")}
+            style={{
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: 20,
+              letterSpacing: 3,
+              color: "rgba(232,237,245,0.4)",
+              marginBottom: 24,
+              cursor: "pointer",
+              display: "inline-block",
+            }}
           >
-            {isPremium ? "Not your plan" : "Current Plan"}
-          </button>
-        </div>
-
-        {/* Premium Plan */}
-        <div className="border-2 border-slate-800 rounded-2xl p-6 relative">
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs px-3 py-1 rounded-full">
-            {isPremium ? "✓ YOUR PLAN" : "RECOMMENDED"}
+            COST<span style={{ color: "#f59e0b" }}>IQ</span>
           </div>
-          <div className="mb-6">
-            <h2 className="text-lg font-bold text-slate-800">Premium</h2>
-            <div className="text-3xl font-bold text-slate-800 mt-2">
-              {billing === "monthly" ? "₱299" : "₱2,999"}
-              <span className="text-base font-normal text-slate-500">
-                {billing === "monthly" ? "/month" : "/year"}
+
+          <h1
+            style={{
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: 56,
+              letterSpacing: 2,
+              color: "#e8edf5",
+              lineHeight: 1,
+              marginBottom: 12,
+            }}
+          >
+            SIMPLE, HONEST PRICING
+          </h1>
+          <p
+            style={{
+              fontSize: 15,
+              color: "rgba(232,237,245,0.5)",
+              maxWidth: 440,
+              margin: "0 auto",
+            }}
+          >
+            Free tells you what your costs are. Premium tells you what to do
+            about them.
+          </p>
+
+          {/* Premium status badge */}
+          {isPremium && (
+            <div style={{ marginTop: 20 }}>
+              <span
+                className="badge"
+                style={{
+                  background: "rgba(74,222,128,0.1)",
+                  borderColor: "rgba(74,222,128,0.25)",
+                  color: "#4ade80",
+                }}
+              >
+                ⚡ You're on Premium
+                {user?.premium_until && (
+                  <span
+                    style={{
+                      color: "rgba(74,222,128,0.6)",
+                      fontWeight: 400,
+                      letterSpacing: 0,
+                    }}
+                  >
+                    · Renews{" "}
+                    {new Date(user.premium_until).toLocaleDateString("en-PH", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </span>
+                )}
               </span>
             </div>
-            <p className="text-slate-500 text-sm mt-1">
-              {isPremium
-                ? `Active until ${new Date(user?.premium_until).toLocaleDateString("en-PH", { year: "numeric", month: "long", day: "numeric" })}`
-                : billing === "annual"
-                  ? "₱250/month billed annually"
-                  : "Billed monthly"}
-            </p>
-          </div>
-          <div className="space-y-3">
-            {features.map((f) => (
-              <div key={f.label} className="flex items-center gap-2">
-                <span className="text-green-500">✓</span>
-                <span className="text-sm text-slate-700">{f.label}</span>
-              </div>
-            ))}
-          </div>
+          )}
 
-          {isPremium ? (
-            <button
-              onClick={() => navigate("/dashboard")}
-              className="w-full mt-6 py-2.5 rounded-xl bg-green-600 hover:bg-green-500 text-white text-sm font-medium transition-all"
+          {/* Billing toggle */}
+          {!isPremium && (
+            <div
+              style={{
+                marginTop: 28,
+                display: "flex",
+                justifyContent: "center",
+              }}
             >
-              ✓ Go to Dashboard
-            </button>
-          ) : (
-            <button
-              onClick={handleUpgrade}
-              disabled={loading}
-              className="w-full mt-6 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium transition-all disabled:opacity-50"
-            >
-              {loading
-                ? "Redirecting..."
-                : `Get Premium — ${billing === "monthly" ? "₱299/mo" : "₱2,999/yr"}`}
-            </button>
+              <div className="billing-toggle">
+                <button
+                  className={`billing-btn ${billing === "monthly" ? "active" : "inactive"}`}
+                  onClick={() => setBilling("monthly")}
+                >
+                  Monthly
+                </button>
+                <button
+                  className={`billing-btn ${billing === "annual" ? "active" : "inactive"}`}
+                  onClick={() => setBilling("annual")}
+                >
+                  Annual
+                  <span
+                    style={{
+                      marginLeft: 8,
+                      fontSize: 10,
+                      background: "rgba(74,222,128,0.2)",
+                      color: "#4ade80",
+                      padding: "2px 8px",
+                      borderRadius: 999,
+                      fontWeight: 700,
+                    }}
+                  >
+                    SAVE ₱589
+                  </span>
+                </button>
+              </div>
+            </div>
           )}
         </div>
-      </div>
 
-      <p className="text-center text-xs text-slate-400 mt-6">
-        Payments are securely processed by PayMongo. Cancel anytime.
-      </p>
+        {/* Plans Grid */}
+        <div
+          style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}
+        >
+          {/* Free Plan */}
+          <div className={`plan-card ${isPremium ? "dimmed" : ""}`}>
+            <div style={{ marginBottom: 28 }}>
+              <div
+                style={{
+                  fontFamily: "'Bebas Neue'",
+                  fontSize: 14,
+                  letterSpacing: 3,
+                  color: "rgba(232,237,245,0.4)",
+                  marginBottom: 12,
+                }}
+              >
+                FREE PLAN
+              </div>
+              <div
+                style={{
+                  fontFamily: "'Bebas Neue'",
+                  fontSize: 56,
+                  color: "#e8edf5",
+                  lineHeight: 1,
+                }}
+              >
+                ₱0
+              </div>
+              <div
+                style={{
+                  fontSize: 13,
+                  color: "rgba(232,237,245,0.4)",
+                  marginTop: 4,
+                }}
+              >
+                Forever free
+              </div>
+            </div>
+
+            <div style={{ marginBottom: 8 }}>
+              {features.map((f) => (
+                <div key={f.label} className="feature-row">
+                  {f.free ? (
+                    <div className="check-yes">✓</div>
+                  ) : (
+                    <div className="check-no">✕</div>
+                  )}
+                  <span
+                    style={{
+                      color: f.free
+                        ? "rgba(232,237,245,0.7)"
+                        : "rgba(232,237,245,0.25)",
+                    }}
+                  >
+                    {f.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="disabled-btn">
+              {isPremium ? "NOT YOUR PLAN" : "CURRENT PLAN"}
+            </div>
+          </div>
+
+          {/* Premium Plan */}
+          <div className="plan-card premium">
+            {isPremium ? (
+              <div className="premium-active-tag">✓ YOUR PLAN</div>
+            ) : (
+              <div className="recommended-tag">RECOMMENDED</div>
+            )}
+
+            <div style={{ marginBottom: 28 }}>
+              <div
+                style={{
+                  fontFamily: "'Bebas Neue'",
+                  fontSize: 14,
+                  letterSpacing: 3,
+                  color: "#f59e0b",
+                  marginBottom: 12,
+                }}
+              >
+                PREMIUM PLAN
+              </div>
+              <div style={{ display: "flex", alignItems: "flex-end", gap: 4 }}>
+                <div
+                  style={{
+                    fontFamily: "'Bebas Neue'",
+                    fontSize: 56,
+                    color: "#e8edf5",
+                    lineHeight: 1,
+                  }}
+                >
+                  {billing === "monthly" ? "₱299" : "₱2,999"}
+                </div>
+                <div
+                  style={{
+                    fontSize: 14,
+                    color: "rgba(232,237,245,0.4)",
+                    marginBottom: 8,
+                  }}
+                >
+                  {billing === "monthly" ? "/mo" : "/yr"}
+                </div>
+              </div>
+              <div
+                style={{
+                  fontSize: 13,
+                  color: "rgba(232,237,245,0.4)",
+                  marginTop: 4,
+                }}
+              >
+                {isPremium
+                  ? `Active until ${new Date(user?.premium_until).toLocaleDateString("en-PH", { year: "numeric", month: "long", day: "numeric" })}`
+                  : billing === "annual"
+                    ? "₱250/month billed annually"
+                    : "Billed monthly, cancel anytime"}
+              </div>
+            </div>
+
+            <div style={{ marginBottom: 8 }}>
+              {features.map((f) => (
+                <div key={f.label} className="feature-row">
+                  <div className="check-yes">✓</div>
+                  <span style={{ color: "rgba(232,237,245,0.7)" }}>
+                    {f.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {isPremium ? (
+              <button
+                className="dashboard-btn"
+                onClick={() => navigate("/dashboard")}
+              >
+                ✓ GO TO DASHBOARD
+              </button>
+            ) : (
+              <button
+                className="upgrade-btn"
+                onClick={handleUpgrade}
+                disabled={loading}
+              >
+                {loading
+                  ? "REDIRECTING..."
+                  : `GET PREMIUM — ${billing === "monthly" ? "₱299/MO" : "₱2,999/YR"}`}
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Footer note */}
+        <div
+          style={{
+            textAlign: "center",
+            marginTop: 32,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 20,
+            flexWrap: "wrap",
+          }}
+        >
+          {[
+            "🔒 Secured by PayMongo",
+            "✓ Cancel anytime",
+            "🇵🇭 GCash & Maya accepted",
+          ].map((t, i) => (
+            <span
+              key={i}
+              style={{ fontSize: 12, color: "rgba(232,237,245,0.3)" }}
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

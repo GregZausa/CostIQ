@@ -1,4 +1,5 @@
 import {
+  completeOnboarding,
   fetchUserByIdService,
   loginUser,
   logoutAllDevices,
@@ -105,5 +106,14 @@ export const logoutAll = async (req, res) => {
   } finally {
     res.clearCookie("refreshToken", COOKIE_OPTIONS);
     res.json({ message: "Logged out from all devices!" });
+  }
+};
+
+export const onboard = async (req, res) => {
+  try {
+    await completeOnboarding(req.user.id);
+    res.json({ message: "Onboarding complete" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };

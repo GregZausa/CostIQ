@@ -4,6 +4,7 @@ import {
   login,
   logout,
   logoutAll,
+  onboard,
   refresh,
   register,
 } from "../controllers/auth.controller.js";
@@ -18,5 +19,6 @@ router.get("/me", requireAuth, getMe);
 router.post("/refresh",refreshLimiter, refresh);
 router.post("/logout", requireAuth, logout);
 router.post("/logout-all", requireAuth, logoutAll); 
+router.post("/onboard", requireAuth, onboard);
 
 export default router;

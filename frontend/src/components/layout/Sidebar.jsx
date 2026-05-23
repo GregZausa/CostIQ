@@ -3,7 +3,7 @@ import { X, Menu, ChevronDown, LogOut, ChevronRight } from "lucide-react";
 import { routes } from "../../config/routes";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
-import logo from "../../../res/logo-icon-removebg-preview.png";
+import logo from "../../../res/cost_iq_logo_dark_mode.png";
 import ToggleButton from "../ui/ToggleButton";
 import { useTheme } from "../../context/ThemeContext";
 

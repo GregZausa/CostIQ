@@ -38,7 +38,6 @@ app.use(
   }),
 );
 
-app.use(globalLimiter);
 
 app.post(
   "/api/paymongo/webhook",
