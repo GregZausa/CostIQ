@@ -20,8 +20,14 @@ const ModalLayout = ({
               shadow-lg transform -translate-x-1/2 -translate-y-1/2 p-6 hover:shadow-2xl transition-all
               duration-300 ease-in-out text-black`}
       >
-        <h1 className={`text-xl font-bold mb-4 ${isDark ? "text-slate-50" : "text-slate-800"}`}>
-          {editingId !== null ? `Edit ${header}` : `Add ${header}`}
+        <h1
+          className={`text-xl font-bold mb-4 ${isDark ? "text-slate-50" : "text-slate-800"}`}
+        >
+          {header
+            ? editingId !== null
+              ? `Edit ${header}`
+              : `Add ${header}`
+            : ""}
         </h1>
         {children}
       </div>

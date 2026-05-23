@@ -5,7 +5,7 @@ import { Mail, Lock, ArrowRight } from "lucide-react";
 
 import { apiUrl } from "../../config/apiUrl";
 import { useAuth } from "../../context/useAuth";
-import costIQLogo from "../../../res/cost_iq_logo_light_mode.png";
+import costIQLogo from "../../../res/cost_iq_logo_dark_mode.png";
 
 const metrics = [
   {
@@ -61,7 +61,7 @@ const LoginPage = () => {
     }
   }, [charIndex, selectedGreeting]);
 
-  const { setIsAuthenticated, fetchCurrentUser } = useAuth();
+  const { setIsAuthenticated, fetchCurrentUser, user } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -95,7 +95,7 @@ const LoginPage = () => {
 
       await fetchCurrentUser();
 
-      toast.success("Welcome back.");
+      toast.success(`Welcome back, ${user.first_name} `);
 
       navigate("/dashboard", { replace: true });
     } catch {
@@ -107,9 +107,7 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen bg-[#080c14] text-[#e8edf5] grid grid-cols-1 lg:grid-cols-2 font-sans">
-      {/* LEFT PANEL */}
       <div className="relative hidden lg:flex flex-col items-center justify-center overflow-hidden border-r border-white/5 bg-[linear-gradient(rgba(245,158,11,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.04)_1px,transparent_1px)] bg-size-[40px_40px]">
-        {/* Glow */}
         <div className="absolute -left-24 -top-24 h-100 w-100 rounded-full bg-[radial-gradient(circle,rgba(245,158,11,0.08)_0%,transparent_70%)]" />
 
         <div className="relative z-10 flex flex-col items-center text-center px-10">
@@ -148,7 +146,6 @@ const LoginPage = () => {
       {/* RIGHT PANEL */}
       <div className="flex items-center justify-center px-6 py-12 sm:px-10">
         <div className="w-full max-w-105">
-          {/* Header */}
           <div className="mb-12">
             <h1 className="font-['Bebas_Neue'] text-5xl tracking-[2px] text-[#e8edf5]">
               {greeting}
@@ -160,9 +157,7 @@ const LoginPage = () => {
             </p>
           </div>
 
-          {/* Form */}
           <div className="flex flex-col gap-4">
-            {/* Email */}
             <div className="relative">
               <Mail
                 size={17}
@@ -196,7 +191,6 @@ const LoginPage = () => {
               />
             </div>
 
-            {/* Button */}
             <button
               onClick={handleLogin}
               disabled={isLoading}
@@ -213,7 +207,6 @@ const LoginPage = () => {
             </button>
           </div>
 
-          {/* Register */}
           <div className="mt-8 text-center text-sm text-white/40">
             No account yet?{" "}
             <span
@@ -237,7 +230,6 @@ const LoginPage = () => {
         </div>
       </div>
 
-      {/* Floating animation */}
       <style>
         {`
           @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap');
