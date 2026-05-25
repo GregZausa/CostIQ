@@ -1,8 +1,8 @@
+// Pricing.jsx
 import { useState } from "react";
 import { createCheckoutSession } from "../../services/subscriptions.api";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
-import pricingStyles from "../../styles/pricintStyles";
 
 const features = [
   { label: "Product Costing", free: true, premium: true },
@@ -19,6 +19,46 @@ const features = [
   { label: "AI Insights", free: false, premium: true },
 ];
 
+// ← Only keeping CSS that Tailwind truly can't do:
+// - CSS custom font imports
+// - ::after shimmer pseudo-element on upgrade button
+// - radial-gradient backgrounds (Tailwind doesn't support arbitrary radial gradients well)
+// - noise texture background-image
+// - grid background pattern
+const minimalStyles = `
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+  .pricing-grid-bg {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      linear-gradient(rgba(245,158,11,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245,158,11,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .noise {
+    position: fixed; inset: 0; opacity: 0.025; pointer-events: none; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  }
+
+  .pricing-glow {
+    position: fixed; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle, rgba(245,158,11,0.07) 0%, transparent 70%);
+  }
+
+  .upgrade-btn::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.5s;
+  }
+  .upgrade-btn:hover::after { transform: translateX(100%); }
+
+  .bebas { font-family: 'Bebas Neue', sans-serif; }
+  .dm-sans { font-family: 'DM Sans', sans-serif; }
+`;
+
 const Pricing = () => {
   const [billing, setBilling] = useState("monthly");
   const [loading, setLoading] = useState(false);
@@ -33,22 +73,8 @@ const Pricing = () => {
   };
 
   return (
-    <div
-      style={{
-        fontFamily: "'DM Sans', sans-serif",
-        background: "#080c14",
-        minHeight: "100vh",
-        color: "#e8edf5",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "60px 24px",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      <style>{pricingStyles}</style>
+    <div className="dm-sans min-h-screen flex flex-col items-center justify-center px-6 py-16 relative overflow-hidden bg-[#080c14] text-[#e8edf5]">
+      <style>{minimalStyles}</style>
 
       <div className="noise" />
       <div className="pricing-grid-bg" />
@@ -74,119 +100,65 @@ const Pricing = () => {
         }}
       />
 
-      <div
-        style={{
-          position: "relative",
-          zIndex: 1,
-          width: "100%",
-          maxWidth: 860,
-        }}
-      >
+      <div className="relative z-10 w-full max-w-3xl">
         {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: 48 }}>
+        <div className="text-center mb-12">
           <div
             onClick={() => navigate("/")}
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: 20,
-              letterSpacing: 3,
-              color: "rgba(232,237,245,0.4)",
-              marginBottom: 24,
-              cursor: "pointer",
-              display: "inline-block",
-            }}
+            className="bebas text-xl tracking-[3px] text-[#e8edf5]/40 mb-6 cursor-pointer inline-block hover:text-[#e8edf5]/60 transition-colors"
           >
-            COST<span style={{ color: "#f59e0b" }}>IQ</span>
+            COST<span className="text-amber-400">IQ</span>
           </div>
 
-          <h1
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: 56,
-              letterSpacing: 2,
-              color: "#e8edf5",
-              lineHeight: 1,
-              marginBottom: 12,
-            }}
-          >
+          <h1 className="bebas text-5xl tracking-[2px] text-[#e8edf5] leading-none mb-3">
             SIMPLE, HONEST PRICING
           </h1>
-          <p
-            style={{
-              fontSize: 15,
-              color: "rgba(232,237,245,0.5)",
-              maxWidth: 440,
-              margin: "0 auto",
-            }}
-          >
+          <p className="text-sm text-[#e8edf5]/50 max-w-sm mx-auto">
             Free tells you what your costs are. Premium tells you what to do
             about them.
           </p>
 
-          {/* Premium status badge */}
+          {/* Premium badge */}
           {isPremium && (
-            <div style={{ marginTop: 20 }}>
-              <span
-                className="badge"
-                style={{
-                  background: "rgba(74,222,128,0.1)",
-                  borderColor: "rgba(74,222,128,0.25)",
-                  color: "#4ade80",
-                }}
-              >
-                ⚡ You're on Premium
-                {user?.premium_until && (
-                  <span
-                    style={{
-                      color: "rgba(74,222,128,0.6)",
-                      fontWeight: 400,
-                      letterSpacing: 0,
-                    }}
-                  >
-                    · Renews{" "}
-                    {new Date(user.premium_until).toLocaleDateString("en-PH", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </span>
-                )}
-              </span>
+            <div className="mt-5 inline-flex items-center gap-2 bg-emerald-400/10 border border-emerald-400/25 text-emerald-400 px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase">
+              ⚡ You're on Premium
+              {user?.premium_until && (
+                <span className="text-emerald-400/60 font-normal tracking-normal normal-case">
+                  · Renews{" "}
+                  {new Date(user.premium_until).toLocaleDateString("en-PH", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </span>
+              )}
             </div>
           )}
 
           {/* Billing toggle */}
           {!isPremium && (
-            <div
-              style={{
-                marginTop: 28,
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <div className="billing-toggle">
+            <div className="mt-7 flex justify-center">
+              <div className="inline-flex bg-white/5 border border-white/8 rounded-xl p-1 gap-1">
                 <button
-                  className={`billing-btn ${billing === "monthly" ? "active" : "inactive"}`}
                   onClick={() => setBilling("monthly")}
+                  className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 dm-sans ${
+                    billing === "monthly"
+                      ? "bg-amber-400 text-[#080c14]"
+                      : "bg-transparent text-[#e8edf5]/50 hover:text-[#e8edf5]"
+                  }`}
                 >
                   Monthly
                 </button>
                 <button
-                  className={`billing-btn ${billing === "annual" ? "active" : "inactive"}`}
                   onClick={() => setBilling("annual")}
+                  className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 dm-sans flex items-center gap-2 ${
+                    billing === "annual"
+                      ? "bg-amber-400 text-[#080c14]"
+                      : "bg-transparent text-[#e8edf5]/50 hover:text-[#e8edf5]"
+                  }`}
                 >
                   Annual
-                  <span
-                    style={{
-                      marginLeft: 8,
-                      fontSize: 10,
-                      background: "rgba(74,222,128,0.2)",
-                      color: "#4ade80",
-                      padding: "2px 8px",
-                      borderRadius: 999,
-                      fontWeight: 700,
-                    }}
-                  >
+                  <span className="text-[10px] bg-emerald-400/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">
                     SAVE ₱589
                   </span>
                 </button>
@@ -195,59 +167,39 @@ const Pricing = () => {
           )}
         </div>
 
-        {/* Plans Grid */}
-        <div
-          style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}
-        >
-          {/* Free Plan */}
-          <div className={`plan-card ${isPremium ? "dimmed" : ""}`}>
-            <div style={{ marginBottom: 28 }}>
-              <div
-                style={{
-                  fontFamily: "'Bebas Neue'",
-                  fontSize: 14,
-                  letterSpacing: 3,
-                  color: "rgba(232,237,245,0.4)",
-                  marginBottom: 12,
-                }}
-              >
+        {/* Plans */}
+        <div className="grid grid-cols-2 gap-5">
+          {/* Free */}
+          <div
+            className={`relative bg-white/3 border border-white/8 rounded-2xl p-9 transition-all duration-300 hover:-translate-y-1 hover:border-white/15 hover:shadow-[0_40px_80px_rgba(0,0,0,0.4)] ${isPremium ? "opacity-50 pointer-events-none" : ""}`}
+          >
+            <div className="mb-7">
+              <p className="bebas text-sm tracking-[3px] text-[#e8edf5]/40 mb-3">
                 FREE PLAN
-              </div>
-              <div
-                style={{
-                  fontFamily: "'Bebas Neue'",
-                  fontSize: 56,
-                  color: "#e8edf5",
-                  lineHeight: 1,
-                }}
-              >
-                ₱0
-              </div>
-              <div
-                style={{
-                  fontSize: 13,
-                  color: "rgba(232,237,245,0.4)",
-                  marginTop: 4,
-                }}
-              >
-                Forever free
-              </div>
+              </p>
+              <p className="bebas text-6xl text-[#e8edf5] leading-none">₱0</p>
+              <p className="text-sm text-[#e8edf5]/40 mt-1">Forever free</p>
             </div>
 
-            <div style={{ marginBottom: 8 }}>
+            <div className="mb-2">
               {features.map((f) => (
-                <div key={f.label} className="feature-row">
+                <div
+                  key={f.label}
+                  className="flex items-center gap-2.5 py-1.5 border-b border-white/4 last:border-0 text-[13px]"
+                >
                   {f.free ? (
-                    <div className="check-yes">✓</div>
+                    <div className="w-4.5 h-4.5 rounded-full bg-emerald-400/15 border border-emerald-400/30 flex items-center justify-center shrink-0 text-[10px] text-emerald-400">
+                      ✓
+                    </div>
                   ) : (
-                    <div className="check-no">✕</div>
+                    <div className="w-4.5 h-4.5 rounded-full bg-white/5 border border-white/8 flex items-center justify-center shrink-0 text-[10px] text-[#e8edf5]/20">
+                      ✕
+                    </div>
                   )}
                   <span
-                    style={{
-                      color: f.free
-                        ? "rgba(232,237,245,0.7)"
-                        : "rgba(232,237,245,0.25)",
-                    }}
+                    className={
+                      f.free ? "text-[#e8edf5]/70" : "text-[#e8edf5]/25"
+                    }
                   >
                     {f.label}
                   </span>
@@ -255,90 +207,70 @@ const Pricing = () => {
               ))}
             </div>
 
-            <div className="disabled-btn">
+            <div className="bebas w-full bg-white/3 text-[#e8edf5]/30 border border-white/[0.07] rounded-xl py-3.5 text-[17px] tracking-[2px] mt-6 text-center cursor-not-allowed">
               {isPremium ? "NOT YOUR PLAN" : "CURRENT PLAN"}
             </div>
           </div>
 
-          {/* Premium Plan */}
-          <div className="plan-card premium">
+          {/* Premium */}
+          <div className="relative bg-amber-400/4 border border-amber-400/30 rounded-2xl p-9 transition-all duration-300 hover:-translate-y-1 hover:border-amber-400/50 hover:shadow-[0_40px_80px_rgba(245,158,11,0.1)]">
             {isPremium ? (
-              <div className="premium-active-tag">✓ YOUR PLAN</div>
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-400 text-[#080c14] bebas text-xs tracking-[2px] px-4 py-1 rounded-full whitespace-nowrap">
+                ✓ YOUR PLAN
+              </div>
             ) : (
-              <div className="recommended-tag">RECOMMENDED</div>
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-400 text-[#080c14] bebas text-xs tracking-[2px] px-4 py-1 rounded-full whitespace-nowrap">
+                RECOMMENDED
+              </div>
             )}
 
-            <div style={{ marginBottom: 28 }}>
-              <div
-                style={{
-                  fontFamily: "'Bebas Neue'",
-                  fontSize: 14,
-                  letterSpacing: 3,
-                  color: "#f59e0b",
-                  marginBottom: 12,
-                }}
-              >
+            <div className="mb-7">
+              <p className="bebas text-sm tracking-[3px] text-amber-400 mb-3">
                 PREMIUM PLAN
-              </div>
-              <div style={{ display: "flex", alignItems: "flex-end", gap: 4 }}>
-                <div
-                  style={{
-                    fontFamily: "'Bebas Neue'",
-                    fontSize: 56,
-                    color: "#e8edf5",
-                    lineHeight: 1,
-                  }}
-                >
+              </p>
+              <div className="flex items-end gap-1">
+                <p className="bebas text-6xl text-[#e8edf5] leading-none">
                   {billing === "monthly" ? "₱299" : "₱2,999"}
-                </div>
-                <div
-                  style={{
-                    fontSize: 14,
-                    color: "rgba(232,237,245,0.4)",
-                    marginBottom: 8,
-                  }}
-                >
+                </p>
+                <p className="text-sm text-[#e8edf5]/40 mb-2">
                   {billing === "monthly" ? "/mo" : "/yr"}
-                </div>
+                </p>
               </div>
-              <div
-                style={{
-                  fontSize: 13,
-                  color: "rgba(232,237,245,0.4)",
-                  marginTop: 4,
-                }}
-              >
+              <p className="text-sm text-[#e8edf5]/40 mt-1">
                 {isPremium
                   ? `Active until ${new Date(user?.premium_until).toLocaleDateString("en-PH", { year: "numeric", month: "long", day: "numeric" })}`
                   : billing === "annual"
                     ? "₱250/month billed annually"
                     : "Billed monthly, cancel anytime"}
-              </div>
+              </p>
             </div>
 
-            <div style={{ marginBottom: 8 }}>
+            <div className="mb-2">
               {features.map((f) => (
-                <div key={f.label} className="feature-row">
-                  <div className="check-yes">✓</div>
-                  <span style={{ color: "rgba(232,237,245,0.7)" }}>
-                    {f.label}
-                  </span>
+                <div
+                  key={f.label}
+                  className="flex items-center gap-2.5 py-1.5 border-b border-white/4 last:border-0 text-[13px]"
+                >
+                  <div className="w-4.5 h-4.5 rounded-full bg-emerald-400/15 border border-emerald-400/30 flex items-center justify-center shrink-0 text-[10px] text-emerald-400">
+                    ✓
+                  </div>
+                  <span className="text-[#e8edf5]/70">{f.label}</span>
                 </div>
               ))}
             </div>
 
             {isPremium ? (
               <button
-                className="dashboard-btn"
                 onClick={() => navigate("/dashboard")}
+                className="bebas w-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/30 rounded-xl py-3.5 text-[17px] tracking-[2px] mt-6 cursor-pointer transition-all hover:bg-emerald-400/15 hover:border-emerald-400/50"
               >
                 ✓ GO TO DASHBOARD
               </button>
             ) : (
               <button
-                className="upgrade-btn"
                 onClick={handleUpgrade}
                 disabled={loading}
+                className="upgrade-btn bebas relative w-full bg-amber-400 hover:bg-amber-300 text-[#080c14] rounded-xl py-3.5 text-[17px] tracking-[2px] mt-6 cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_20px_40px_rgba(245,158,11,0.3)] disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0 overflow-hidden"
               >
                 {loading
                   ? "REDIRECTING..."
@@ -348,27 +280,14 @@ const Pricing = () => {
           </div>
         </div>
 
-        {/* Footer note */}
-        <div
-          style={{
-            textAlign: "center",
-            marginTop: 32,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 20,
-            flexWrap: "wrap",
-          }}
-        >
+        {/* Footer */}
+        <div className="flex items-center justify-center gap-5 flex-wrap mt-8">
           {[
             "🔒 Secured by PayMongo",
             "✓ Cancel anytime",
             "🇵🇭 GCash & Maya accepted",
           ].map((t, i) => (
-            <span
-              key={i}
-              style={{ fontSize: 12, color: "rgba(232,237,245,0.3)" }}
-            >
+            <span key={i} className="text-xs text-[#e8edf5]/30">
               {t}
             </span>
           ))}
