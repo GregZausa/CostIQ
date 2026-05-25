@@ -24,8 +24,14 @@ import Pricing from "../pages/paymongo/Pricing";
 import PaymentSuccess from "../pages/paymongo/PaymentSuccess";
 import WhatIfIncomeGoalReport from "../pages/WhatIfIncomeGoalReport";
 import LandingPage from "../pages/LandingPage";
+import Contact from "../pages/Contact";
 
 export const routes = [
+  {
+    path: "/contact",
+    element: <Contact />,
+    public: true,
+  },
   {
     path: "/home",
     element: <LandingPage />,

@@ -24,7 +24,7 @@ const STEPS = [
     title: "READ YOUR DASHBOARD",
     subtitle: "All your financial metrics in one place",
     desc: "Your dashboard shows net profit, ROI, break-even revenue, and more. The more products you add, the more powerful your insights become.",
-    cta: "LET'S GO",
+    cta: "LET'S GO →",
   },
 ];
 
@@ -35,230 +35,111 @@ const OnboardingModal = ({ user, onComplete }) => {
   const current = STEPS[step];
   const isLast = step === STEPS.length - 1;
 
-  const handleNext = async () => {
-    if (isLast) {
-      setLoading(true);
-      try {
-        await authFetch(`${apiUrl}/auth/onboard`, {
-          method: "POST",
-          credentials: "include",
-        });
-        onComplete();
-        navigate("/product-management/products");
-      } catch {
-        onComplete();
-      } finally {
-        setLoading(false);
-      }
-    } else {
-      setStep((s) => s + 1);
-    }
-  };
-
-  const handleSkip = async () => {
+  const markOnboarded = async () => {
     try {
       await authFetch(`${apiUrl}/auth/onboard`, {
         method: "POST",
         credentials: "include",
       });
     } catch {}
+  };
+
+  const handleNext = async () => {
+    if (isLast) {
+      setLoading(true);
+      await markOnboarded();
+      onComplete();
+      navigate("/product-management/products");
+      setLoading(false);
+    } else {
+      setStep((s) => s + 1);
+    }
+  };
+
+  const handleSkip = async () => {
+    await markOnboarded();
     onComplete();
   };
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 1000,
-        background: "rgba(8,12,20,0.85)",
-        backdropFilter: "blur(12px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 24,
-      }}
-    >
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap');
-
-        .ob-card {
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.08);
-          border-radius: 20px;
-          padding: 48px 40px;
-          width: 100%; max-width: 480px;
-          position: relative;
-          animation: ob-enter 0.4s cubic-bezier(0.16,1,0.3,1);
-        }
-
-        @keyframes ob-enter {
-          from { opacity: 0; transform: translateY(24px) scale(0.97); }
-          to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .ob-step-content {
-          animation: ob-slide 0.3s cubic-bezier(0.16,1,0.3,1);
-        }
-
-        @keyframes ob-slide {
-          from { opacity: 0; transform: translateX(16px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-
-        .ob-btn-primary {
-          width: 100%;
-          background: #f59e0b; color: #080c14;
-          border: none; border-radius: 10px;
-          padding: 14px; font-family: 'Bebas Neue', sans-serif;
-          font-size: 17px; letter-spacing: 2px;
-          cursor: pointer; transition: all 0.2s;
-          position: relative; overflow: hidden;
-        }
-        .ob-btn-primary:hover { background: #fbbf24; transform: translateY(-2px); box-shadow: 0 16px 40px rgba(245,158,11,0.25); }
-        .ob-btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-        .ob-btn-skip {
-          background: none; border: none;
-          color: rgba(232,237,245,0.3); font-family: 'DM Sans', sans-serif;
-          font-size: 13px; cursor: pointer; transition: color 0.2s;
-          padding: 8px;
-        }
-        .ob-btn-skip:hover { color: rgba(232,237,245,0.6); }
-
-        .ob-dot {
-          width: 6px; height: 6px; border-radius: 50%;
-          transition: all 0.3s ease;
-        }
-        .ob-dot.active { width: 20px; background: #f59e0b; }
-        .ob-dot.done { background: rgba(245,158,11,0.4); }
-        .ob-dot.upcoming { background: rgba(255,255,255,0.15); }
-      `}</style>
-
-      <div className="ob-card">
-        {/* Progress dots */}
-        <div style={{ display: "flex", gap: 6, marginBottom: 36 }}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-slate-950/80 backdrop-blur-md">
+      <div className="w-full max-w-md bg-slate-900 border border-slate-700/50 rounded-2xl p-10 shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <div className="flex items-center gap-2 mb-10">
           {STEPS.map((_, i) => (
             <div
               key={i}
-              className={`ob-dot ${i === step ? "active" : i < step ? "done" : "upcoming"}`}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === step
+                  ? "w-8 bg-amber-400"
+                  : i < step
+                    ? "w-6 bg-amber-400/40"
+                    : "w-6 bg-slate-700"
+              }`}
             />
           ))}
+          <span className="ml-auto text-xs text-slate-500 font-medium">
+            {step + 1} / {STEPS.length}
+          </span>
         </div>
 
         {/* Step content */}
-        <div className="ob-step-content" key={step}>
+        <div
+          key={step}
+          className="animate-in fade-in slide-in-from-right-4 duration-200"
+        >
           {/* Icon */}
-          <div
-            style={{
-              width: 64,
-              height: 64,
-              borderRadius: "50%",
-              background: "rgba(245,158,11,0.1)",
-              border: "1px solid rgba(245,158,11,0.2)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 28,
-              marginBottom: 24,
-            }}
-          >
+          <div className="w-14 h-14 rounded-2xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-2xl mb-6">
             {current.icon}
           </div>
 
-          {/* Title */}
-          <div
-            style={{
-              fontSize: 11,
-              fontWeight: 600,
-              letterSpacing: 2,
-              color: "#f59e0b",
-              textTransform: "uppercase",
-              marginBottom: 8,
-              fontFamily: "'DM Sans', sans-serif",
-            }}
-          >
+          {/* Subtitle */}
+          <p className="text-xs font-semibold tracking-widest text-amber-400 uppercase mb-2">
             {current.subtitle}
-          </div>
-          <h2
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: 36,
-              letterSpacing: 1.5,
-              color: "#e8edf5",
-              lineHeight: 1,
-              marginBottom: 16,
-            }}
-          >
+          </p>
+
+          {/* Title */}
+          <h2 className="text-2xl font-bold text-slate-100 leading-tight mb-3">
             {current.title}
           </h2>
-          <p
-            style={{
-              fontSize: 14,
-              color: "rgba(232,237,245,0.55)",
-              lineHeight: 1.8,
-              marginBottom: 32,
-            }}
-          >
+
+          {/* Desc */}
+          <p className="text-sm text-slate-400 leading-relaxed mb-6">
             {current.desc}
           </p>
 
-          {/* User greeting on first step */}
+          {/* Welcome card on step 1 */}
           {step === 0 && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(255,255,255,0.07)",
-                borderRadius: 12,
-                padding: "12px 16px",
-                marginBottom: 24,
-              }}
-            >
-              <div
-                style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: "50%",
-                  background: "linear-gradient(135deg, #f59e0b, #d97706)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 13,
-                  fontWeight: 700,
-                  color: "#080c14",
-                  flexShrink: 0,
-                }}
-              >
+            <div className="flex items-center gap-3 bg-slate-800/60 border border-slate-700/50 rounded-xl p-3 mb-6">
+              <div className="w-9 h-9 rounded-full bg-linear-to-br from-amber-400 to-amber-600 flex items-center justify-center text-xs font-bold text-slate-900 shrink-0">
                 {user?.first_name?.[0]?.toUpperCase()}
               </div>
               <div>
-                <div
-                  style={{ fontSize: 13, fontWeight: 600, color: "#e8edf5" }}
-                >
+                <p className="text-sm font-semibold text-slate-200">
                   Mabuhay, {user?.first_name}! 🇵🇭
-                </div>
-                <div style={{ fontSize: 12, color: "rgba(232,237,245,0.4)" }}>
+                </p>
+                <p className="text-xs text-slate-500">
                   Let's get your business running on data.
-                </div>
+                </p>
               </div>
             </div>
           )}
         </div>
 
+        {/* CTA */}
         <button
-          className="ob-btn-primary"
           onClick={handleNext}
           disabled={loading}
+          className="w-full bg-amber-400 hover:bg-amber-300 active:bg-amber-500 text-slate-900 font-bold text-sm tracking-widest uppercase py-3.5 rounded-xl transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-amber-400/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-y-0"
         >
           {loading ? "SETTING UP..." : current.cta}
         </button>
 
         {/* Skip */}
-        <div style={{ textAlign: "center", marginTop: 12 }}>
-          <button className="ob-btn-skip" onClick={handleSkip}>
+        <div className="text-center mt-3">
+          <button
+            onClick={handleSkip}
+            className="text-xs text-slate-600 hover:text-slate-400 transition-colors py-2 px-4"
+          >
             Skip for now
           </button>
         </div>

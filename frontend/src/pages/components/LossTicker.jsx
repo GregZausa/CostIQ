@@ -13,7 +13,7 @@ const LossTicker = () => {
     <div
       style={{
         position: "fixed",
-        bottom: 24,
+        bottom: 115,
         right: 24,
         zIndex: 999,
         background: "rgba(8,12,20,0.92)",
