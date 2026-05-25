@@ -13,6 +13,7 @@ import FinalCTA from "./components/FinalCTA";
 import Footer from "./components/Footer";
 import RevealSection from "./components/RevealSection";
 import { useParallax } from "../hooks/useParallax";
+import ContactSection from "./components/ContactSection";
 
 const LandingPage = () => {
   const register = useParallax();
@@ -68,6 +69,7 @@ const LandingPage = () => {
 
   return (
     <div
+      className="scrollbar-none"
       style={{
         fontFamily: "'DM Sans', sans-serif",
         background: "#080c14",
@@ -103,6 +105,7 @@ const LandingPage = () => {
       <TestimonialsSection />
       <PricingSection />
 
+      <ContactSection />
       <FinalCTA ctaSectionGlowRef={ctaSectionGlowRef} />
       <Footer />
     </div>

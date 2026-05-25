@@ -1,15 +1,8 @@
-// PaymentSuccess.jsx
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { authFetch } from "../../utils/authFetch";
 import { apiUrl } from "../../config/apiUrl";
 
-// Only CSS that Tailwind truly can't handle:
-// - Font import
-// - Keyframe animations
-// - Radial gradient glows
-// - Noise/grid textures
-// - Spinner animation
 const minimalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap');
 

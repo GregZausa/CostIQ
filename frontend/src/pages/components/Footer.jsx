@@ -39,6 +39,16 @@ const Footer = () => (
       >
         Login
       </a>
+      <a
+        href="/contact"
+        style={{
+          fontSize: 13,
+          color: "rgba(232,237,245,0.4)",
+          textDecoration: "none",
+        }}
+      >
+        Contact
+      </a>
     </div>
   </footer>
 );
