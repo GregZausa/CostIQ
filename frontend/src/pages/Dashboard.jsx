@@ -23,6 +23,7 @@ import { useAuth } from "../context/useAuth";
 import OnboardingModal from "../components/modals/OnboardingModal";
 import EmptyDashboard from "./EmptyDashboard";
 import { useProductsQuery } from "../hooks/products/useProductsQuery";
+import { SkeletonDashboard } from "../components/ui/Skeleton";
 
 const Dashboard = () => {
   const {
@@ -45,7 +46,7 @@ const Dashboard = () => {
 
   const { isDark } = useTheme();
   const { user, fetchCurrentUser } = useAuth();
-  const { computedProducts } = useProductsQuery();
+  const { computedProducts, loading } = useProductsQuery();
   const [showOnboarding, setShowOnboarding] = useState(!user?.has_onboarded);
 
   const handleOnboardingComplete = async () => {
@@ -72,6 +73,8 @@ const Dashboard = () => {
     avgCOGS > 0 ||
     (radarChartData?.length ?? 0) > 0 ||
     (products?.length ?? 0) > 0;
+
+  if (loading) return <SkeletonDashboard />;
 
   return (
     <div>

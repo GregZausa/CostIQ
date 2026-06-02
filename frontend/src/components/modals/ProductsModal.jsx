@@ -10,6 +10,7 @@ const ProductsModal = ({
   materialQuery,
   employeeQuery,
   expensesQuery,
+  editingId = null,
 }) => {
   const [openModal, setOpenModal] = useState(null);
   const { handleChange } = form;
@@ -17,11 +18,9 @@ const ProductsModal = ({
   const handleMaterialsConfirm = (items) => {
     handleChange({ target: { name: "directMaterials", value: items } });
   };
-
   const handleEmployeesConfirm = (items) => {
     handleChange({ target: { name: "employees", value: items } });
   };
-
   const handleExpensesConfirm = (items) => {
     handleChange({ target: { name: "otherExpenses", value: items } });
   };
@@ -36,11 +35,13 @@ const ProductsModal = ({
     }
     setOpenModal(params);
   };
+
   return (
     <ModalLayout
       closeModal={closeModal}
-      widthStyle={"w-250"}
+      widthStyle="w-250"
       header="Product"
+      editingId={editingId}
     >
       <AddProductForm
         handleSubmit={actions.handleSubmit}

@@ -62,6 +62,7 @@ const ProductsTable = ({ query, actions }) => {
           name={row.product_name}
             id={row.product_id}
             onDelete={actions.handleDelete}
+            onEdit={actions.handleEdit}
           />
         ),
       },
