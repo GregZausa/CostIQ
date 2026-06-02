@@ -143,6 +143,95 @@ export const createProductService = async ({ file, userId, body }) => {
   }
 };
 
+export const updateProductService = async ({
+  file,
+  userId,
+  body,
+  productId,
+}) => {
+  const client = await pool.connect();
+  try {
+    const imageUrl = file ? await uploadImage(file) : null;
+    const {
+      product_name,
+      batch_per_day,
+      total_input,
+      units_per_product,
+      total_sellable_units,
+      profit_margin,
+      discount,
+      sales_tax,
+    } = body;
+
+    const direct_materials = JSON.parse(body.direct_materials);
+    const employees = JSON.parse(body.employees);
+    const other_expenses = JSON.parse(body.other_expenses);
+
+    await client.query("BEGIN");
+
+    await client.query(
+      `UPDATE products SET
+        product_name = $1, batch_per_day = $2,
+        total_input = $3, units_per_product = $4,
+        total_sellable_units = $5, profit_margin = $6,
+        discount = $7, sales_tax = $8
+        ${imageUrl ? ", product_image = $9" : ""}
+       WHERE product_id = ${imageUrl ? "$10" : "$9"}
+       AND created_by = ${imageUrl ? "$11" : "$10"}`,
+      imageUrl
+        ? [
+            product_name,
+            batch_per_day,
+            total_input,
+            units_per_product,
+            total_sellable_units,
+            profit_margin,
+            discount,
+            sales_tax,
+            imageUrl,
+            productId,
+            userId,
+          ]
+        : [
+            product_name,
+            batch_per_day,
+            total_input,
+            units_per_product,
+            total_sellable_units,
+            profit_margin,
+            discount,
+            sales_tax,
+            productId,
+            userId,
+          ],
+    );
+
+    await client.query(
+      `DELETE FROM product_ingredients WHERE product_id = $1`,
+      [productId],
+    );
+    await client.query(`DELETE FROM product_employees WHERE product_id = $1`, [
+      productId,
+    ]);
+    await client.query(
+      `DELETE FROM product_other_expenses WHERE product_id = $1`,
+      [productId],
+    );
+
+    await insertProductIngredients(client, productId, direct_materials);
+    await insertProductEmployees(client, productId, employees);
+    await insertProductOtherExpenses(client, productId, other_expenses);
+
+    await client.query("COMMIT");
+    return { message: "Product updated successfully" };
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
+};
+
 export const fetchProductsService = async ({ userId }) => {
   const isPremium = await checkIfUserIsPremium(userId);
   const [products] = await Promise.all([getProduct(userId, isPremium)]);

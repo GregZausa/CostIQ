@@ -8,6 +8,7 @@ import {
   fetchProduct,
   fetchProducts,
   removeProducts,
+  updateProduct,
 } from "../controllers/product.controller.js";
 import upload from "../middleware/upload.js";
 
@@ -25,5 +26,6 @@ router.get("/products", fetchPaginatedProducts);
 router.get("/products/computed", fetchAllComputedProducts);
 router.get("/products/:id", fetchProduct);
 router.delete("/products/:id", removeProducts);
+router.put("/products/:id", requireAuth, upload.single("product_image"), updateProduct);
 
 export default router;

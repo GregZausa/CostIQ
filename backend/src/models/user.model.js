@@ -87,3 +87,44 @@ export const markUserOnboarded = async (userId) => {
     userId,
   ]);
 };
+
+export const saveEmailVerificationToken = async (userId, token, expires) => {
+  await pool.query(
+    `UPDATE users SET email_verification_token = $1,
+     email_verification_expires = $2 WHERE id = $3`,
+    [token, expires, userId],
+  );
+};
+
+export const findUserByEmailVerificationToken = async (token) => {
+  const { rows } = await pool.query(
+    `SELECT * FROM users WHERE email_verification_token = $1`,
+    [token],
+  );
+  return rows[0];
+};
+
+export const savePasswordResetToken = async (userId, token, expires) => {
+  await pool.query(
+    `UPDATE users SET password_reset_token = $1,
+     password_reset_expires = $2 WHERE id = $3`,
+    [token, expires, userId],
+  );
+};
+
+export const findUserByPasswordResetToken = async (token) => {
+  const { rows } = await pool.query(
+    `SELECT * FROM users WHERE password_reset_token = $1`,
+    [token],
+  );
+  return rows[0];
+};
+
+export const updateUserPassword = async (userId, hashedPassword) => {
+  await pool.query(
+    `UPDATE users SET password_hash = $1,
+      password_reset_token = NULL, password_reset_expires = NULL
+      WHERE id = $2`,
+    [hashedPassword, userId],
+  );
+};
