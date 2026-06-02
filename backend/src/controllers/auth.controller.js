@@ -1,12 +1,17 @@
+import { saveRefreshToken } from "../models/user.model.js";
 import {
   completeOnboarding,
   fetchUserByIdService,
+  forgotPassword,
   loginUser,
   logoutAllDevices,
   logoutUser,
   refreshUserToken,
   registerUser,
+  resetPassword,
+  verifyEmail,
 } from "../services/auth.service.js";
+import { generateAccessToken, generateRefreshToken } from "../utils/tokens.js";
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
@@ -14,6 +19,10 @@ const COOKIE_OPTIONS = {
   sameSite: "lax",
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
+
+const isProduction = process.env.NODE_ENV === "production";
+
+const BASE_URL = isProduction ? process.env.PRODUCTION_URL : process.env.URL;
 
 export const register = async (req, res) => {
   try {
@@ -38,6 +47,54 @@ export const register = async (req, res) => {
     res
       .status(err.message.includes("exists") ? 409 : 500)
       .json({ message: err.message });
+  }
+};
+export const verifyEmailController = async (req, res) => {
+  try {
+    const { token } = req.query;
+    await verifyEmail(token);
+    res.redirect(`${BASE_URL}/login?verified=true`);
+  } catch (err) {
+    res.redirect(`${BASE_URL}/login?verified=false`);
+  }
+};
+
+export const forgotPasswordController = async (req, res) => {
+  try {
+    const { email } = req.body;
+    await forgotPassword(email);
+    res.json({ message: "If that email exists, a reset link has been sent." });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const resetPasswordController = async (req, res) => {
+  try {
+    const { token, password } = req.body;
+    if (!password || password.length < 8)
+      return res
+        .status(400)
+        .json({ message: "Password must be at least 8 characters." });
+    await resetPassword(token, password);
+    res.json({ message: "Password reset successfully. You can now log in." });
+  } catch (err) {
+    res.status(err.statusCode || 500).json({ message: err.message });
+  }
+};
+
+export const googleCallback = async (req, res) => {
+  try {
+    const user = req.user;
+    const accessToken = generateAccessToken(user.id);
+    const refreshToken = generateRefreshToken(user.id);
+    await saveRefreshToken(user.id, refreshToken);
+
+    res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS);
+
+    res.redirect(`${BASE_URL}/oauth/callback?token=${accessToken}`);
+  } catch (err) {
+    res.redirect(`${BASE_URL}/login?error=oauth_failed`);
   }
 };
 

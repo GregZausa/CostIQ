@@ -1,4 +1,9 @@
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
+import {
+  sendVerificationEmail,
+  sendPasswordResetEmail,
+} from "../utils/email.js";
 import {
   createUser,
   findUserByEmail,
@@ -8,9 +13,15 @@ import {
   deleteRefreshToken,
   deleteAllUserRefreshTokens,
   markUserOnboarded,
+  findUserByEmailVerificationToken,
+  saveEmailVerificationToken,
+  savePasswordResetToken,
+  findUserByPasswordResetToken,
+  updateUserPassword,
 } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import { AppError } from "../utils/AppError.js";
+import pool from "../config/db.js";
 
 const comparePassword = (password, hashedPassword) =>
   bcrypt.compare(password, hashedPassword);
@@ -42,7 +53,46 @@ export const registerUser = async ({
   const refreshToken = generateRefreshToken(newUser.id);
   await saveRefreshToken(newUser.id, refreshToken);
 
+  const verifyToken = crypto.randomBytes(32).toString("hex");
+  const expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+  await saveEmailVerificationToken(newUser.id, verifyToken, expires);
+  await sendVerificationEmail(email, verifyToken);
+
   return { newUser, accessToken, refreshToken };
+};
+
+export const verifyEmail = async (token) => {
+  const user = await findUserByEmailVerificationToken(token);
+  if (!user) throw new AppError("Invalid or expired verification token", 400);
+  if (new Date() > new Date(user.email_verification_expires))
+    throw new AppError("Verification token expired", 400);
+
+  await pool.query(
+    `UPDATE users SET is_email_verified = true,
+     email_verification_token = NULL, email_verification_expires = NULL
+     WHERE id = $1`,
+    [user.id],
+  );
+};
+
+export const forgotPassword = async (email) => {
+  const user = await findUserByEmail(email);
+  if (!user) return;
+
+  const token = crypto.randomBytes(32).toString("hex");
+  const expires = new Date(Date.now() + 60 * 60 * 1000);
+  await savePasswordResetToken(user.id, token, expires);
+  await sendPasswordResetEmail(email, token);
+};
+
+export const resetPassword = async (token, newPassword) => {
+  const user = await findUserByPasswordResetToken(token);
+  if (!user) throw new AppError("Invalid or expired reset token", 400);
+  if (new Date() > new Date(user.password_reset_expires))
+    throw new AppError("Reset token expired", 400);
+
+  const hashed = await bcrypt.hash(newPassword, 10);
+  await updateUserPassword(user.id, hashed);
 };
 
 export const loginUser = async ({ email, password }) => {

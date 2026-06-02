@@ -25,6 +25,10 @@ import PaymentSuccess from "../pages/paymongo/PaymentSuccess";
 import WhatIfIncomeGoalReport from "../pages/WhatIfIncomeGoalReport";
 import LandingPage from "../pages/LandingPage";
 import Contact from "../pages/Contact";
+import OAuthCallback from "../pages/auth/OAuthCallback";
+import VerifyEmail from "../pages/auth/VerifyEmail";
+import ForgotPassword from "../pages/auth/ForgotPassword";
+import ResetPassword from "../pages/auth/ResetPassword";
 
 export const routes = [
   {
@@ -43,6 +47,20 @@ export const routes = [
     public: true,
     authRedirect: true,
   },
+  {
+    path: "/oauth/callback",
+    element: <OAuthCallback />,
+    public: true,
+    authRedirect: false,
+  },
+  { path: "/verify-email", element: <VerifyEmail />, public: true },
+  {
+    path: "/forgot-password",
+    element: <ForgotPassword />,
+    public: true,
+    authRedirect: true,
+  },
+  { path: "/reset-password", element: <ResetPassword />, public: true },
   {
     path: "/register",
     element: <Register />,

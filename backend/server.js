@@ -25,6 +25,7 @@ import {
   globalLimiter,
   webhookLimiter,
 } from "./src/middleware/rate-limiter.js";
+import passport from "./src/config/passport.js";
 
 const app = express();
 const port = process.env.PORT || "5001";
@@ -38,6 +39,7 @@ app.use(
   }),
 );
 
+app.use(passport.initialize());
 
 app.post(
   "/api/paymongo/webhook",
