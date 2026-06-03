@@ -1,5 +1,5 @@
-// EmptyDashboard.jsx
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
 
 const steps = [
   {
@@ -62,10 +62,10 @@ const colorMap = {
 
 const EmptyDashboard = ({ user }) => {
   const navigate = useNavigate();
+  const { isDark } = useTheme();
 
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center px-6 py-16 relative">
-      {/* Floating metrics preview */}
       <div className="flex items-center gap-3 mb-10 animate-bounce-slow">
         {[
           { label: "NET PROFIT", value: "₱0.00", color: "text-emerald-400" },
@@ -76,7 +76,7 @@ const EmptyDashboard = ({ user }) => {
             key={i}
             className="bg-slate-800/60 border border-slate-700/50 rounded-xl px-4 py-3 text-center"
           >
-            <div className="text-[9px] font-semibold tracking-widest text-slate-500 uppercase mb-1">
+            <div className={`text-[9px] font-semibold tracking-widest ${isDark ? "text-slate-500" : "text-slate-300"} uppercase mb-1`}>
               {m.label}
             </div>
             <div className={`text-base font-bold ${m.color}`}>{m.value}</div>
@@ -84,9 +84,10 @@ const EmptyDashboard = ({ user }) => {
         ))}
       </div>
 
-      {/* Heading */}
       <div className="text-center mb-12 max-w-lg">
-        <h1 className="text-3xl md:text-4xl font-bold text-slate-100 leading-tight mb-3">
+        <h1
+          className={`text-3xl md:text-4xl font-bold ${isDark ? "text-slate-100" : "text-slate-700"} leading-tight mb-3`}
+        >
           Your war room awaits,{" "}
           <span className="text-amber-400">{user?.first_name}</span> 👋
         </h1>
@@ -96,7 +97,6 @@ const EmptyDashboard = ({ user }) => {
         </p>
       </div>
 
-      {/* Steps grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl mb-10">
         {steps.map((s, i) => {
           const c = colorMap[s.color];
@@ -113,7 +113,6 @@ const EmptyDashboard = ({ user }) => {
               `}
             >
               <div className="flex items-start gap-4">
-                {/* Icon */}
                 <div
                   className={`w-11 h-11 rounded-xl border flex items-center justify-center text-xl shrink-0 ${c.icon}`}
                 >
@@ -144,7 +143,6 @@ const EmptyDashboard = ({ user }) => {
         })}
       </div>
 
-      {/* Main CTA */}
       <div className="text-center">
         <button
           onClick={() => navigate("/product-management/products")}
