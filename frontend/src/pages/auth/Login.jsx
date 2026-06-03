@@ -131,7 +131,6 @@ const LoginPage = () => {
             Your business costing war room. Know your numbers. Own your price.
           </p>
 
-          {/* Floating cards */}
           <div className="mt-14 flex w-full max-w-105 flex-col gap-4">
             {metrics.map((metric, index) => (
               <div
@@ -265,7 +264,6 @@ const LoginPage = () => {
             Continue with Google
           </button>
 
-          {/* Security */}
           <div className="mt-12 rounded-xl border border-white/5 bg-white/2 p-5 text-center">
             <div className="mb-1 text-[11px] tracking-[1px] text-white/30">
               SECURED BY
