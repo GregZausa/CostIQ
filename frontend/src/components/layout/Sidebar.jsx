@@ -42,8 +42,8 @@ const Sidebar = () => {
   return (
     <>
       <div
-        className={`
-    lg:hidden fixed top-0 left-0 right-0 z-50
+        className={`z-100
+    lg:hidden fixed top-0 left-0 right-0
     h-14 px-4
     flex items-center justify-between
     border-b backdrop-blur-md
@@ -90,7 +90,7 @@ const Sidebar = () => {
         className={`
           fixed top-0 left-0 h-screen w-60
           flex flex-col
-          transition-transform duration-300 z-50
+          transition-transform duration-300 z-100
           border-r
           ${isDark ? "bg-slate-800 border-slate-700" : "bg-white border-slate-200"}
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
