@@ -2,7 +2,8 @@ import pool from "../config/db.js";
 
 export const checkAndConsumeToken = async (userId) => {
   const { rows } = await pool.query(
-    `SELECT ai_tokens_used, ai_tokens_limit, ai_tokens_reset_at, is_premium
+    `SELECT ai_tokens_used, ai_tokens_limit, ai_tokens_reset_at, 
+     is_premium, ai_trial_used
      FROM users WHERE id = $1`,
     [userId]
   );
@@ -10,8 +11,21 @@ export const checkAndConsumeToken = async (userId) => {
   const user = rows[0];
   if (!user) throw new Error("User not found");
 
-  if (!user.is_premium) {
-    throw new Error("AI features are available for Premium users only.")
+  if (!user.is_premium && !user.ai_trial_used) {
+    await pool.query(
+      `UPDATE users SET ai_trial_used = true WHERE id = $1`,
+      [userId]
+    );
+    return {
+      tokensUsed: 1,
+      tokensLimit: 1,
+      tokensRemaining: 0,
+      isTrial: true,
+    };
+  }
+
+  if (!user.is_premium && user.ai_trial_used) {
+    throw new Error("You've used your free AI trial. Upgrade to Premium for full access.")
   }
 
   if (new Date() > new Date(user.ai_tokens_reset_at)) {
@@ -39,7 +53,7 @@ export const checkAndConsumeToken = async (userId) => {
     tokensUsed: user.ai_tokens_used + 1,
     tokensLimit: user.ai_tokens_limit,
     tokensRemaining: user.ai_tokens_limit - user.ai_tokens_used - 1,
-    resetsAt: user.ai_tokens_reset_at,
+    isTrial: false,
   }
 }
 

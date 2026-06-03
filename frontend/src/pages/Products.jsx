@@ -32,6 +32,7 @@ import OtherExpensesCard from "../components/cards/OtherExepnsesCard";
 import ProductCardLayout from "../components/layout/ProductCardLayout";
 import CostSensitivityChart from "../components/ui/charts/CostSensitivityChart";
 import BreakEvenSummaryCard from "../components/cards/BreakEvenSummaryCard";
+import AIFeatureWrapper from "../components/ui/AIFeatureWrapper";
 
 const TABS = [
   { key: "overview", label: "Overview" },
@@ -170,14 +171,15 @@ const Products = () => {
 
           {activeTab === "ai" && (
             <>
-              {user?.is_premium ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <AIFeatureWrapper user={user}>
                   <MarketPriceCard computed={computed} />
+                </AIFeatureWrapper>
+
+                <AIFeatureWrapper user={user}>
                   <CostOptimizationCard computed={computed} />
-                </div>
-              ) : (
-                <PremiumCard message="Unlock AI Insights for more advance insights" />
-              )}
+                </AIFeatureWrapper>
+              </div>
             </>
           )}
         </div>
