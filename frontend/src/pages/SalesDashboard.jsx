@@ -153,7 +153,7 @@ const SalesDashboard = ({
             </div>
             <div className="w-full bg-slate-700/50 rounded-full h-2 overflow-hidden">
               <div
-                className="h-full rounded-full transition-all duration-500 bg-gradient-to-r from-amber-400 to-amber-300"
+                className="h-full rounded-full transition-all duration-500 bg-linear-to-r from-amber-400 to-amber-300"
                 style={{ width: `${goalProgress}%` }}
               />
             </div>
@@ -301,7 +301,7 @@ const SalesDashboard = ({
                   </div>
                   <div className="w-full bg-slate-700/50 rounded-full h-1.5 overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-blue-400 to-blue-300 transition-all duration-500"
+                      className="h-full rounded-full bg-linear-to-r from-blue-400 to-blue-300 transition-all duration-500"
                       style={{ width: `${pct}%` }}
                     />
                   </div>

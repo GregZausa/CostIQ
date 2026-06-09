@@ -23,7 +23,7 @@ export const getUserById = async (userId) => {
   const { rows } = await pool.query(
     `SELECT id, first_name, last_name, email,
      is_premium, subscription_status, premium_since, premium_until,
-     has_onboarded
+     has_onboarded, monthly_goal
      FROM users WHERE id = $1 LIMIT 1`,
     [userId],
   );
