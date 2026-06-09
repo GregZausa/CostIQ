@@ -19,13 +19,13 @@ import RevenueGapChart from "../components/ui/charts/RevenueGapChart";
 import CostEfficiencyRadarChart from "../components/ui/charts/CostEfficiencyRadarChart";
 import NoDataLayout from "../components/layout/NoDataLayout";
 import { useTheme } from "../context/ThemeContext";
-import { useAuth } from "../context/useAuth";
 import OnboardingModal from "../components/modals/OnboardingModal";
 import EmptyDashboard from "./EmptyDashboard";
 import { useProductsQuery } from "../hooks/products/useProductsQuery";
 import { SkeletonDashboard } from "../components/ui/Skeleton";
 import SalesDashboard from "../pages/SalesDashboard";
 import { useSales } from "../hooks/sales/useSales";
+import { useAuth } from "../context/useAuth";
 
 const Dashboard = () => {
   const {
@@ -41,7 +41,7 @@ const Dashboard = () => {
     radarChartData,
     products,
     mostExpensiveProduct,
-    query, // ← make sure this is exposed from useProducts
+    query,
   } = useProducts();
 
   const { totalRawMaterials } = useRawMaterials();
@@ -106,7 +106,6 @@ const Dashboard = () => {
             <NoDataLayout message="No products yet, Add one to get started!" />
           ) : (
             <>
-              {/* ← ADD SALES DASHBOARD HERE — first thing they see */}
               {!salesLoading && (
                 <div className="pt-2">
                   <SalesDashboard
@@ -120,7 +119,6 @@ const Dashboard = () => {
                 </div>
               )}
 
-              {/* Existing content below — unchanged */}
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 pt-2 shrink-0 gap-2">
                 <ProductsOverviewCard
                   value={totalProducts}
