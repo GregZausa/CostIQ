@@ -10,53 +10,73 @@ import { authFetch } from "../../utils/authFetch";
 import { apiUrl } from "../../config/apiUrl";
 import ProductCardLayout from "../layout/ProductCardLayout";
 import { fetchCostOptimization } from "../../services/gemini.api";
+import { useTheme } from "../../context/ThemeContext";
 
-const priorityConfig = {
+const priorityConfig = (isDark) => ({
   high: {
-    color: "text-red-600",
-    bg: "bg-red-50 border-red-100",
-    dot: "bg-red-500",
+    color: isDark ? "text-red-200" : "text-red-600",
+    bg: isDark ? "bg-red-800/20 border-red-700" : "bg-red-50 border-red-100",
+    dot: isDark ? "bg-red-300" : "bg-red-500",
   },
   medium: {
-    color: "text-yellow-600",
-    bg: "bg-yellow-50 border-yellow-100",
-    dot: "bg-yellow-500",
+    color: isDark ? "text-yellow-200" : "text-yellow-600",
+    bg: isDark
+      ? "bg-yellow-800/20 border-yellow-700"
+      : "bg-yellow-50 border-yellow-100",
+    dot: isDark ? "bg-yellow-300" : "bg-yellow-500",
   },
   low: {
-    color: "text-green-600",
-    bg: "bg-green-50 border-green-100",
-    dot: "bg-green-500",
+    color: isDark ? "text-green-200" : "text-green-600",
+    bg: isDark
+      ? "bg-green-800/20 border-green-700"
+      : "bg-green-50 border-green-100",
+    dot: isDark ? "bg-green-300" : "bg-green-500",
   },
-};
+});
 
-const difficultyConfig = {
-  easy: "text-green-600 bg-green-50",
-  moderate: "text-yellow-600 bg-yellow-50",
-  hard: "text-red-600 bg-red-50",
-};
+const difficultyConfig = (isDark) => ({
+  easy: isDark
+    ? "text-green-200 bg-green-800/20"
+    : "text-green-600 bg-green-50",
 
-const scoreConfig = (score) => {
+  moderate: isDark
+    ? "text-yellow-200 bg-yellow-800/20"
+    : "text-yellow-600 bg-yellow-50",
+
+  hard: isDark ? "text-red-200 bg-red-800/20" : "text-red-600 bg-red-50",
+});
+
+const scoreConfig = (score, isDark) => {
   if (score >= 80)
     return {
-      color: "text-green-600",
-      bg: "bg-green-50 border-green-200",
+      color: isDark ? "text-green-200" : "text-green-600",
+      bg: isDark
+        ? "bg-green-800/20 border-green-700"
+        : "bg-green-50 border-green-200",
       label: "Excellent",
     };
+
   if (score >= 60)
     return {
-      color: "text-yellow-600",
-      bg: "bg-yellow-50 border-yellow-200",
+      color: isDark ? "text-yellow-200" : "text-yellow-600",
+      bg: isDark
+        ? "bg-yellow-800/20 border-yellow-700"
+        : "bg-yellow-50 border-yellow-200",
       label: "Good",
     };
+
   if (score >= 40)
     return {
-      color: "text-orange-600",
-      bg: "bg-orange-50 border-orange-200",
+      color: isDark ? "text-orange-200" : "text-orange-600",
+      bg: isDark
+        ? "bg-orange-800/20 border-orange-700"
+        : "bg-orange-50 border-orange-200",
       label: "Needs Improvement",
     };
+
   return {
-    color: "text-red-600",
-    bg: "bg-red-50 border-red-200",
+    color: isDark ? "text-red-200" : "text-red-600",
+    bg: isDark ? "bg-red-800/20 border-red-700" : "bg-red-50 border-red-200",
     label: "Critical",
   };
 };
@@ -66,6 +86,7 @@ const CostOptimizationCard = ({ computed }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [tokenInfo, setTokenInfo] = useState(null);
+  const { isDark } = useTheme();
 
   const handleAnalyze = async () => {
     if (!computed?.product_id) return;
@@ -81,7 +102,9 @@ const CostOptimizationCard = ({ computed }) => {
     }
   };
 
-  const config = analysis ? scoreConfig(analysis.overallScore) : null;
+  const pConfig = priorityConfig(isDark);
+  const dConfig = difficultyConfig(isDark);
+  const config = analysis ? scoreConfig(analysis.overallScore, isDark) : null;
 
   return (
     <ProductCardLayout title="AI Cost Optimization" icon={TrendingDown}>
@@ -102,10 +125,14 @@ const CostOptimizationCard = ({ computed }) => {
               className={`flex items-center justify-between px-4 py-3 border rounded-xl ${config.bg}`}
             >
               <div>
-                <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold">
+                <p
+                  className={`text-xs ${isDark ? "text-slate-200" : "text-slate-600"} uppercase tracking-wider font-semibold`}
+                >
                   Cost Efficiency Score
                 </p>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p
+                  className={`text-xs ${isDark ? "text-slate-200" : "text-slate-600"} mt-0.5`}
+                >
                   {analysis.summary}
                 </p>
               </div>
@@ -122,19 +149,27 @@ const CostOptimizationCard = ({ computed }) => {
             {/* Strengths */}
             {analysis.strengths?.length > 0 && (
               <div className="space-y-1.5">
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
                   Strengths
                 </p>
                 {analysis.strengths.map((s, i) => (
                   <div
                     key={i}
-                    className="flex items-start gap-2 px-3 py-1.5 bg-green-50 border border-green-100 rounded-lg"
+                    className={`flex items-start gap-2 px-3 py-1.5 rounded-lg border ${
+                      isDark
+                        ? "bg-green-800/20 border-green-700"
+                        : "bg-green-50 border-green-100"
+                    }`}
                   >
                     <CheckCircle
                       size={12}
                       className="text-green-500 shrink-0 mt-0.5"
                     />
-                    <p className="text-xs text-green-700">{s}</p>
+                    <p
+                      className={`text-xs ${isDark ? "text-green-200" : "text-green-700"}`}
+                    >
+                      {s}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -143,11 +178,12 @@ const CostOptimizationCard = ({ computed }) => {
             {/* Suggestions */}
             {analysis.suggestions?.length > 0 && (
               <div className="space-y-1.5">
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
                   Suggestions
                 </p>
                 {analysis.suggestions.map((s, i) => {
-                  const p = priorityConfig[s.priority];
+                  const p = pConfig[s.priority];
+
                   return (
                     <div
                       key={i}
@@ -162,22 +198,40 @@ const CostOptimizationCard = ({ computed }) => {
                             {s.title}
                           </p>
                         </div>
+
                         <div className="flex items-center gap-1">
                           <span
-                            className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${difficultyConfig[s.difficulty]}`}
+                            className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${dConfig[s.difficulty]}`}
                           >
                             {s.difficulty}
                           </span>
+
                           <span
-                            className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${p.color} bg-white border`}
+                            className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${p.color} ${
+                              isDark
+                                ? "bg-slate-800 border-slate-700"
+                                : "bg-white border"
+                            }`}
                           >
                             {s.priority}
                           </span>
                         </div>
                       </div>
-                      <p className="text-xs text-slate-600">{s.suggestion}</p>
+
+                      <p
+                        className={`text-xs ${
+                          isDark ? "text-slate-300" : "text-slate-600"
+                        }`}
+                      >
+                        {s.suggestion}
+                      </p>
+
                       {s.potentialSaving && (
-                        <p className="text-[10px] text-slate-400 mt-1">
+                        <p
+                          className={`text-[10px] mt-1 ${
+                            isDark ? "text-slate-400" : "text-slate-400"
+                          }`}
+                        >
                           💰 {s.potentialSaving}
                         </p>
                       )}
@@ -190,27 +244,31 @@ const CostOptimizationCard = ({ computed }) => {
             {/* Quick Wins */}
             {analysis.quickWins?.length > 0 && (
               <div className="space-y-1.5">
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
                   Quick Wins
                 </p>
                 {analysis.quickWins.map((w, i) => (
                   <div
                     key={i}
-                    className="flex items-start gap-2 px-3 py-1.5 bg-indigo-50 border border-indigo-100 rounded-lg"
+                    className={`flex items-start gap-2 px-3 py-1.5 rounded-lg border ${
+                      isDark
+                        ? "bg-indigo-800/20 border-indigo-700"
+                        : "bg-indigo-50 border-indigo-100"
+                    }`}
                   >
                     <Zap
                       size={12}
                       className="text-indigo-500 shrink-0 mt-0.5"
                     />
-                    <p className="text-xs text-indigo-700">{w}</p>
+                    <p
+                      className={`text-xs ${isDark ? "text-indigo-200" : "text-indigo-700"}`}
+                    >
+                      {w}
+                    </p>
                   </div>
                 ))}
               </div>
             )}
-
-            <p className="text-[10px] text-slate-300 text-right">
-              Powered by {analysis.modelUsed}
-            </p>
           </>
         )}
 
@@ -231,7 +289,7 @@ const CostOptimizationCard = ({ computed }) => {
         <button
           onClick={handleAnalyze}
           disabled={loading || !computed?.product_id}
-          className="w-full py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+          className={`w-full py-2 ${isDark ? "bg-slate-50 hover:bg-slate-100 text-slate-800" : "bg-slate-800 hover:bg-slate-700 text-white"} text-xs font-semibold rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2`}
         >
           <TrendingDown size={13} />
           {loading
