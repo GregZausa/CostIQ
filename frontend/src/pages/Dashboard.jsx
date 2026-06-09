@@ -24,6 +24,8 @@ import OnboardingModal from "../components/modals/OnboardingModal";
 import EmptyDashboard from "./EmptyDashboard";
 import { useProductsQuery } from "../hooks/products/useProductsQuery";
 import { SkeletonDashboard } from "../components/ui/Skeleton";
+import SalesDashboard from "../pages/SalesDashboard";
+import { useSales } from "../hooks/sales/useSales";
 
 const Dashboard = () => {
   const {
@@ -39,15 +41,24 @@ const Dashboard = () => {
     radarChartData,
     products,
     mostExpensiveProduct,
+    query, // ← make sure this is exposed from useProducts
   } = useProducts();
+
   const { totalRawMaterials } = useRawMaterials();
   const { totalEmployees } = useEmployee();
   const { totalOtherExpenses } = useOtherExpenses();
-
   const { isDark } = useTheme();
   const { user, fetchCurrentUser } = useAuth();
   const { computedProducts, loading } = useProductsQuery();
   const [showOnboarding, setShowOnboarding] = useState(!user?.has_onboarded);
+
+  const {
+    dashboard,
+    todaySales,
+    loading: salesLoading,
+    handleLogSale,
+    handleUpdateGoal,
+  } = useSales();
 
   const handleOnboardingComplete = async () => {
     setShowOnboarding(false);
@@ -95,6 +106,21 @@ const Dashboard = () => {
             <NoDataLayout message="No products yet, Add one to get started!" />
           ) : (
             <>
+              {/* ← ADD SALES DASHBOARD HERE — first thing they see */}
+              {!salesLoading && (
+                <div className="pt-2">
+                  <SalesDashboard
+                    dashboard={dashboard}
+                    todaySales={todaySales}
+                    products={query?.products ?? []}
+                    user={user}
+                    onLog={handleLogSale}
+                    onUpdateGoal={handleUpdateGoal}
+                  />
+                </div>
+              )}
+
+              {/* Existing content below — unchanged */}
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 pt-2 shrink-0 gap-2">
                 <ProductsOverviewCard
                   value={totalProducts}
