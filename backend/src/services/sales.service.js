@@ -6,6 +6,7 @@ import {
   getProductSalesSummary,
   getWeeklySalesHistory,
   updateMonthlyGoal,
+  getSalesHistory,
 } from "../models/sales.model.js";
 import { fetchProductService } from "./product.services.js";
 
@@ -44,4 +45,8 @@ export const getDashboardSalesService = async (userId) => {
     getWeeklySalesHistory(userId),
   ]);
   return { summary, productSummary, weeklyHistory };
+};
+
+export const getSalesHistoryService = async ({ userId, isPremium }) => {
+  return await getSalesHistory(userId, isPremium);
 };

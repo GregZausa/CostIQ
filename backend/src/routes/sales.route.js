@@ -7,6 +7,7 @@ import {
   getTodaySalesController,
   getMonthlySalesController,
   updateGoalController,
+  getSalesHistoryController,
 } from "../controllers/sales.controller.js";
 
 const router = express.Router();
@@ -16,5 +17,6 @@ router.get("/dashboard", requireAuth, getDashboardSalesController);
 router.get("/today", requireAuth, getTodaySalesController);
 router.get("/monthly", requireAuth, getMonthlySalesController);
 router.patch("/goal", requireAuth, updateGoalController);
+router.get("/history", requireAuth, getSalesHistoryController); 
 
 export default router;

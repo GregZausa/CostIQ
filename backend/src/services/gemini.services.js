@@ -1,11 +1,15 @@
 import { GoogleGenAI } from "@google/genai";
+import {
+  getSalesSummary,
+  getProductSalesSummary,
+  getWeeklySalesHistory,
+} from "../models/sales.model.js";
 
 const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 let AVAILABLE_MODELS = [];
 
 const loadModels = async () => {
   const res = await genAI.models.list();
-
   AVAILABLE_MODELS = res.pageInternal
     .map((m) => m.name.replace("models/", ""))
     .filter(
@@ -15,10 +19,25 @@ const loadModels = async () => {
         !name.includes("image") &&
         !name.includes("tts"),
     );
-
   console.log("Usable models:", AVAILABLE_MODELS);
 };
 
+const isRetryableError = (err) => {
+  const msg = err?.message?.toLowerCase() ?? "";
+  const status = err?.status ?? err?.httpStatus;
+  return (
+    status === 429 ||
+    status === 503 ||
+    status === 500 ||
+    status === 502 ||
+    status === 504 ||
+    msg.includes("resource exhausted") ||
+    msg.includes("rate limit") ||
+    msg.includes("too many requests")
+  );
+};
+
+// ── existing prompts unchanged ──
 const marketPriceAnalysisPrompt = (product) => `
 You are a business pricing analyst in the Philippines. 
 
@@ -48,7 +67,7 @@ Respond ONLY in this exact JSON format, no markdown, no extra text:
 }
 `;
 
-const costOptmizationPrompt = (product) => `
+const costOptimizationPrompt = (product) => `
 You are an expert business cost optimization consultant in the Philippines.
 
 A small business owner has this product:
@@ -64,18 +83,9 @@ A small business owner has this product:
 - Units per Batch: ${product.total_sellable_units}
 - Profit per Unit: ₱${Number(product.netProfitPerUnit).toFixed(2)}
 
-Ingredients as % of COGS: ${(
-  (Number(product.ingredients_cost) / Number(product.totalCPB)) *
-  100
-).toFixed(1)}%
-Labor as % of COGS: ${(
-  (Number(product.labor_cost) / Number(product.totalCPB)) *
-  100
-).toFixed(1)}%
-Expenses as % of COGS: ${(
-  (Number(product.expense_cost) / Number(product.totalCPB)) *
-  100
-).toFixed(1)}%
+Ingredients as % of COGS: ${((Number(product.ingredients_cost) / Number(product.totalCPB)) * 100).toFixed(1)}%
+Labor as % of COGS: ${((Number(product.labor_cost) / Number(product.totalCPB)) * 100).toFixed(1)}%
+Expenses as % of COGS: ${((Number(product.expense_cost) / Number(product.totalCPB)) * 100).toFixed(1)}%
 
 Based on Philippine small business standards:
 1. Score their cost efficiency from 0-100
@@ -105,31 +115,53 @@ Respond ONLY in this exact JSON format, no markdown, no extra text:
 }
 `;
 
-const isRetryableError = (err) => {
-  const msg = err?.message?.toLowerCase() ?? "";
-  const status = err?.status ?? err?.httpStatus;
+// ← NEW: sales analysis prompt
+const salesAnalysisPrompt = (summary, productSummary, weeklyHistory) => `
+You are a business analyst for a Filipino small business owner.
+Analyze their sales data and give actionable insights in simple English.
+Be specific with numbers. Be encouraging but honest.
+Keep it under 200 words. Use bullet points.
+Start each bullet with a relevant emoji.
 
-  return (
-    status === 429 ||
-    status === 503 ||
-    status === 500 ||
-    status === 502 ||
-    status === 504 ||
-    msg.includes("resource exhausted") ||
-    msg.includes("rate limit") ||
-    msg.includes("too many requests")
-  );
-};
+SALES SUMMARY:
+- Today's revenue: ₱${summary.today_revenue}
+- Today's profit: ₱${summary.today_profit}
+- This week's revenue: ₱${summary.week_revenue}
+- This month's revenue: ₱${summary.month_revenue}
+- This month's profit: ₱${summary.month_profit}
+- Best day profit this month: ₱${summary.best_day_profit ?? 0}
+
+PRODUCTS THIS MONTH:
+${productSummary
+  .map(
+    (p) =>
+      `- ${p.product_name}: ${p.total_units} units sold, ₱${p.total_profit} profit`,
+  )
+  .join("\n")}
+
+WEEKLY TREND (last 7 days):
+${
+  weeklyHistory.length > 0
+    ? weeklyHistory
+        .map((d) => `- ${d.date}: ₱${d.revenue} revenue, ₱${d.profit} profit`)
+        .join("\n")
+    : "No sales logged in the last 7 days."
+}
+
+Give 3-5 specific actionable insights.
+Focus on: what's working, what needs attention, which product to push more, goal progress.
+Address the owner directly as "you".
+Be conversational and encouraging — this is a Filipino small business owner.
+`;
+
+// ── existing functions unchanged ──
 export const getMarketPriceAnalysis = async (product) => {
-  if (AVAILABLE_MODELS.length === 0) {
-    await loadModels();
-  }
+  if (AVAILABLE_MODELS.length === 0) await loadModels();
   let lastError = null;
 
   for (const modelName of AVAILABLE_MODELS) {
     try {
       console.log(`Trying model: ${modelName}`);
-
       const result = await genAI.models.generateContent({
         model: modelName,
         contents: marketPriceAnalysisPrompt(product),
@@ -137,7 +169,6 @@ export const getMarketPriceAnalysis = async (product) => {
 
       const text =
         result.text || result.candidates?.[0]?.content?.parts?.[0]?.text;
-
       if (!text) throw new Error("No text returned from Gemini");
 
       const jsonMatch = text.match(/\{[\s\S]*\}/);
@@ -148,7 +179,6 @@ export const getMarketPriceAnalysis = async (product) => {
 
       const parsed = JSON.parse(jsonMatch[0]);
       parsed.modelUsed = modelName;
-
       return parsed;
     } catch (err) {
       if (isRetryableError(err)) {
@@ -161,28 +191,21 @@ export const getMarketPriceAnalysis = async (product) => {
 };
 
 export const getCostOptimizationSuggestions = async (product) => {
-  if (AVAILABLE_MODELS.length === 0) {
-    await loadModels();
-  }
+  if (AVAILABLE_MODELS.length === 0) await loadModels();
 
   for (const modelName of AVAILABLE_MODELS) {
     try {
       console.log(`Trying model: ${modelName}`);
-
       const result = await genAI.models.generateContent({
         model: modelName,
-        contents: costOptmizationPrompt(product),
+        contents: costOptimizationPrompt(product),
       });
 
       const text =
         result.text || result.candidates?.[0]?.content?.parts?.[0]?.text;
-
-      if (!text) {
-        throw new Error("No text returned from Gemini");
-      }
+      if (!text) throw new Error("No text returned from Gemini");
 
       const jsonMatch = text.match(/\{[\s\S]*\}/);
-
       if (!jsonMatch) {
         console.error("RAW AI RESPONSE:", text);
         throw new Error("Invalid AI response format");
@@ -190,20 +213,55 @@ export const getCostOptimizationSuggestions = async (product) => {
 
       const parsed = JSON.parse(jsonMatch[0]);
       parsed.modelUsed = modelName;
-
       return parsed;
     } catch (err) {
       console.error(`Error on ${modelName}:`, err.message);
-
       if (isRetryableError(err)) {
-        console.warn(`Retryable error on ${modelName}, trying next model...`);
+        console.warn(`Retryable error on ${modelName}, trying next...`);
         continue;
       }
-
       throw err;
     }
   }
+  throw new Error(
+    "All Gemini models are currently unavailable. Please try again later.",
+  );
+};
 
+// ← NEW: sales analysis using same pattern as above
+export const analyzeSalesService = async (userId) => {
+  if (AVAILABLE_MODELS.length === 0) await loadModels();
+
+  const [summary, productSummary, weeklyHistory] = await Promise.all([
+    getSalesSummary(userId),
+    getProductSalesSummary(userId),
+    getWeeklySalesHistory(userId),
+  ]);
+
+  const prompt = salesAnalysisPrompt(summary, productSummary, weeklyHistory);
+
+  for (const modelName of AVAILABLE_MODELS) {
+    try {
+      console.log(`Sales analysis trying model: ${modelName}`);
+      const result = await genAI.models.generateContent({
+        model: modelName,
+        contents: prompt,
+      });
+
+      const text =
+        result.text || result.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) throw new Error("No text returned from Gemini");
+
+      return { analysis: text, modelUsed: modelName };
+    } catch (err) {
+      console.error(`Error on ${modelName}:`, err.message);
+      if (isRetryableError(err)) {
+        console.warn(`Retryable error on ${modelName}, trying next...`);
+        continue;
+      }
+      throw err;
+    }
+  }
   throw new Error(
     "All Gemini models are currently unavailable. Please try again later.",
   );
