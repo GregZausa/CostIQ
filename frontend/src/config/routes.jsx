@@ -10,7 +10,10 @@ import {
   IdCardLanyard,
   LayoutDashboardIcon,
   ShoppingBagIcon,
+  Sparkles,
   Toolbox,
+  TrendingUp,
+  TrendingUpIcon,
 } from "lucide-react";
 import RawMaterials from "../pages/RawMaterials";
 import Employee from "../pages/Employee";
@@ -29,6 +32,9 @@ import OAuthCallback from "../pages/auth/OAuthCallback";
 import VerifyEmail from "../pages/auth/VerifyEmail";
 import ForgotPassword from "../pages/auth/ForgotPassword";
 import ResetPassword from "../pages/auth/ResetPassword";
+import Sales from "../pages/Sales";
+import SalesHistory from "../pages/SalesHistory";
+import SalesAIAnalysis from "../pages/SalesAIAnalysis";
 
 export const routes = [
   {
@@ -87,6 +93,17 @@ export const routes = [
     ),
     sidebar: true,
     label: "Dashboard",
+  },
+  {
+    path: "/sales",
+    icon: TrendingUpIcon,
+    sidebar: true,
+    label: "Sales Tracker",
+    element: (
+      <MainLayout>
+        <Sales />
+      </MainLayout>
+    ),
   },
   {
     path: "product-management",
@@ -230,4 +247,5 @@ export const routes = [
       </MainLayout>
     ),
   },
+
 ];

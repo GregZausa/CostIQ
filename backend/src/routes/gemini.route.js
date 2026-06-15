@@ -2,11 +2,13 @@ import express from "express";
 import {
   analyzeCostOptimization,
   analyzeMarketPrice,
+  analyzeSales,
 } from "../controllers/gemini.controller.js";
 import { requireAuth } from "../middleware/auth.middleware.js";
 import { aiLimiter } from "../middleware/rate-limiter.js";
 
 const router = express.Router();
+
 router.get(
   "/market-price/:productId",
   requireAuth,
@@ -19,5 +21,6 @@ router.get(
   aiLimiter,
   analyzeCostOptimization,
 );
+router.get("/sales-analysis", requireAuth, aiLimiter, analyzeSales);
 
 export default router;

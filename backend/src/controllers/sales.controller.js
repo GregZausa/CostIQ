@@ -1,6 +1,7 @@
 import {
   logSaleService,
   getDashboardSalesService,
+  getSalesHistoryService,
 } from "../services/sales.service.js";
 import {
   getTodaySales,
@@ -63,6 +64,18 @@ export const updateGoalController = async (req, res) => {
     const { goal } = req.body;
     await updateMonthlyGoal(req.user.id, goal);
     res.json({ message: "Goal updated!" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const getSalesHistoryController = async (req, res) => {
+  try {
+    const history = await getSalesHistoryService({
+      userId: req.user.id,
+      isPremium: req.user.is_premium,
+    });
+    res.json({ history });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

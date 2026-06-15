@@ -106,18 +106,6 @@ const Dashboard = () => {
             <NoDataLayout message="No products yet, Add one to get started!" />
           ) : (
             <>
-              {!salesLoading && (
-                <div className="pt-2">
-                  <SalesDashboard
-                    dashboard={dashboard}
-                    todaySales={todaySales}
-                    products={query?.products ?? []}
-                    user={user}
-                    onLog={handleLogSale}
-                    onUpdateGoal={handleUpdateGoal}
-                  />
-                </div>
-              )}
 
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 pt-2 shrink-0 gap-2">
                 <ProductsOverviewCard

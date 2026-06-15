@@ -37,14 +37,10 @@ export const logSale = async ({
 
 export const getTodaySales = async (userId) => {
   const { rows } = await pool.query(
-    `SELECT
-       sl.*,
-       p.product_name,
-       p.product_image
+    `SELECT sl.*, p.product_name, p.product_image
      FROM sales_logs sl
      JOIN products p ON p.product_id = sl.product_id
-     WHERE sl.user_id = $1
-     AND sl.date = CURRENT_DATE
+     WHERE sl.user_id = $1 AND sl.date = CURRENT_DATE
      ORDER BY sl.created_at DESC`,
     [userId],
   );
@@ -73,23 +69,15 @@ export const getMonthlySales = async (userId, year, month) => {
 export const getSalesSummary = async (userId) => {
   const { rows } = await pool.query(
     `SELECT
-       -- Today
        COALESCE(SUM(CASE WHEN date = CURRENT_DATE THEN revenue END), 0) as today_revenue,
        COALESCE(SUM(CASE WHEN date = CURRENT_DATE THEN profit END), 0) as today_profit,
        COALESCE(SUM(CASE WHEN date = CURRENT_DATE THEN units_sold END), 0) as today_units,
-
-       -- This week
        COALESCE(SUM(CASE WHEN date >= DATE_TRUNC('week', CURRENT_DATE) THEN revenue END), 0) as week_revenue,
        COALESCE(SUM(CASE WHEN date >= DATE_TRUNC('week', CURRENT_DATE) THEN profit END), 0) as week_profit,
-
-       -- This month
        COALESCE(SUM(CASE WHEN date >= DATE_TRUNC('month', CURRENT_DATE) THEN revenue END), 0) as month_revenue,
        COALESCE(SUM(CASE WHEN date >= DATE_TRUNC('month', CURRENT_DATE) THEN profit END), 0) as month_profit,
        COALESCE(SUM(CASE WHEN date >= DATE_TRUNC('month', CURRENT_DATE) THEN units_sold END), 0) as month_units,
-
-       -- Best day this month
        MAX(CASE WHEN date >= DATE_TRUNC('month', CURRENT_DATE) THEN profit END) as best_day_profit
-
      FROM sales_logs
      WHERE user_id = $1`,
     [userId],
@@ -100,9 +88,7 @@ export const getSalesSummary = async (userId) => {
 export const getProductSalesSummary = async (userId) => {
   const { rows } = await pool.query(
     `SELECT
-       p.product_id,
-       p.product_name,
-       p.product_image,
+       p.product_id, p.product_name, p.product_image,
        COALESCE(SUM(sl.units_sold), 0) as total_units,
        COALESCE(SUM(sl.revenue), 0) as total_revenue,
        COALESCE(SUM(sl.profit), 0) as total_profit
@@ -119,16 +105,10 @@ export const getProductSalesSummary = async (userId) => {
 
 export const getWeeklySalesHistory = async (userId) => {
   const { rows } = await pool.query(
-    `SELECT
-       date,
-       SUM(revenue) as revenue,
-       SUM(profit) as profit,
-       SUM(units_sold) as units_sold
+    `SELECT date, SUM(revenue) as revenue, SUM(profit) as profit, SUM(units_sold) as units_sold
      FROM sales_logs
-     WHERE user_id = $1
-     AND date >= CURRENT_DATE - INTERVAL '7 days'
-     GROUP BY date
-     ORDER BY date ASC`,
+     WHERE user_id = $1 AND date >= CURRENT_DATE - INTERVAL '7 days'
+     GROUP BY date ORDER BY date ASC`,
     [userId],
   );
   return rows;
@@ -140,3 +120,22 @@ export const updateMonthlyGoal = async (userId, goal) => {
     userId,
   ]);
 };
+
+// ← NEW
+export const getSalesHistory = async (userId, isPremium) => {
+  const { rows } = await pool.query(
+    `SELECT
+       sl.*,
+       p.product_name,
+       p.product_image
+     FROM sales_logs sl
+     JOIN products p ON p.product_id = sl.product_id
+     WHERE sl.user_id = $1
+     ${!isPremium ? "AND sl.date >= CURRENT_DATE - INTERVAL '7 days'" : ""}
+     ORDER BY sl.date DESC
+     ${!isPremium ? "LIMIT 50" : ""}`,
+    [userId],
+  );
+  return rows;
+};
+  

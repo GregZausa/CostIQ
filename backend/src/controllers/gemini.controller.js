@@ -1,6 +1,7 @@
 import {
   getCostOptimizationSuggestions,
   getMarketPriceAnalysis,
+  analyzeSalesService, 
 } from "../services/gemini.services.js";
 import { getProductsWithProfit } from "../models/product.model.js";
 import { checkAndConsumeToken, getTokenStatus } from "../models/ai.model.js";
@@ -49,6 +50,16 @@ export const fetchTokenStatus = async (req, res) => {
     const status = await getTokenStatus(req.user.id);
     res.json(status);
   } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const analyzeSales = async (req, res) => {
+  try {
+    const result = await analyzeSalesService(req.user.id);
+    res.json(result);
+  } catch (err) {
+    console.error("Sales analysis error:", err);
     res.status(500).json({ message: err.message });
   }
 };
